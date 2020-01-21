@@ -16,7 +16,7 @@ import lombok.Data;
 @Table(name = "userDetails")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private long userId;
 	private String firstName;
@@ -26,6 +26,15 @@ public class User {
 	private String mobileNumber;
 	private LocalDateTime createdDate;
 	private boolean isVerified;
+
+	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumber) {
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.password = password;
+		this.mobileNumber = mobileNumber;
+	}
 
 	public User() {
 
