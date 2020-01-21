@@ -63,4 +63,10 @@ public class UserDTO {
 		this.mobileNumber = mobileNumber;
 	}
 
+	@Override
+	public String toString() {
+		return "UserDTO [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId + ", password="
+				+ password + ", mobileNumber=" + mobileNumber + "]";
+	}
+
 }

@@ -104,4 +104,11 @@ public class User {
 		this.isVerified = isVerified;
 	}
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
+				+ ", password=" + password + ", mobileNumber=" + mobileNumber + ", createdDate=" + createdDate
+				+ ", isVerified=" + isVerified + "]";
+	}
+
 }
