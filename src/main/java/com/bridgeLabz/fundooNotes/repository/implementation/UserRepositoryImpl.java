@@ -25,6 +25,7 @@ public class UserRepositoryImpl implements IUserRepository {
 		return newUser;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public User getUser(String emailId) {
 		Session session = entityManager.unwrap(Session.class);
