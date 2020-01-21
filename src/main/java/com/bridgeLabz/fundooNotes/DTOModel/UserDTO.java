@@ -8,38 +8,43 @@ import lombok.Data;
 @Component
 public class UserDTO {
 
-//	@NotBlank(message="field should not be empty")
 //	@Pattern(regexp="[a-zA-Z]*",message="only alphabets are allowed")
-	private String name;
-
+	private String firstName;
+//	@Pattern(regexp="[a-zA-Z]*",message="only alphabets are allowed")
+	private String lastName;
 //	@Email
-	private String email;
-
-//	@NotBlank(message="field should not be empty")
+	private String emailId;
 //	@Pattern(regexp ="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",message="Enter a valid password")
 	private String password;
-
 //	@NotNull(message="field should not be empty")
-	private Long mobileNumber;
+	private String mobileNumber;
 
 	public UserDTO() {
 
 	}
 
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 
 	public String getPassword() {
@@ -50,11 +55,11 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public Long getMobileNumber() {
+	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
-	public void setMobileNumber(Long mobileNumber) {
+	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 
