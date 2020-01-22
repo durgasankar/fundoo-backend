@@ -6,6 +6,6 @@ public interface IUserService {
 
 	public boolean register(UserDTO userDto);
 
-	public boolean verifyToken(String token);
+	public boolean isVerifiedUserToken(String token);
 
 }

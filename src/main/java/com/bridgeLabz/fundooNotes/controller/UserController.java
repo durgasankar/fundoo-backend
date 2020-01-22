@@ -41,8 +41,7 @@ public class UserController {
 	public ResponseEntity<Response> verifyRegistration(@PathVariable("token") String token) {
 
 		System.out.println("token for verification" + token);
-		boolean update = userService.verifyToken(token);
-		if (update) {
+		if (userService.isVerifiedUserToken(token)) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified", 200));
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("not verified", 400));

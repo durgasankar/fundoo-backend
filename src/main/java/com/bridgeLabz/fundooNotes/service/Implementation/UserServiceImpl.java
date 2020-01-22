@@ -1,6 +1,5 @@
 package com.bridgeLabz.fundooNotes.service.Implementation;
 
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
@@ -44,25 +42,19 @@ public class UserServiceImpl implements IUserService {
 		newUser.setVerified(false);
 		userRepository.save(newUser);
 
-		String emailBodyContaintLink = Util.createLink("http://localhost:8080/user/verification",
+		String emailBodyContaintLink = Util.createLink("http://192.168.1.41:8080/user/verification",
 				jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), "Registration Verification Link", emailBodyContaintLink);
+		System.out.println("Generated token : " + jwtToken.createJwtToken(newUser.getUserId()));
 		return true;
 	}
 
 	@Override
-	public boolean verifyToken(String token) {
-
-		try {
-			Long fetchedCustomerId = jwtToken.decodeToken(token);
-//			User fetchedUser = userRepository.getUser(fetchedCustomerId);
-
-			// need to save customer using verify
-			userRepository.verifyUser(fetchedCustomerId);
+	public boolean isVerifiedUserToken(String token) {
+		long fetchedCustomerId = jwtToken.decodeToken(token);
+		System.out.println(fetchedCustomerId);
+		if (userRepository.isVerifiedUser(fetchedCustomerId) == true)
 			return true;
-		} catch (JWTVerificationException | IllegalArgumentException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		return false;
 	}
 

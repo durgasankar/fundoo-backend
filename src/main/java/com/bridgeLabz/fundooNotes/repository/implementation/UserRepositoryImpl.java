@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository.implementation;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -43,14 +44,16 @@ public class UserRepositoryImpl implements IUserRepository {
 	}
 
 	@Override
-	public boolean verifyUser(Long id) {
+	@Transactional
+	public boolean isVerifiedUser(Long id) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery("update User set is_verified=:verified" + "where id=:id");
+		Query query = session.createQuery("update User set is_verified=:verified" + " where id=:id");
 		query.setParameter("verified", true);
 		query.setParameter("id", id);
-		if (query.executeUpdate() > 0) {
+		int affectedRows = query.executeUpdate();
+//		System.out.println("affected rows inside repository : " + affectedRows);
+		if (affectedRows > 0)
 			return true;
-		}
 		return false;
 	}
 

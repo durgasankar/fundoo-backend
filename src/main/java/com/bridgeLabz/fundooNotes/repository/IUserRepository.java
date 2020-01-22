@@ -10,6 +10,6 @@ public interface IUserRepository {
 
 	public User getUser(Long id);
 
-	public boolean verifyUser(Long id);
+	public boolean isVerifiedUser(Long id);
 
 }

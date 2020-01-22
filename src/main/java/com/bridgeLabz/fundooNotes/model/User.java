@@ -23,7 +23,7 @@ public class User {
 	private String password;
 	private String mobileNumber;
 	private LocalDateTime createdDate;
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "boolean default false")
 	private boolean isVerified;
 
 	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumber) {
