@@ -29,8 +29,8 @@ public class UserRepositoryImpl implements IUserRepository {
 	@Override
 	public User getUser(String emailId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query emailFetchQuery = session.createQuery("FROM User where email=:emailId");
-		emailFetchQuery.setParameter("email", emailId);
+		Query emailFetchQuery = session.createQuery("FROM User where emailId=:emailId");
+		emailFetchQuery.setParameter("emailId", emailId);
 		return (User) emailFetchQuery.uniqueResult();
 	}
 

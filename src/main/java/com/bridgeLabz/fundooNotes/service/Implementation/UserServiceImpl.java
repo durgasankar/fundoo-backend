@@ -26,27 +26,25 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean register(UserDTO userDto) {
-		System.out.println("Inside service");
+//		System.out.println("Inside service");
 		// fetched the user from db
 		User fetchedUser = userRepository.getUser(userDto.getEmailId());
 
 		if (fetchedUser != null) {
 			throw new UserException("Opps...User already registred with us!");
+		} else {
+			User newUser = new User();
+
+//			System.out.println(newUser.getPassword());
+			BeanUtils.copyProperties(userDto, newUser);
+
+			newUser.setCreatedDate(LocalDateTime.now());
+//			System.out.println(newUser.getPassword());
+			newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+//			newUser.setIsVerified(false);
+			userRepository.save(newUser);
+			return true;
 		}
-		User newUser = new User();
-		newUser.setPassword("abc");
-
-		System.out.println(newUser.getPassword());
-		BeanUtils.copyProperties(userDto, newUser);
-
-		newUser.setCreatedDate(LocalDateTime.now());
-		System.out.println(newUser.getPassword());
-		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-		newUser.setVerified(false);
-
-		userRepository.save(newUser);
-
-		return true;
 
 	}
 

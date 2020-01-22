@@ -9,9 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "userDetails")
 public class User {
@@ -21,10 +18,12 @@ public class User {
 	private long userId;
 	private String firstName;
 	private String lastName;
+	@Column(unique = true)
 	private String emailId;
 	private String password;
 	private String mobileNumber;
 	private LocalDateTime createdDate;
+	@Column(nullable = false)
 	private boolean isVerified;
 
 	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumber) {
