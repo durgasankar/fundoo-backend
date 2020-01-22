@@ -21,23 +21,15 @@ public class EMailServiceProvider {
 	private static final String SENDER_PASSWORD = System.getenv("password");
 
 	public void sendMail(String toEmailId, String subject, String bodyContaint) {
-
-		Properties properties = new Properties();
-
-		properties.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
-		properties.put("mail.smtp.port", "587"); // TLS Port
-		properties.put("mail.smtp.auth", "true"); // enable authentication
-		properties.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
-
 		// create Authenticator object to pass in Session.getInstance argument
 		Authenticator authentication = new Authenticator() {
 			// override the getPasswordAuthentication method
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(SENDER_EMAIL_ID, SENDER_PASSWORD);
 			}
 		};
-
-		Session session = Session.getInstance(properties, authentication);
+		Session session = Session.getInstance(mailPropertiesSettings(), authentication);
 		try {
 			Transport.send(mimeMessageConfiguration(session, toEmailId, subject, bodyContaint));
 			System.out.println("Email Sent Successfully!!");
@@ -48,7 +40,7 @@ public class EMailServiceProvider {
 	}
 
 	private MimeMessage mimeMessageConfiguration(Session session, String toEmail, String subject, String body) {
-		
+
 		MimeMessage mimeMessage = new MimeMessage(session);
 		// set message headers
 		try {
@@ -65,11 +57,22 @@ public class EMailServiceProvider {
 			e.printStackTrace();
 		}
 		return mimeMessage;
+	}
+
+	private Properties mailPropertiesSettings() {
+		Properties properties = new Properties();
+		properties.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
+		properties.put("mail.smtp.port", "587"); // TLS Port
+		properties.put("mail.smtp.auth", "true"); // enable authentication
+		properties.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
+		return properties;
 
 	}
 
 //	public static void main(String[] args) {
-//		EMailServiceProvider.sendMail("durgasankar.raja500@gmail.com", "chk", "ouu.. working fine");
+//		
+//		EMailServiceProvider p = new EMailServiceProvider();
+//		p.sendMail("aditi.desai298@gmail.com", "chk", "ouu.. working fine");
 //	}
 
 }

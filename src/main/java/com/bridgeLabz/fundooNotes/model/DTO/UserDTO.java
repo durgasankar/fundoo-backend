@@ -1,4 +1,4 @@
-package com.bridgeLabz.fundooNotes.DTOModel;
+package com.bridgeLabz.fundooNotes.model.DTO;
 
 import org.springframework.stereotype.Component;
 
@@ -52,7 +52,7 @@ public class UserDTO {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;	
+		this.password = password;
 	}
 
 	public String getMobileNumber() {

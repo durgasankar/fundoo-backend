@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.bridgeLabz.fundooNotes.DTOModel.UserDTO;
-import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.IUserService;
+import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
+import com.bridgeLabz.fundooNotes.utility.Util;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -23,28 +24,40 @@ public class UserServiceImpl implements IUserService {
 	private IUserRepository userRepository;
 	@Autowired
 	private JWTToken jwtToken;
+	@Autowired
+	private EMailServiceProvider emailServiceProvider;
 
+	// working fine
 	@Override
 	public boolean register(UserDTO userDto) {
-//		System.out.println("Inside service");
-		// fetched the user from db
 		User fetchedUser = userRepository.getUser(userDto.getEmailId());
-
 		if (fetchedUser != null) {
-			throw new UserException("Opps...User already registred with us!");
-		} else {
-			User newUser = new User();
-
-//			System.out.println(newUser.getPassword());
-			BeanUtils.copyProperties(userDto, newUser);
-
-			newUser.setCreatedDate(LocalDateTime.now());
-//			System.out.println(newUser.getPassword());
-			newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-//			newUser.setIsVerified(false);
-			userRepository.save(newUser);
-			return true;
+//			throw new UserException("Opps...User already registred with us!");
+			return false;
 		}
+		User newUser = new User();
+		BeanUtils.copyProperties(userDto, newUser);
+		newUser.setCreatedDate(LocalDateTime.now());
+		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+		newUser.setVerified(false);
+		userRepository.save(newUser);
+		// check point 1
+
+		String emailBodyContaintLink = Util.createLink("http://localhost:8080/verify",
+				generateToken(newUser.getUserId()));
+		emailServiceProvider.sendMail(newUser.getEmailId(), "Registration Verification Link", emailBodyContaintLink);
+
+//		Email emailObject = new Email(newUser.getEmailId(), "Registration Verification Link",
+//				Util.createLink("http://localhost:8080/verify", generateToken(newUser.getUserId())));
+//		System.out.println("I am here after long code");
+//		emailServiceProvider.sendMail(emailObject);
+
+		return true;
+
+	}
+
+	public String generateToken(Long id) {
+		return jwtToken.createJwtToken(id);
 
 	}
 

@@ -1,6 +1,6 @@
 package com.bridgeLabz.fundooNotes.service;
 
-import com.bridgeLabz.fundooNotes.DTOModel.UserDTO;
+import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 
 public interface IUserService {
 	

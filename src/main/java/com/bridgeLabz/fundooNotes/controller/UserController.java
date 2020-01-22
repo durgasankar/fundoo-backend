@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgeLabz.fundooNotes.DTOModel.LoginInformation;
-import com.bridgeLabz.fundooNotes.DTOModel.UserDTO;
+import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.service.IUserService;
 
@@ -38,9 +37,6 @@ public class UserController {
 
 	}
 
-	public ResponseEntity<Response> login(@RequestBody LoginInformation loginCredential) {
-		return null;
-
-	}
+	
 
 }
