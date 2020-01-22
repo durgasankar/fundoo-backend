@@ -1,5 +1,9 @@
 package com.bridgeLabz.fundooNotes.model.DTO;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
@@ -8,15 +12,15 @@ import lombok.Data;
 @Component
 public class UserDTO {
 
-//	@Pattern(regexp="[a-zA-Z]*",message="only alphabets are allowed")
+	@Pattern(regexp = "[a-zA-Z]*", message = "only alphabets are allowed")
 	private String firstName;
-//	@Pattern(regexp="[a-zA-Z]*",message="only alphabets are allowed")
+	@Pattern(regexp = "[a-zA-Z]*", message = "only alphabets are allowed")
 	private String lastName;
-//	@Email
+	@Email
 	private String emailId;
-//	@Pattern(regexp ="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",message="Enter a valid password")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Enter a valid password")
 	private String password;
-//	@NotNull(message="field should not be empty")
+	@NotNull(message = "field should not be empty")
 	private String mobileNumber;
 
 	public UserDTO() {

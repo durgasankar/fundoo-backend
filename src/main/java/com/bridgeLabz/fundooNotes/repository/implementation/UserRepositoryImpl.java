@@ -33,15 +33,25 @@ public class UserRepositoryImpl implements IUserRepository {
 		emailFetchQuery.setParameter("emailId", emailId);
 		return (User) emailFetchQuery.uniqueResult();
 	}
-	
-	
+
 	@Override
 	public User getUser(Long id) {
-		
 		Session session = entityManager.unwrap(Session.class);
 		Query query = session.createQuery(" FROM User where id=:id");
 		query.setParameter("id", id);
 		return (User) query.uniqueResult();
+	}
+
+	@Override
+	public boolean verifyUser(Long id) {
+		Session session = entityManager.unwrap(Session.class);
+		Query query = session.createQuery("update User set is_verified=:verified" + "where id=:id");
+		query.setParameter("verified", true);
+		query.setParameter("id", id);
+		if (query.executeUpdate() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
