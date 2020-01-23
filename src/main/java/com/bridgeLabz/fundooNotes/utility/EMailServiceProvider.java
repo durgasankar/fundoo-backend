@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EMailServiceProvider {
-	private static final String SENDER_EMAIL_ID = System.getenv("emailId");
+	private static final String SENDER_EMAIL_ID = System.getenv("email");
 	private static final String SENDER_PASSWORD = System.getenv("password");
 
 	public void sendMail(String toEmailId, String subject, String bodyContaint) {
@@ -32,9 +32,9 @@ public class EMailServiceProvider {
 		Session session = Session.getInstance(mailPropertiesSettings(), authentication);
 		try {
 			Transport.send(mimeMessageConfiguration(session, toEmailId, subject, bodyContaint));
-			System.out.println("Email Sent Successfully!!");
 		} catch (MessagingException e) {
 			e.printStackTrace();
+
 		}
 
 	}
@@ -47,8 +47,8 @@ public class EMailServiceProvider {
 			mimeMessage.addHeader("Content-type", "text/HTML; charset=UTF-8");
 			mimeMessage.addHeader("format", "flowed");
 			mimeMessage.addHeader("Content-Transfer-Encoding", "8bit");
-			mimeMessage.setFrom(new InternetAddress(System.getenv("emailId"), "Fundoo Note Application"));
-			mimeMessage.setReplyTo(InternetAddress.parse(System.getenv("emailId"), false));
+			mimeMessage.setFrom(new InternetAddress(SENDER_EMAIL_ID, "Fundoo Note Application"));
+			mimeMessage.setReplyTo(InternetAddress.parse(SENDER_EMAIL_ID, false));
 			mimeMessage.setSubject(subject, "UTF-8");
 			mimeMessage.setText(body, "UTF-8");
 			mimeMessage.setSentDate(new Date());
@@ -68,11 +68,4 @@ public class EMailServiceProvider {
 		return properties;
 
 	}
-
-//	public static void main(String[] args) {
-//		
-//		EMailServiceProvider p = new EMailServiceProvider();
-//		p.sendMail("aditi.desai298@gmail.com", "chk", "ouu.. working fine");
-//	}
-
 }

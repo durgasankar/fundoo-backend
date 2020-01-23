@@ -28,21 +28,18 @@ public class UserController {
 
 		// check point 1
 		boolean resultStatus = userService.register(newUserDTO);
-//		System.out.println("Check poiont 2 " + resultStatus);
-		if (resultStatus == false) {
-			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
-					.body(new Response("user already exist", 400, newUserDTO));
+		if (!resultStatus) {
+			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new Response("user already exist", 400));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("registration successful", 200, newUserDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("registration successful", 200));
 
 	}
 
 	@GetMapping("verification/{token}")
 	public ResponseEntity<Response> verifyRegistration(@PathVariable("token") String token) {
 
-		System.out.println("token for verification" + token);
 		if (userService.isVerifiedUserToken(token)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified", 200));
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified sucessfully.", 200));
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("not verified", 400));
 

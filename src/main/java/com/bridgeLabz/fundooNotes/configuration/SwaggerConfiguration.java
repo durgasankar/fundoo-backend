@@ -11,10 +11,11 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 @EnableSwagger2
-public class Swaggerconfig {
+public class SwaggerConfiguration {
 	@Bean
 	public Docket productApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select()
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.bridgeLabz.fundooNotes.controller")).paths(regex("/.*"))
 				.build();
 	}

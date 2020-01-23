@@ -32,7 +32,6 @@ public class UserServiceImpl implements IUserService {
 	public boolean register(UserDTO userDto) {
 		User fetchedUser = userRepository.getUser(userDto.getEmailId());
 		if (fetchedUser != null) {
-//			throw new UserException("Opps...User already registred with us!");
 			return false;
 		}
 		User newUser = new User();
@@ -45,17 +44,16 @@ public class UserServiceImpl implements IUserService {
 		String emailBodyContaintLink = Util.createLink("http://192.168.1.41:8080/user/verification",
 				jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), "Registration Verification Link", emailBodyContaintLink);
-		System.out.println("Generated token : " + jwtToken.createJwtToken(newUser.getUserId()));
+
 		return true;
 	}
 
 	@Override
 	public boolean isVerifiedUserToken(String token) {
 		long fetchedCustomerId = jwtToken.decodeToken(token);
-		System.out.println(fetchedCustomerId);
-		if (userRepository.isVerifiedUser(fetchedCustomerId) == true)
-			return true;
-		return false;
+		userRepository.isVerifiedUser(fetchedCustomerId);
+		return true;
+
 	}
 
 }

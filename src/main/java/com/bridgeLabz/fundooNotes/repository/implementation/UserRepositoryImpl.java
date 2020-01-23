@@ -51,7 +51,6 @@ public class UserRepositoryImpl implements IUserRepository {
 		query.setParameter("verified", true);
 		query.setParameter("id", id);
 		int affectedRows = query.executeUpdate();
-//		System.out.println("affected rows inside repository : " + affectedRows);
 		if (affectedRows > 0)
 			return true;
 		return false;

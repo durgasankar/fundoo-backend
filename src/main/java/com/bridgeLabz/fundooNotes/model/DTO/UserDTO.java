@@ -7,9 +7,11 @@ import javax.validation.constraints.Pattern;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
-@Data
 @Component
+@Slf4j
+@Data
 public class UserDTO {
 
 	@Pattern(regexp = "[a-zA-Z]*", message = "only alphabets are allowed")
@@ -22,10 +24,6 @@ public class UserDTO {
 	private String password;
 	@NotNull(message = "field should not be empty")
 	private String mobileNumber;
-
-	public UserDTO() {
-
-	}
 
 	public String getFirstName() {
 		return firstName;
