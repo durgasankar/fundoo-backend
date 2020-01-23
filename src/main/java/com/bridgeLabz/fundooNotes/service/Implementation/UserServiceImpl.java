@@ -82,6 +82,12 @@ public class UserServiceImpl implements IUserService {
 
 	}
 
+	/**
+	 * this function takes login information from user on the basis of input user
+	 * email id it fetch all information of the user from database and checks for
+	 * varification details of the user. if the user is verified then it return all
+	 * information of user else it proceed with the verification.
+	 */
 	@Override
 	public User login(LoginInformation loginInformation) {
 		User fetchedUser = userRepository.getUser(loginInformation.getEmailId());
@@ -95,7 +101,9 @@ public class UserServiceImpl implements IUserService {
 			String emailBodyLink = Util.createLink("http://192.168.1.41:8080/user/verification",
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
 			emailServiceProvider.sendMail(fetchedUser.getEmailId(), EMAIL_SUBJECT, emailBodyLink);
+			return fetchedUser;
 		}
+		// not registered
 		return null;
 	}
 

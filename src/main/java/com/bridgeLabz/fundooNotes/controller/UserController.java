@@ -77,16 +77,31 @@ public class UserController {
 
 	}
 
+	/**
+	 * This function takes LongIn information data given by user on the basis of
+	 * user input information it fetch the complete user checks for conditions
+	 * whether the user is verified or not and also checks whether he is registered
+	 * or not and works accordingly.
+	 * 
+	 * @param loginInformation
+	 * @return
+	 */
 	@PostMapping("login")
 	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginInformation loginInformation) {
 
 		User fetchedUserInformation = userService.login(loginInformation);
-
 		if (fetchedUserInformation != null) {
-			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
-			return ResponseEntity.status(HttpStatus.ACCEPTED).header("login successful", loginInformation.getEmailId())
-					.body(new UserDetailResponse(generatedToken, 200));
+			if (fetchedUserInformation.isVerified()) {
+				// verified
+				String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
+				return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
+						.body(new UserDetailResponse("login successful", 200));
+			}
+			// not verified
+			return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+					.body(new UserDetailResponse("Please verify your account", 503));
 		}
+		// not registered
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse("login failed", 400));
 	}
 
