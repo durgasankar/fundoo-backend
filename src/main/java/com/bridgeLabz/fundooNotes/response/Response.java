@@ -2,6 +2,14 @@ package com.bridgeLabz.fundooNotes.response;
 
 import java.util.List;
 
+/**
+ * Thsi class has the functionality of capturing response of user which would be
+ * recorded when user does any type of operation.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-21
+ * @version 1.0
+ */
 public class Response {
 
 	private String message;

@@ -11,6 +11,16 @@ import org.springframework.stereotype.Repository;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 
+/**
+ * This class implements {@link IUserRepository} and defines the implementation
+ * functionality of adding available methods in the interface which uses The
+ * EntityManager and the EntityManagerFactory provide an unwrap method which
+ * returns the corresponding classes of the JPA implementation.
+ * 
+ * @author Duragasankar Mishra
+ * @created 2020-01-21
+ * @version 1.0
+ */
 @Repository
 @SuppressWarnings("rawtypes")
 public class UserRepositoryImpl implements IUserRepository {
@@ -18,15 +28,25 @@ public class UserRepositoryImpl implements IUserRepository {
 	@Autowired
 	private EntityManager entityManager;
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation then access the
+	 * save functionality and after successfully saving the data in the database
+	 * returns the data which is saved in the database.
+	 */
 	@Override
 	public User save(User newUser) {
-		// got the current session from entity manager
 		Session session = entityManager.unwrap(Session.class);
-		// from the existing session did hibernate operation
 		session.saveOrUpdate(newUser);
 		return newUser;
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and update operation is carried out
+	 * which returns the user after data from database
+	 */
 	@Override
 	public User getUser(String emailId) {
 		Session session = entityManager.unwrap(Session.class);
@@ -35,7 +55,14 @@ public class UserRepositoryImpl implements IUserRepository {
 		return (User) emailFetchQuery.uniqueResult();
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and fetching operation is carried out
+	 * which returns the user after data from database.
+	 */
 	@Override
+	@Transactional
 	public User getUser(Long id) {
 		Session session = entityManager.unwrap(Session.class);
 		Query query = session.createQuery(" FROM User where id=:id");
@@ -43,6 +70,12 @@ public class UserRepositoryImpl implements IUserRepository {
 		return (User) query.uniqueResult();
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and update operation is carried out
+	 * which returns boolean value after successful completion of update operation.
+	 */
 	@Override
 	@Transactional
 	public boolean isVerifiedUser(Long id) {
@@ -50,10 +83,8 @@ public class UserRepositoryImpl implements IUserRepository {
 		Query query = session.createQuery("update User set is_verified=:verified" + " where id=:id");
 		query.setParameter("verified", true);
 		query.setParameter("id", id);
-		int affectedRows = query.executeUpdate();
-		if (affectedRows > 0)
-			return true;
-		return false;
+		query.executeUpdate();
+		return true;
 	}
 
 }

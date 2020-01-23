@@ -10,11 +10,28 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.auth0.jwt.interfaces.Verification;
 
+/**
+ * This class has the functionality of creating a jwt token and decode the token
+ * based on user's provided data and provided secret code.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-22
+ * @version 1.0
+ * @see {@link JWT}
+ */
 @Component
 public class JWTToken {
 
 	private static final String TOKEN_SECRET_CODE = "r20jc134";
 
+	/**
+	 * This function takes user id as input parameter with that id it sign with
+	 * algorithms{@link Algorithm HMAC256} with the assigned secret code then it
+	 * generate unique String consist of header.payload.signature.
+	 * 
+	 * @param id as Long input parameter
+	 * @return String generatedToken
+	 */
 	public String createJwtToken(long id) {
 		String generatedToken = null;
 		try {
@@ -26,35 +43,29 @@ public class JWTToken {
 		return generatedToken;
 	}
 
+	/**
+	 * This function takes jwtToken as String input parameter and verifies with the
+	 * given secret code with concerned algorithms{@link Algorithm HMAC256} then
+	 * decode the token and claims it with the user's provided data during token
+	 * generation then returns the user's provided data.
+	 * 
+	 * @param jwtToken as String input parameter
+	 * @return userId as Long
+	 */
 	public Long decodeToken(String jwtToken) {
 		Long userId = (long) 0;
-
 		try {
 			if (jwtToken != null) {
-				// for verification algorithm
 				Verification verification = JWT.require(Algorithm.HMAC256(TOKEN_SECRET_CODE));
 				JWTVerifier jwtverifier = verification.build();
-				// to decode token
 				DecodedJWT decodedjwt = jwtverifier.verify(jwtToken);
-				// claim the token by userId
 				Claim claim = decodedjwt.getClaim("id");
 				userId = claim.asLong();
 			}
-
 		} catch (IllegalArgumentException | JWTCreationException e) {
 
 			e.printStackTrace();
 		}
-
 		return userId;
 	}
-
-//	public static void main(String[] args)
-//			throws JWTVerificationException, IllegalArgumentException, UnsupportedEncodingException {
-//		JwtGenerator generator = new JwtGenerator();
-//		String generatedToken = generator.createJwtToken(15);
-//		System.out.println(generatedToken);
-//		System.out.println(generator.decodeToken(generatedToken));
-//
-//	}
 }

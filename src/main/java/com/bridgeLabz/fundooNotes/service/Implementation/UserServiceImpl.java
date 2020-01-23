@@ -15,6 +15,19 @@ import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
 import com.bridgeLabz.fundooNotes.utility.Util;
 
+/**
+ * This class implements {@link IUserService} inetrface which has the
+ * UnImplemented functionality of registering the user and verifying with the
+ * identity and all implementions as carried here.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-22
+ * @version 1.0
+ * @see {@link BCryptPasswordEncoder} for creating encrypted password
+ * @see {@link IUserRepository} for storing data with the database
+ * @see {@link JWTToken} fore creatuion of token
+ * @see {@link EMailServiceProvider} for mail facilities
+ */
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -27,7 +40,14 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private EMailServiceProvider emailServiceProvider;
 
-	// working fine
+	/**
+	 * This class takes the user inputed data and checks whether the user present in
+	 * the database or not if the user is not registered with the database then it
+	 * copies all the data from dto to normal user class and encodes the user
+	 * password and save the user with the database and then by using
+	 * {@link JWTToken} and {@link EMailServiceProvider} it create a token and send
+	 * the user's mail id for verification.
+	 */
 	@Override
 	public boolean register(UserDTO userDto) {
 		User fetchedUser = userRepository.getUser(userDto.getEmailId());
@@ -48,10 +68,15 @@ public class UserServiceImpl implements IUserService {
 		return true;
 	}
 
+	/**
+	 * This function takes token in the form of String input paraameter and then
+	 * decode the token and fetch customer id and and from that id it gets the data
+	 * from database @see{@link IUserRepository} and after successful varification
+	 * it returns boolean value
+	 */
 	@Override
 	public boolean isVerifiedUserToken(String token) {
-		long fetchedCustomerId = jwtToken.decodeToken(token);
-		userRepository.isVerifiedUser(fetchedCustomerId);
+		userRepository.isVerifiedUser(jwtToken.decodeToken(token));
 		return true;
 
 	}

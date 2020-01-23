@@ -15,15 +15,32 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * This is the configuration mail class which uses smtp authentication and runs
+ * the service in the port 587 and gives the functionality of sending the mail
+ * to user.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-22
+ * @version 1.0
+ */
 @Component
 public class EMailServiceProvider {
+
 	private static final String SENDER_EMAIL_ID = System.getenv("email");
 	private static final String SENDER_PASSWORD = System.getenv("password");
 
+	/**
+	 * This function takes following input parameter and configure the
+	 * authentication of smtp and port 587 and authorisation and send the mail to
+	 * the assigned user details.
+	 * 
+	 * @param toEmailId
+	 * @param subject
+	 * @param bodyContaint
+	 */
 	public void sendMail(String toEmailId, String subject, String bodyContaint) {
-		// create Authenticator object to pass in Session.getInstance argument
 		Authenticator authentication = new Authenticator() {
-			// override the getPasswordAuthentication method
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(SENDER_EMAIL_ID, SENDER_PASSWORD);
@@ -39,6 +56,16 @@ public class EMailServiceProvider {
 
 	}
 
+	/**
+	 * This function takes following information and sets all the header information
+	 * of the email.
+	 * 
+	 * @param session as Current session information
+	 * @param toEmail as String receiver's mail id
+	 * @param subject as String input parameter
+	 * @param body    as String input parameter
+	 * @return MimeMessage class
+	 */
 	private MimeMessage mimeMessageConfiguration(Session session, String toEmail, String subject, String body) {
 
 		MimeMessage mimeMessage = new MimeMessage(session);
@@ -59,6 +86,11 @@ public class EMailServiceProvider {
 		return mimeMessage;
 	}
 
+	/**
+	 * This class sets the properties configuaration of the mail and return it.
+	 * 
+	 * @return Properties class
+	 */
 	private Properties mailPropertiesSettings() {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", "smtp.gmail.com"); // SMTP Host
