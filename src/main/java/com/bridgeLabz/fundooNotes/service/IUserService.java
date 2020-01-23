@@ -1,5 +1,7 @@
 package com.bridgeLabz.fundooNotes.service;
 
+import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 
 /**
@@ -28,7 +30,7 @@ public interface IUserService {
 	 * @return Boolean
 	 */
 	public boolean isVerifiedUserToken(String token);
-	
-	
+
+	public User login(LoginInformation loginInformation);
 
 }

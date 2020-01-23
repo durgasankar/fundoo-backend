@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.IUserService;
@@ -30,7 +31,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-
+	private static final String EMAIL_SUBJECT = "Registration Verification Link";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -63,7 +64,7 @@ public class UserServiceImpl implements IUserService {
 
 		String emailBodyContaintLink = Util.createLink("http://192.168.1.41:8080/user/verification",
 				jwtToken.createJwtToken(newUser.getUserId()));
-		emailServiceProvider.sendMail(newUser.getEmailId(), "Registration Verification Link", emailBodyContaintLink);
+		emailServiceProvider.sendMail(newUser.getEmailId(), EMAIL_SUBJECT, emailBodyContaintLink);
 
 		return true;
 	}
@@ -79,6 +80,23 @@ public class UserServiceImpl implements IUserService {
 		userRepository.isVerifiedUser(jwtToken.decodeToken(token));
 		return true;
 
+	}
+
+	@Override
+	public User login(LoginInformation loginInformation) {
+		User fetchedUser = userRepository.getUser(loginInformation.getEmailId());
+		// valid user
+		if (fetchedUser != null) {
+			// send for verification if not verified
+			if (fetchedUser.isVerified()
+					&& passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
+				return fetchedUser;
+			}
+			String emailBodyLink = Util.createLink("http://192.168.1.41:8080/user/verification",
+					jwtToken.createJwtToken(fetchedUser.getUserId()));
+			emailServiceProvider.sendMail(fetchedUser.getEmailId(), EMAIL_SUBJECT, emailBodyLink);
+		}
+		return null;
 	}
 
 }

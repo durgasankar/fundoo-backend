@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.service.IUserService;
@@ -70,5 +72,6 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("not verified", 400));
 
 	}
+
 
 }
