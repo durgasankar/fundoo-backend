@@ -28,5 +28,7 @@ public interface IUserService {
 	 * @return Boolean
 	 */
 	public boolean isVerifiedUserToken(String token);
+	
+	
 
 }
