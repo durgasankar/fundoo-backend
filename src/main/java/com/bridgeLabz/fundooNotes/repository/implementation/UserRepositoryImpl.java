@@ -16,7 +16,7 @@ import com.bridgeLabz.fundooNotes.repository.IUserRepository;
  * functionality of adding available methods in the interface which uses The
  * EntityManager and the EntityManagerFactory provide an unwrap method which
  * returns the corresponding classes of the JPA implementation.
- * 
+ * loginInformation.getEmailId()
  * @author Duragasankar Mishra
  * @created 2020-01-21
  * @version 1.0

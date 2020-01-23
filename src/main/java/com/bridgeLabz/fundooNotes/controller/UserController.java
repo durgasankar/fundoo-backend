@@ -15,7 +15,9 @@ import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
+import com.bridgeLabz.fundooNotes.response.UserDetailResponse;
 import com.bridgeLabz.fundooNotes.service.IUserService;
+import com.bridgeLabz.fundooNotes.utility.JWTToken;
 
 /**
  * By using the object reference of service class This class has the
@@ -36,6 +38,8 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
+	@Autowired
+	private JWTToken jwtToken;
 
 	/**
 	 * This function takes all user info input as input parameter and checks the
@@ -73,5 +77,17 @@ public class UserController {
 
 	}
 
+	@PostMapping("login")
+	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginInformation loginInformation) {
+
+		User fetchedUserInformation = userService.login(loginInformation);
+
+		if (fetchedUserInformation != null) {
+			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
+			return ResponseEntity.status(HttpStatus.ACCEPTED).header("login successful", loginInformation.getEmailId())
+					.body(new UserDetailResponse(generatedToken, 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse("login failed", 400));
+	}
 
 }
