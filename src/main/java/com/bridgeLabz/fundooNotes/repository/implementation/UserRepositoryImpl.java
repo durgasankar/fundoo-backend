@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 
 /**
@@ -17,6 +18,7 @@ import com.bridgeLabz.fundooNotes.repository.IUserRepository;
  * EntityManager and the EntityManagerFactory provide an unwrap method which
  * returns the corresponding classes of the JPA implementation.
  * loginInformation.getEmailId()
+ * 
  * @author Duragasankar Mishra
  * @created 2020-01-21
  * @version 1.0
@@ -82,6 +84,17 @@ public class UserRepositoryImpl implements IUserRepository {
 		Session session = entityManager.unwrap(Session.class);
 		Query query = session.createQuery("update User set is_verified=:verified" + " where id=:id");
 		query.setParameter("verified", true);
+		query.setParameter("id", id);
+		query.executeUpdate();
+		return true;
+	}
+
+	@Transactional
+	@Override
+	public boolean updatePassword(UpdatePassword updatePasswordinformation, long id) {
+		Session session = entityManager.unwrap(Session.class);
+		Query query = session.createQuery("update User set password=:updatedPassword" + " where id=:id");
+		query.setParameter("updatedPassword", updatePasswordinformation.getConfirmPassword());
 		query.setParameter("id", id);
 		query.executeUpdate();
 		return true;

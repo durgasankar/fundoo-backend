@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository;
 
 import com.bridgeLabz.fundooNotes.model.User;
+import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
 
 /**
  * Repository Interface which has the unimplemented functionality of all
@@ -45,5 +46,7 @@ public interface IUserRepository {
 	 * @return Boolean value
 	 */
 	public boolean isVerifiedUser(Long id);
+
+	public boolean updatePassword(UpdatePassword updatePasswordinformation, long id);
 
 }

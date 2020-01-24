@@ -2,6 +2,7 @@ package com.bridgeLabz.fundooNotes.service;
 
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 
 /**
@@ -50,5 +51,7 @@ public interface IUserService {
 	 * @return Boolean
 	 */
 	public boolean isUserPresent(String emailId);
+	
+	public boolean updatePassword(UpdatePassword updatePassword, String token);
 
 }

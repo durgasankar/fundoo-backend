@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.IUserService;
@@ -138,6 +139,12 @@ public class UserServiceImpl implements IUserService {
 		}
 		// user not found
 		throw new UserException("Opps...User not found!", 404);
+	}
+
+	@Override
+	public boolean updatePassword(UpdatePassword updatePassword, String token) {
+		
+		return false;
 	}
 
 }
