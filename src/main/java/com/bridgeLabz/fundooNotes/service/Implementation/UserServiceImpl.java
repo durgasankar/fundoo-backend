@@ -34,7 +34,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
 @Service
 public class UserServiceImpl implements IUserService {
 	public static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
-	public static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
+	public static final String SERVER_ADDRESS = "http://192.168.1.41:8081";
 	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -132,6 +132,7 @@ public class UserServiceImpl implements IUserService {
 				String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/updatePassword",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
+				System.out.println("is userPresent token : " + jwtToken.createJwtToken(fetchedUser.getUserId()));
 				return true;
 			}
 			// not verified
@@ -155,12 +156,6 @@ public class UserServiceImpl implements IUserService {
 			return true;
 		}
 		throw new UserException("Opps...password did not match!", 400);
-	}
-
-	@Override
-	public boolean isUserRegistered(String emailId) {
-		userRepository.getUser(emailId);
-		return true;
 	}
 
 }

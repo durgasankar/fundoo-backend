@@ -127,7 +127,7 @@ public class UserController {
 			@RequestBody() UpdatePassword upadatePassword) {
 		System.out.println("fetched token : " + token);
 		boolean updationStatus = userService.updatePassword(upadatePassword, token);
-		if (!updationStatus) {
+		if (updationStatus) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("updated sucessfully", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("updation failed", 400));

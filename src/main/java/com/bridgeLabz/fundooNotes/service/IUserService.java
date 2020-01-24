@@ -54,6 +54,4 @@ public interface IUserService {
 
 	public boolean updatePassword(UpdatePassword updatePassword, String token);
 
-	public boolean isUserRegistered(String emailId);
-
 }
