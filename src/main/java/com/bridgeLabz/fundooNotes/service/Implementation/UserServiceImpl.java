@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
 import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
@@ -31,8 +32,9 @@ import com.bridgeLabz.fundooNotes.utility.Util;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-	private static final String EMAIL_SUBJECT = "Registration Verification Link";
-	private static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
+	public static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
+	public static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
+	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -63,9 +65,9 @@ public class UserServiceImpl implements IUserService {
 		newUser.setVerified(false);
 		userRepository.save(newUser);
 
-		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS +"/user/verification",
+		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(newUser.getUserId()));
-		emailServiceProvider.sendMail(newUser.getEmailId(), EMAIL_SUBJECT, emailBodyContaintLink);
+		emailServiceProvider.sendMail(newUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyContaintLink);
 
 		return true;
 	}
@@ -99,13 +101,36 @@ public class UserServiceImpl implements IUserService {
 					&& passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
 				return fetchedUser;
 			}
-			String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/verification",
+			String emailBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
-			emailServiceProvider.sendMail(fetchedUser.getEmailId(), EMAIL_SUBJECT, emailBodyLink);
+			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
 			return fetchedUser;
 		}
 		// not registered
 		return null;
+	}
+
+	@Override
+	public boolean isUserPresent(String emailId) {
+		User fetchedUser = userRepository.getUser(emailId);
+		// user found
+		if (fetchedUser != null) {
+			// user verified
+			if (fetchedUser.isVerified()) {
+				String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/updatePassword",
+						jwtToken.createJwtToken(fetchedUser.getUserId()));
+				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
+				return true;
+			}
+			// not verified
+			String emailRegistrationVerificationBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
+					jwtToken.createJwtToken(fetchedUser.getUserId()));
+			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT,
+					emailRegistrationVerificationBodyLink);
+			return false;
+		}
+		// user not found
+		throw new UserException("Opps...User not found!", 999);
 	}
 
 }

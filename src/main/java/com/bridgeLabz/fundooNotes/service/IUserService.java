@@ -41,4 +41,6 @@ public interface IUserService {
 
 	public User login(LoginInformation loginInformation);
 
+	public boolean isUserPresent(String emailId);
+
 }
