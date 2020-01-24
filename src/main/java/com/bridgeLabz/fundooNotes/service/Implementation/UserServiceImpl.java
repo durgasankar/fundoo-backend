@@ -119,7 +119,7 @@ public class UserServiceImpl implements IUserService {
 	 * his identity before reseting his password.
 	 */
 	@Override
-	public boolean isUserPresent(String emailId){
+	public boolean isUserPresent(String emailId) {
 		User fetchedUser = userRepository.getUser(emailId);
 		// user found
 		if (fetchedUser != null) {
@@ -138,13 +138,19 @@ public class UserServiceImpl implements IUserService {
 			return false;
 		}
 		// user not found
-		throw new UserException("Opps...User not found!", 404);
+		throw new UserException("Opps...User not found!", 400);
 	}
 
 	@Override
-	public boolean updatePassword(UpdatePassword updatePassword, String token) {
-		
-		return false;
+	public boolean updatePassword(UpdatePassword updatePasswordInformation, String token) {
+
+		if (updatePasswordInformation.getPassword().equals(updatePasswordInformation.getConfirmPassword())) {
+			updatePasswordInformation
+					.setConfirmPassword(passwordEncoder.encode(updatePasswordInformation.getConfirmPassword()));
+			userRepository.updatePassword(updatePasswordInformation, jwtToken.decodeToken(token));
+			return true;
+		}
+		throw new UserException("Opps...password did not match!", 400);
 	}
 
 }
