@@ -91,22 +91,17 @@ public class UserController {
 	 */
 	@PostMapping("login")
 	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginInformation loginInformation) {
-
 		User fetchedUserInformation = userService.login(loginInformation);
+
 		if (fetchedUserInformation != null) {
-			if (fetchedUserInformation.isVerified()) {
-				// verified
-				String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
-				System.out.println("Generated during login" + generatedToken);
-				return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
-						.body(new UserDetailResponse("login successful", 200, loginInformation));
-			}
-			// registered but not verified
-			return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-					.body(new UserDetailResponse("Please verify your account", 503, loginInformation));
+			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
+			System.out.println("Generated during login" + generatedToken);
+			return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
+					.body(new UserDetailResponse("login successful", 200, loginInformation));
 		}
 		// not registered
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse("login failed", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new UserDetailResponse("check mail for verification", 400));
 	}
 
 	/**

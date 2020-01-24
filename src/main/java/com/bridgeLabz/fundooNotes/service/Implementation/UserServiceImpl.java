@@ -97,20 +97,19 @@ public class UserServiceImpl implements IUserService {
 		User fetchedUser = userRepository.getUser(loginInformation.getEmailId());
 		// valid user
 		if (fetchedUser != null) {
-			// verified user
-			if (fetchedUser.isVerified()) {
-				// verified user and password matches
-				if (passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
+			// valid user with valid password
+			if (passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
+				// valid user with verified
+				if (fetchedUser.isVerified()) {
 					return fetchedUser;
 				}
-				// verified user but password does not match
-				throw new UserException("Opps...Invalid credentials!", 400);
+				String emailBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
+						jwtToken.createJwtToken(fetchedUser.getUserId()));
+				emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
+				return null;
 			}
-			// send for verification if not verified
-			String emailBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
-					jwtToken.createJwtToken(fetchedUser.getUserId()));
-			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
-			return null;
+			// password dont match
+			throw new UserException("Opps...Invalid credentials!", 400);
 		}
 		// not registered
 		throw new UserException("Opps...User not found!", 400);
@@ -156,6 +155,12 @@ public class UserServiceImpl implements IUserService {
 			return true;
 		}
 		throw new UserException("Opps...password did not match!", 400);
+	}
+
+	@Override
+	public boolean isUserRegistered(String emailId) {
+		userRepository.getUser(emailId);
+		return true;
 	}
 
 }

@@ -51,7 +51,9 @@ public interface IUserService {
 	 * @return Boolean
 	 */
 	public boolean isUserPresent(String emailId);
-	
+
 	public boolean updatePassword(UpdatePassword updatePassword, String token);
+
+	public boolean isUserRegistered(String emailId);
 
 }

@@ -30,7 +30,6 @@ public class User {
 	private String password;
 	private String mobileNumber;
 	private LocalDateTime createdDate;
-	@Column(nullable = false, columnDefinition = "boolean default false")
 	private boolean isVerified;
 
 	/**
