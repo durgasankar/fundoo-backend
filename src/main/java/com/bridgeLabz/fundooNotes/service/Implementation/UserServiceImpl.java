@@ -118,7 +118,7 @@ public class UserServiceImpl implements IUserService {
 	 * his identity before reseting his password.
 	 */
 	@Override
-	public boolean isUserPresent(String emailId) throws UserException {
+	public boolean isUserPresent(String emailId){
 		User fetchedUser = userRepository.getUser(emailId);
 		// user found
 		if (fetchedUser != null) {

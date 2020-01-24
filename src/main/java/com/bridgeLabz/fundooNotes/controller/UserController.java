@@ -103,8 +103,7 @@ public class UserController {
 					.body(new UserDetailResponse("Please verify your account", 503, loginInformation));
 		}
 		// not registered
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new UserDetailResponse("login failed", 400, loginInformation));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse("login failed", 400));
 	}
 
 	/**
