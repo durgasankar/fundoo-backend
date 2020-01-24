@@ -97,6 +97,7 @@ public class UserController {
 			if (fetchedUserInformation.isVerified()) {
 				// verified
 				String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
+				System.out.println("Generated during login" + generatedToken);
 				return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
 						.body(new UserDetailResponse("login successful", 200, loginInformation));
 			}
@@ -129,7 +130,12 @@ public class UserController {
 	@PutMapping("updatePassword/{token}")
 	public ResponseEntity<Response> updatePassword(@PathVariable("token") String token,
 			@RequestBody() UpdatePassword upadatePassword) {
-		return null;
+		System.out.println("fetched token : " + token);
+		boolean updationStatus = userService.updatePassword(upadatePassword, token);
+		if (!updationStatus) {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("updated sucessfully", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("updation failed", 400));
 
 	}
 
