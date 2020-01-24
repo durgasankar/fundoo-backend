@@ -3,7 +3,6 @@ package com.bridgeLabz.fundooNotes.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,6 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
  */
 @RestController
 @RequestMapping("user")
-@CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
 
 	@Autowired
@@ -87,7 +85,7 @@ public class UserController {
 	 * or not and works accordingly.
 	 * 
 	 * @param loginInformation
-	 * @return
+	 * @return ResponseEntity<Response>
 	 */
 	@PostMapping("login")
 	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginInformation loginInformation) {
@@ -109,6 +107,15 @@ public class UserController {
 				.body(new UserDetailResponse("login failed", 400, loginInformation));
 	}
 
+	/**
+	 * This function takes email id as string input parameter and checks the
+	 * existance of user from service class on validate credentials, it allows the
+	 * user to reset his password by his mail. Or else, it sends the mail to user
+	 * for verification of his account
+	 * 
+	 * @param emailId as String input parameter
+	 * @return ResponseEntity<Response>
+	 */
 	@PostMapping("forgotPassword")
 	public ResponseEntity<Response> forgotPassword(@RequestParam("emailId") String emailId) {
 		boolean fetchedUserStatus = userService.isUserPresent(emailId);

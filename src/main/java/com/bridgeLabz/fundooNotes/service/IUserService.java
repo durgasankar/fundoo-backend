@@ -41,6 +41,14 @@ public interface IUserService {
 
 	public User login(LoginInformation loginInformation);
 
+	/**
+	 * UnImplemented functionality of verifying user which takes email id as String
+	 * input parameter checks the verification and existance status of user and
+	 * returns boolean value
+	 * 
+	 * @param emailId as String input parameter
+	 * @return Boolean
+	 */
 	public boolean isUserPresent(String emailId);
 
 }

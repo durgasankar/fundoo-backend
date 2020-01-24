@@ -25,10 +25,9 @@ public class UserDetailResponse {
 	 * @param loginInformation as LoginInformation class
 	 */
 	public UserDetailResponse(String tokenCode, int statusCode, LoginInformation loginInformation) {
-		super();
 		this.tokenCode = tokenCode;
 		this.statusCode = statusCode;
-		this.setLoginInformation(loginInformation);
+		this.loginInformation = loginInformation;
 	}
 
 	/**

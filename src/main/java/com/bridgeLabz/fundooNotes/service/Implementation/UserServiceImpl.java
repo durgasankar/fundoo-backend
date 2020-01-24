@@ -110,8 +110,15 @@ public class UserServiceImpl implements IUserService {
 		return null;
 	}
 
+	/**
+	 * This function takes Email id as String input parameter and checks for user if
+	 * user not found it throws user not found exception. if user is found it checks
+	 * for verification status if user is verified then it sends the user with
+	 * update password link else it send the user with verification link to verify
+	 * his identity before reseting his password.
+	 */
 	@Override
-	public boolean isUserPresent(String emailId) {
+	public boolean isUserPresent(String emailId) throws UserException {
 		User fetchedUser = userRepository.getUser(emailId);
 		// user found
 		if (fetchedUser != null) {
@@ -123,14 +130,14 @@ public class UserServiceImpl implements IUserService {
 				return true;
 			}
 			// not verified
-			String emailRegistrationVerificationBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
-					jwtToken.createJwtToken(fetchedUser.getUserId()));
+			String emailRegistrationVerificationBodyLink = Util.createLink(
+					SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK, jwtToken.createJwtToken(fetchedUser.getUserId()));
 			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT,
 					emailRegistrationVerificationBodyLink);
 			return false;
 		}
 		// user not found
-		throw new UserException("Opps...User not found!", 999);
+		throw new UserException("Opps...User not found!", 404);
 	}
 
 }
