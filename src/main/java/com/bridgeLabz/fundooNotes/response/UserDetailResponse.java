@@ -1,5 +1,7 @@
 package com.bridgeLabz.fundooNotes.response;
 
+import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
+
 /**
  * Response class for login which holds the token code of the user and status
  * code.
@@ -12,6 +14,22 @@ public class UserDetailResponse {
 
 	private String tokenCode;
 	private int statusCode;
+	private LoginInformation loginInformation;
+
+	/**
+	 * Constructor takes token code and status code and user information as input
+	 * parameter
+	 * 
+	 * @param tokenCode        as String input parameter
+	 * @param statusCode       as Integer input parameter
+	 * @param loginInformation as LoginInformation class
+	 */
+	public UserDetailResponse(String tokenCode, int statusCode, LoginInformation loginInformation) {
+		super();
+		this.tokenCode = tokenCode;
+		this.statusCode = statusCode;
+		this.setLoginInformation(loginInformation);
+	}
 
 	/**
 	 * Constructor takes token code and status code as input parameter
@@ -46,6 +64,14 @@ public class UserDetailResponse {
 
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	public LoginInformation getLoginInformation() {
+		return loginInformation;
+	}
+
+	public void setLoginInformation(LoginInformation loginInformation) {
+		this.loginInformation = loginInformation;
 	}
 
 }

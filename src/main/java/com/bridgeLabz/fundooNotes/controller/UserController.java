@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.User;
@@ -53,9 +54,11 @@ public class UserController {
 
 		boolean resultStatus = userService.register(newUserDTO);
 		if (!resultStatus) {
-			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new Response("user already exist", 400));
+			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
+					.body(new Response("user already exist", 400, resultStatus));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("registration successful", 200));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(new Response("registration successful", 200, resultStatus));
 
 	}
 
@@ -73,7 +76,7 @@ public class UserController {
 		if (userService.isVerifiedUserToken(token)) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified sucessfully.", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("not verified", 400));
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("not verified", 400));
 
 	}
 
@@ -95,14 +98,25 @@ public class UserController {
 				// verified
 				String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
 				return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
-						.body(new UserDetailResponse("login successful", 200));
+						.body(new UserDetailResponse("login successful", 200, loginInformation));
 			}
 			// registered but not verified
 			return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-					.body(new UserDetailResponse("Please verify your account", 503));
+					.body(new UserDetailResponse("Please verify your account", 503, loginInformation));
 		}
 		// not registered
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UserDetailResponse("login failed", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new UserDetailResponse("login failed", 400, loginInformation));
+	}
+
+	@PostMapping("forgotPassword")
+	public ResponseEntity<Response> forgotPassword(@RequestParam("emailId") String emailId) {
+		boolean fetchedUserStatus = userService.isUserPresent(emailId);
+		if (fetchedUserStatus) {
+			return ResponseEntity.status(HttpStatus.FOUND).body(new Response("found user", 200));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("not verified", 400));
+
 	}
 
 }
