@@ -32,6 +32,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
 @Service
 public class UserServiceImpl implements IUserService {
 	private static final String EMAIL_SUBJECT = "Registration Verification Link";
+	private static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -62,7 +63,7 @@ public class UserServiceImpl implements IUserService {
 		newUser.setVerified(false);
 		userRepository.save(newUser);
 
-		String emailBodyContaintLink = Util.createLink("http://192.168.1.41:8080/user/verification",
+		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS +"/user/verification",
 				jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), EMAIL_SUBJECT, emailBodyContaintLink);
 
@@ -98,7 +99,7 @@ public class UserServiceImpl implements IUserService {
 					&& passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
 				return fetchedUser;
 			}
-			String emailBodyLink = Util.createLink("http://192.168.1.41:8080/user/verification",
+			String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/verification",
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
 			emailServiceProvider.sendMail(fetchedUser.getEmailId(), EMAIL_SUBJECT, emailBodyLink);
 			return fetchedUser;

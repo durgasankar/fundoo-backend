@@ -97,7 +97,7 @@ public class UserController {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
 						.body(new UserDetailResponse("login successful", 200));
 			}
-			// not verified
+			// registered but not verified
 			return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
 					.body(new UserDetailResponse("Please verify your account", 503));
 		}
