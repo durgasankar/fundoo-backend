@@ -76,7 +76,7 @@ public class UserController {
 		if (userService.isVerifiedUserToken(token)) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified sucessfully.", 200));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("not verified", 400));
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("Invalid verification attempt", 400));
 
 	}
 

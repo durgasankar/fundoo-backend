@@ -34,7 +34,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
 @Service
 public class UserServiceImpl implements IUserService {
 	public static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
-	public static final String SERVER_ADDRESS = "http://192.168.1.41:8081";
+	public static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
 	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -75,15 +75,18 @@ public class UserServiceImpl implements IUserService {
 
 	/**
 	 * This function takes token in the form of String input paraameter and then
-	 * decode the token and fetch customer id and and from that id it gets the data
-	 * from database @see{@link IUserRepository} and after successful varification
-	 * it returns boolean value
+	 * decode the token and fetch customer id and checks fo his valid candidancy
+	 * then from that id it gets the data from database @see{@link IUserRepository}
+	 * and after successful varification it returns boolean value
 	 */
 	@Override
 	public boolean isVerifiedUserToken(String token) {
-		userRepository.isVerifiedUser(jwtToken.decodeToken(token));
-		return true;
-
+		long fetchedId = jwtToken.decodeToken(token);
+		if (fetchedId > 0) {
+			userRepository.isVerifiedUser(fetchedId);
+			return true;
+		}
+		return false;
 	}
 
 	/**
