@@ -95,7 +95,6 @@ public class UserController {
 
 		if (fetchedUserInformation != null) {
 			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
-			System.out.println("Generated during login" + generatedToken);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
 					.body(new UserDetailResponse("login successful", 200, loginInformation));
 		}
@@ -122,10 +121,19 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("not verified", 400));
 	}
 
+	/**
+	 * This function takes update password credencials input parameter along with
+	 * valid token as String input parameter after verifying the credentials and
+	 * update the password and after successful updation it displays corresponding
+	 * message.
+	 * 
+	 * @param token           as String Input parameter
+	 * @param upadatePassword as {@link UpdatePassword} class
+	 * @return ResponseEntity<Response>
+	 */
 	@PutMapping("updatePassword/{token}")
 	public ResponseEntity<Response> updatePassword(@PathVariable("token") String token,
 			@RequestBody() UpdatePassword upadatePassword) {
-		System.out.println("fetched token : " + token);
 		boolean updationStatus = userService.updatePassword(upadatePassword, token);
 		if (updationStatus) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("updated sucessfully", 200));

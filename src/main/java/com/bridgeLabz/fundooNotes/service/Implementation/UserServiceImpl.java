@@ -135,7 +135,6 @@ public class UserServiceImpl implements IUserService {
 				String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/updatePassword",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
-				System.out.println("is userPresent token : " + jwtToken.createJwtToken(fetchedUser.getUserId()));
 				return true;
 			}
 			// not verified
