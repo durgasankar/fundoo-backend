@@ -68,6 +68,7 @@ public class UserServiceImpl implements IUserService {
 
 		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(newUser.getUserId()));
+		System.out.println("token : " + jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyContaintLink);
 
 		return true;
