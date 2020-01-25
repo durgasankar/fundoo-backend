@@ -148,6 +148,12 @@ public class UserServiceImpl implements IUserService {
 		throw new UserException("Opps...User not found!", 400);
 	}
 
+	/**
+	 * This function takes Upadate password information along with valid token as
+	 * user input parameter and encode the recent password given by the user and
+	 * after sucessful updation of password conformation message is sent to the
+	 * user's mail id.
+	 */
 	@Override
 	public boolean updatePassword(UpdatePassword updatePasswordInformation, String token) {
 
@@ -155,9 +161,28 @@ public class UserServiceImpl implements IUserService {
 			updatePasswordInformation
 					.setConfirmPassword(passwordEncoder.encode(updatePasswordInformation.getConfirmPassword()));
 			userRepository.updatePassword(updatePasswordInformation, jwtToken.decodeToken(token));
+			// sends mail after updating password
+			emailServiceProvider.sendMail(updatePasswordInformation.getEmailId(), "Password updated sucessfully...",
+					mailContaintAfterUpdatingPassword(updatePasswordInformation));
 			return true;
 		}
 		throw new UserException("Opps...password did not match!", 400);
+	}
+
+	/**
+	 * This function takes Upadte password details as string input parameter and
+	 * prepare a body containt for sending mail to the concern user. along with user
+	 * valid details it sends login link to the user.
+	 * 
+	 * @param updatePasswordInformation as {@link UpdatePassword} input parameter
+	 * @return String
+	 */
+	private String mailContaintAfterUpdatingPassword(UpdatePassword updatePasswordInformation) {
+		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + updatePasswordInformation.getEmailId()
+				+ "\nPassword : " + updatePasswordInformation.getPassword();
+		String loginString = "\nClick on the link to login\n";
+		String loginLink = SERVER_ADDRESS + "/user/login";
+		return passwordUpdateBodyContent + loginString + loginLink;
 	}
 
 }

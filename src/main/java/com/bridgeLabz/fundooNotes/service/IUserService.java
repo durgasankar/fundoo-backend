@@ -18,7 +18,7 @@ public interface IUserService {
 	 * UnImplemented functionality of adding the user DTO class and registering with
 	 * the database and after sucessful addition returns boolean value.
 	 * 
-	 * @param userDto as DTO class user input parameter
+	 * @param userDto as {@link UserDTO} class
 	 * @return Boolean
 	 */
 	public boolean register(UserDTO userDto);
@@ -36,7 +36,7 @@ public interface IUserService {
 	 * UnImplemented functionality of login which takes userDto as class type input
 	 * parameter and returns complete user class after verifying the user.
 	 * 
-	 * @param loginInformation
+	 * @param loginInformation as {@link LoginInformation}
 	 * @return User class
 	 */
 
@@ -52,6 +52,15 @@ public interface IUserService {
 	 */
 	public boolean isUserPresent(String emailId);
 
+	/**
+	 * UnImplemented functionality of upadting the password information when user
+	 * forgets his old password.and after updation confirmation mail should be sent
+	 * to the user.
+	 * 
+	 * @param updatePassword as {@link UpdatePassword} class
+	 * @param token          as String input parameter
+	 * @return Boolean
+	 */
 	public boolean updatePassword(UpdatePassword updatePassword, String token);
 
 }

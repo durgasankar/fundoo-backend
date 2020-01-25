@@ -47,6 +47,14 @@ public interface IUserRepository {
 	 */
 	public boolean isVerifiedUser(Long id);
 
+	/**
+	 * UnImplemented functionality of updating user update password functionality
+	 * with the database.
+	 * 
+	 * @param updatePasswordinformation as {@link UpdatePassword}
+	 * @param id                        as Long input parameter
+	 * @return
+	 */
 	public boolean updatePassword(UpdatePassword updatePasswordinformation, long id);
 
 }

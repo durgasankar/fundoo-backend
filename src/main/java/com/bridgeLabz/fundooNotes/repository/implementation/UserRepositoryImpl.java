@@ -89,6 +89,14 @@ public class UserRepositoryImpl implements IUserRepository {
 		return true;
 	}
 
+	/**
+	 * This function takes {@link UpdatePassword} and id of the user as Long input
+	 * paramater and The EntityManager and the EntityManagerFactory provide an
+	 * unwrap method which returns the corresponding classes of the JPA
+	 * implementation and by using HQL customized query from current session and
+	 * update the given input information with the database and after sucessful
+	 * updation it returns boolean value.
+	 */
 	@Transactional
 	@Override
 	public boolean updatePassword(UpdatePassword updatePasswordinformation, long id) {
