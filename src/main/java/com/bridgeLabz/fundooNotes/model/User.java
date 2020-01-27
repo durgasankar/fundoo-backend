@@ -35,9 +35,10 @@ public class User {
 	private String mobileNumber;
 	private LocalDateTime createdDate;
 	private boolean isVerified;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")
-	private List<Note> note;
+	private List<Note> notes;
 
 	/**
 	 * Constructor by using fields for constructor injection
@@ -207,6 +208,14 @@ public class User {
 	 */
 	public void setVerified(boolean isVerified) {
 		this.isVerified = isVerified;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
 	}
 
 	/**
