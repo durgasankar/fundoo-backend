@@ -24,8 +24,8 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
 /**
  * By using the object reference of service class This class has the
  * functionality of getting connected with the user on the user specific request
- * it will redirect to the respective controller method and carryout
- * functionality of that perticular request.
+ * it will redirect to the respective controller method and carry out
+ * functionality of that particular request.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
@@ -63,8 +63,8 @@ public class UserController {
 	}
 
 	/**
-	 * This function takes geneerated token of the user as String input as input
-	 * parameter and checks the user varification @see {@link IUserService} and
+	 * This function takes generated token of the user as String input as input
+	 * parameter and checks the user verification @see {@link IUserService} and
 	 * accordingly returns the response.
 	 * 
 	 * @param newUserDTO as DTO class input parameter
@@ -86,7 +86,7 @@ public class UserController {
 	 * whether the user is verified or not and also checks whether he is registered
 	 * or not and works accordingly.
 	 * 
-	 * @param loginInformation
+	 * @param loginInformation as {@link LoginInformation}
 	 * @return ResponseEntity<Response>
 	 */
 	@PostMapping("login")
@@ -105,7 +105,7 @@ public class UserController {
 
 	/**
 	 * This function takes email id as string input parameter and checks the
-	 * existance of user from service class on validate credentials, it allows the
+	 * Existence of user from service class on validate credentials, it allows the
 	 * user to reset his password by his mail. Or else, it sends the mail to user
 	 * for verification of his account
 	 * 
@@ -122,9 +122,9 @@ public class UserController {
 	}
 
 	/**
-	 * This function takes update password credencials input parameter along with
+	 * This function takes update password credentials input parameter along with
 	 * valid token as String input parameter after verifying the credentials and
-	 * update the password and after successful updation it displays corresponding
+	 * update the password and after successful update it displays corresponding
 	 * message.
 	 * 
 	 * @param token           as String Input parameter

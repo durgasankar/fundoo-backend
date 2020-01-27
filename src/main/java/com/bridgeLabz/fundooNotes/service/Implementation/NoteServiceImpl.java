@@ -15,6 +15,15 @@ import com.bridgeLabz.fundooNotes.service.INoteService;
 import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
 
+/**
+ * This class implements {@link INoteService} interface which has the
+ * unimplemented functionality of creating a note, updating, deleting and all.
+ * All operations will be carried out if the user is a valid user.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-27
+ * @version 1.0
+ */
 @Service
 public class NoteServiceImpl implements INoteService {
 
@@ -27,11 +36,16 @@ public class NoteServiceImpl implements INoteService {
 	@Autowired
 	private JWTToken jwtToken;
 
+	/**
+	 * This function takes userNoteDto as input parameter and token as path
+	 * variable. Using token it authorize the user if the user is verified then all
+	 * data of noteDto is copied to the note class and creation dateTime and color
+	 * information is saved then the user note information is saved in the database.
+	 * After successful saving of note it return boolean value.
+	 */
 	@Override
 	public boolean createNote(NoteDTO noteDto, String token) {
-
-		long fetchedUserId = jwtToken.decodeToken(token);
-		User fetchedUser = userRepository.getUser(fetchedUserId);
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
 		if (fetchedUser != null && fetchedUser.isVerified()) {
 			Note newNote = new Note();
 			BeanUtils.copyProperties(noteDto, newNote);

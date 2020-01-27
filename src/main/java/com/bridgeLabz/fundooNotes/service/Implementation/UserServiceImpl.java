@@ -19,16 +19,16 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
 import com.bridgeLabz.fundooNotes.utility.Util;
 
 /**
- * This class implements {@link IUserService} inetrface which has the
+ * This class implements {@link IUserService} interface which has the
  * UnImplemented functionality of registering the user and verifying with the
- * identity and all implementions as carried here.
+ * identity and all implementations as carried here.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
  * @version 1.0
  * @see {@link BCryptPasswordEncoder} for creating encrypted password
  * @see {@link IUserRepository} for storing data with the database
- * @see {@link JWTToken} fore creatuion of token
+ * @see {@link JWTToken} fore creation of token
  * @see {@link EMailServiceProvider} for mail facilities
  */
 @Service
@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * This class takes the user inputed data and checks whether the user present in
 	 * the database or not if the user is not registered with the database then it
-	 * copies all the data from dto to normal user class and encodes the user
+	 * copies all the data from DTO to normal user class and encodes the user
 	 * password and save the user with the database and then by using
 	 * {@link JWTToken} and {@link EMailServiceProvider} it create a token and send
 	 * the user's mail id for verification.
@@ -74,10 +74,11 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * This function takes token in the form of String input paraameter and then
-	 * decode the token and fetch customer id and checks fo his valid candidancy
-	 * then from that id it gets the data from database @see{@link IUserRepository}
-	 * and after successful varification it returns boolean value
+	 * This function takes token in the form of String input parameter and then
+	 * decode the token and fetch customer id and checks of his valid candidate
+	 * credentials then from that id it gets the data from
+	 * database @see{@link IUserRepository} and after successful verification it
+	 * returns boolean value
 	 */
 	@Override
 	public boolean isVerifiedUserToken(String token) {
@@ -92,7 +93,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * this function takes login information from user on the basis of input user
 	 * email id it fetch all information of the user from database and checks for
-	 * varification details of the user. if the user is verified then it return all
+	 * Verification details of the user. if the user is verified then it return all
 	 * information of user else it proceed with the verification.
 	 */
 	@Override
@@ -111,7 +112,7 @@ public class UserServiceImpl implements IUserService {
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
 				return null;
 			}
-			// password dont match
+			// password don't match
 			throw new UserException("Opps...Invalid credentials!", 400);
 		}
 		// not registered
@@ -149,9 +150,9 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * This function takes Upadate password information along with valid token as
+	 * This function takes Update password information along with valid token as
 	 * user input parameter and encode the recent password given by the user and
-	 * after sucessful updation of password conformation message is sent to the
+	 * after successful update of password confirmation message is sent to the
 	 * user's mail id.
 	 */
 	@Override
@@ -170,8 +171,8 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	/**
-	 * This function takes Upadte password details as string input parameter and
-	 * prepare a body containt for sending mail to the concern user. along with user
+	 * This function takes Update password details as string input parameter and
+	 * prepare a body contains for sending mail to the concern user. along with user
 	 * valid details it sends login link to the user.
 	 * 
 	 * @param updatePasswordInformation as {@link UpdatePassword} input parameter

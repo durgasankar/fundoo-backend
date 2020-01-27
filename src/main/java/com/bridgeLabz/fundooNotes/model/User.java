@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Table(name = "userDetails")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
 	private long userId;
 	private String firstName;
@@ -210,10 +210,20 @@ public class User {
 		this.isVerified = isVerified;
 	}
 
+	/**
+	 * Getter method to get all notes of user
+	 * 
+	 * @return List<Note>
+	 */
 	public List<Note> getNotes() {
 		return notes;
 	}
 
+	/**
+	 * Setter method to set all notes of the user
+	 * 
+	 * @param notes as LIst<Note> input parameter
+	 */
 	public void setNotes(List<Note> notes) {
 		this.notes = notes;
 	}

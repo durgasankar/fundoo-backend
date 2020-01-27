@@ -10,9 +10,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
+import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.service.INoteService;
+import com.bridgeLabz.fundooNotes.service.Implementation.NoteServiceImpl;
 
+/**
+ * By using the object reference of service class This class has the
+ * functionality of getting connected with the user on the user specific request
+ * it will redirect to the respective controller method and carry out
+ * functionality of that particular request.and respectively note operation is
+ * carried out for valid user.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-01-27
+ * @version 1.0
+ * @see {@link INoteService} implementation of all note functionality
+ * @see {@link Response} if there is any type of response it will reflect out
+ */
 @RestController
 @RequestMapping("note")
 public class NoteController {
@@ -20,6 +35,15 @@ public class NoteController {
 	@Autowired
 	private INoteService noteService;
 
+	/**
+	 * This function takes {@link NoteDTO} as request body and token from
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and accordingly returns the response.
+	 * 
+	 * @param noteDto as {@link UserDTO}
+	 * @param token   as String input parameter
+	 * @return ResponseEntity<Response>
+	 */
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader String token) {
 		if (noteService.createNote(noteDto, token)) {

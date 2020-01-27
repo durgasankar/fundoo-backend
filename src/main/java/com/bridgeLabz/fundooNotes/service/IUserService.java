@@ -6,8 +6,9 @@ import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 
 /**
- * This inetrface has the UnImplemented functionality of registering the user
- * and verifying with the identity.
+ * This interface has the UnImplemented functionality of registering the user
+ * and verifying with the identity, login, forget password and update password
+ * functionality.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
@@ -16,7 +17,7 @@ import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 public interface IUserService {
 	/**
 	 * UnImplemented functionality of adding the user DTO class and registering with
-	 * the database and after sucessful addition returns boolean value.
+	 * the database and after successful addition returns boolean value.
 	 * 
 	 * @param userDto as {@link UserDTO} class
 	 * @return Boolean
@@ -25,7 +26,7 @@ public interface IUserService {
 
 	/**
 	 * UnImplemented functionality of verifying the user from the data fetched from
-	 * repository and after sucessful addition returns boolean value.
+	 * repository and after successful addition returns boolean value.
 	 * 
 	 * @param token as String input parameter
 	 * @return Boolean
@@ -44,7 +45,7 @@ public interface IUserService {
 
 	/**
 	 * UnImplemented functionality of verifying user which takes email id as String
-	 * input parameter checks the verification and existance status of user and
+	 * input parameter checks the verification and existence status of user and
 	 * returns boolean value
 	 * 
 	 * @param emailId as String input parameter
@@ -53,8 +54,8 @@ public interface IUserService {
 	public boolean isUserPresent(String emailId);
 
 	/**
-	 * UnImplemented functionality of upadting the password information when user
-	 * forgets his old password.and after updation confirmation mail should be sent
+	 * UnImplemented functionality of updating the password information when user
+	 * forgets his old password.and after update, confirmation mail should be sent
 	 * to the user.
 	 * 
 	 * @param updatePassword as {@link UpdatePassword} class
