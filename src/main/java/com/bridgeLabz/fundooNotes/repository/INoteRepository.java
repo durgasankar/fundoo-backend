@@ -18,5 +18,7 @@ public interface INoteRepository {
 	 * @return Note class
 	 */
 	public Note save(Note newNote);
+	
+
 
 }

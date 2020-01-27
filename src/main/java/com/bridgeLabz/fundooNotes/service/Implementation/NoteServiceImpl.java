@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
@@ -37,7 +38,7 @@ public class NoteServiceImpl implements INoteService {
 	private JWTToken jwtToken;
 
 	/**
-	 * This function takes userNoteDto as input parameter and token as path
+	 * This function takes {@link NoteDTO} as input parameter and token as path
 	 * variable. Using token it authorize the user if the user is verified then all
 	 * data of noteDto is copied to the note class and creation dateTime and color
 	 * information is saved then the user note information is saved in the database.
@@ -55,7 +56,16 @@ public class NoteServiceImpl implements INoteService {
 			noteRepository.save(newNote);
 			return true;
 		}
-		return false;
+		throw new UserException("Opps...User not found!", 400);
+	}
+
+	@Override
+	public boolean updateNote(NoteDTO noteDto, String token) {
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null && fetchedUser.isVerified()) {
+			
+		}
+		throw new UserException("Opps...User not found!", 400);
 	}
 
 }

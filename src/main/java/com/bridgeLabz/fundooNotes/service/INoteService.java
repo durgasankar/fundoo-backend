@@ -20,5 +20,7 @@ public interface INoteService {
 	 * @return Boolean
 	 */
 	public boolean createNote(NoteDTO noteDto, String token);
+	
+	public boolean updateNote(NoteDTO noteDto, String token);
 
 }
