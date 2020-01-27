@@ -2,6 +2,9 @@ package com.bridgeLabz.fundooNotes.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DateTimeInfo {
 	private LocalDateTime createdInfo;
 	private LocalDateTime updatedInfo;
