@@ -4,17 +4,19 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.model.DateTimeInfo;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.NoteDTO;
+import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
 import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.INoteService;
 import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
 
+@Service
 public class NoteServiceImpl implements INoteService {
 
 	@Autowired

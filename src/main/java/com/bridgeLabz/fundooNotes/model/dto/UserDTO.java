@@ -1,4 +1,4 @@
-package com.bridgeLabz.fundooNotes.model.DTO;
+package com.bridgeLabz.fundooNotes.model.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

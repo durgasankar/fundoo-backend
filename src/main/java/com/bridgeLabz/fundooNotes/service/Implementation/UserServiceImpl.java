@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
-import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
-import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
+import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
+import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.IUserService;
 import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
@@ -68,7 +68,6 @@ public class UserServiceImpl implements IUserService {
 
 		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(newUser.getUserId()));
-		System.out.println("token : " + jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyContaintLink);
 
 		return true;

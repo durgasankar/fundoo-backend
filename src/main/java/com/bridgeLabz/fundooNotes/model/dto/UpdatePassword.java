@@ -1,4 +1,4 @@
-package com.bridgeLabz.fundooNotes.model.DTO;
+package com.bridgeLabz.fundooNotes.model.dto;
 
 /**
  * Model class for Update password which has three parameters like email id,

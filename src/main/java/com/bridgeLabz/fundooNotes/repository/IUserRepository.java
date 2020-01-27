@@ -1,7 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
+import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 
 /**
  * Repository Interface which has the unimplemented functionality of all

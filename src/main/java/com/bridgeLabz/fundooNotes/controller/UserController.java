@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
-import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
-import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
+import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
+import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.response.UserDetailResponse;
 import com.bridgeLabz.fundooNotes.service.IUserService;

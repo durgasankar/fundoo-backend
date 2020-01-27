@@ -1,6 +1,6 @@
 package com.bridgeLabz.fundooNotes.response;
 
-import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
 
 /**
  * Response class for login which holds the token code of the user and status

@@ -1,9 +1,9 @@
 package com.bridgeLabz.fundooNotes.service;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.LoginInformation;
-import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
-import com.bridgeLabz.fundooNotes.model.DTO.UserDTO;
+import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
+import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 
 /**
  * This inetrface has the UnImplemented functionality of registering the user

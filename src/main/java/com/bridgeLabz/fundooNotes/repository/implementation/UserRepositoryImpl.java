@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.DTO.UpdatePassword;
+import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 
 /**
