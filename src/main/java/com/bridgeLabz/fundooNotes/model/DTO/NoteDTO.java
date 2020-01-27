@@ -1,5 +1,8 @@
 package com.bridgeLabz.fundooNotes.model.DTO;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class NoteDTO {
 	private String title;
 	private String description;
