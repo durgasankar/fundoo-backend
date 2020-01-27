@@ -6,7 +6,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bridgeLabz.fundooNotes.model.DateTimeInfo;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
@@ -26,8 +25,6 @@ public class NoteServiceImpl implements INoteService {
 	@Autowired
 	private EMailServiceProvider emailServiceProvider;
 	@Autowired
-	private DateTimeInfo dateTimeInfo;
-	@Autowired
 	private JWTToken jwtToken;
 
 	@Override
@@ -35,11 +32,10 @@ public class NoteServiceImpl implements INoteService {
 
 		long fetchedUserId = jwtToken.decodeToken(token);
 		User fetchedUser = userRepository.getUser(fetchedUserId);
-		if (fetchedUser != null) {
+		if (fetchedUser != null && fetchedUser.isVerified()) {
 			Note newNote = new Note();
 			BeanUtils.copyProperties(noteDto, newNote);
-			newNote.getDateTimeInfo().setCreatedInfo(LocalDateTime.now());
-			newNote.setDateTimeInfo(dateTimeInfo);
+			newNote.setCreatedDate(LocalDateTime.now());
 			newNote.setColor("white");
 			fetchedUser.getNotes().add(newNote);
 			noteRepository.save(newNote);

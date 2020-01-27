@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository.implementation;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class NoteRepositoryImpl implements INoteRepository {
 	private EntityManager entityManager;
 
 	@Override
+	@Transactional
 	public Note save(Note newNote) {
 		Session session = entityManager.unwrap(Session.class);
 		session.saveOrUpdate(newNote);

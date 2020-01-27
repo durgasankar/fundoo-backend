@@ -1,26 +1,30 @@
 package com.bridgeLabz.fundooNotes.model;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "note_details")
 public class Note {
-
-	// id,title,description,pinned,remainder,color,archive,created,updated,trash,dlt
-	// permantly,getallnotes
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "note_id")
 	private long id;
 	private String title;
 	private String description;
 	private boolean isArchived;
 	private boolean isPinned;
 	private boolean isTrashed;
-	private boolean isDeletedPermanently;
 	private String color;
-	private DateTimeInfo dateTimeInfo;
+	private LocalDateTime createdDate;
+	private LocalDateTime updatedDate;
+	private LocalDateTime remainderDate;
 
 	public long getId() {
 		return id;
@@ -70,14 +74,6 @@ public class Note {
 		this.isTrashed = isTrashed;
 	}
 
-	public boolean isDeletedPermanently() {
-		return isDeletedPermanently;
-	}
-
-	public void setDeletedPermanently(boolean isDeletedPermanently) {
-		this.isDeletedPermanently = isDeletedPermanently;
-	}
-
 	public String getColor() {
 		return color;
 	}
@@ -86,12 +82,28 @@ public class Note {
 		this.color = color;
 	}
 
-	public DateTimeInfo getDateTimeInfo() {
-		return dateTimeInfo;
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setDateTimeInfo(DateTimeInfo dateTimeInfo) {
-		this.dateTimeInfo = dateTimeInfo;
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public LocalDateTime getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(LocalDateTime updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public LocalDateTime getRemainderDate() {
+		return remainderDate;
+	}
+
+	public void setRemainderDate(LocalDateTime remainderDate) {
+		this.remainderDate = remainderDate;
 	}
 
 }
