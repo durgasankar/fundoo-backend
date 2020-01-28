@@ -82,12 +82,20 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", 502));
 	}
 
-	@PostMapping("pin/{id}")
+	@PostMapping("pin/{noteId}")
 	public ResponseEntity<Response> pinNote(@PathVariable long noteId, @RequestHeader("token") String token) {
 		if (noteService.pinNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Already pinned", 502));
 	}
+	@PostMapping("trash/{id}")
+	public ResponseEntity<Response> trashNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+		if (noteService.trashNote(noteId, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error pinning note", 400));
+	}
+	
 
 }
