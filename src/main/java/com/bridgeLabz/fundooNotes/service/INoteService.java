@@ -20,9 +20,15 @@ public interface INoteService {
 	 * @return Boolean
 	 */
 	public boolean createNote(NoteDTO noteDto, String token);
-	
+
 	public boolean updateNote(NoteDTO noteDto, long noteId, String token);
 
 	public boolean deleteNote(long noteId, String token);
+
+	public boolean archieveNote(long noteId, String token);
+
+	public boolean pinNote(long noteId, String token);
+
+	public boolean trashNote(long noteId, String token);
 
 }

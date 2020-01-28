@@ -52,8 +52,8 @@ public class NoteController {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 200));
 		}
-		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
-				.body(new Response("Opps... Error creating note", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps... Error creating note", 500));
 	}
 
 	@PutMapping("update")
@@ -62,17 +62,25 @@ public class NoteController {
 		if (noteService.updateNote(noteDto, noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error updating note", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error updating note", 502));
 
 	}
 
-	@PostMapping("delete/{id}")
-	public ResponseEntity<Response> deleteNote(@PathVariable long id, @RequestHeader("token") String token) {
-		if (noteService.deleteNote(id, token)) {
+	@PostMapping("delete/{noteId}")
+	public ResponseEntity<Response> deleteNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+		if (noteService.deleteNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error deleting note", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error deleting note", 502));
 
+	}
+
+	@PostMapping("archieve/{noteId}")
+	public ResponseEntity<Response> archieveNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+		if (noteService.archieveNote(noteId, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("note archieved", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived",502));
 	}
 
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgeLabz.fundooNotes.model.Note;
-import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 
 /**
@@ -53,19 +52,20 @@ public class NoteRepositoryImpl implements INoteRepository {
 	@Transactional
 	public Note getNote(long noteId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery(" FROM Note where noteId=:noteId");
-		query.setParameter("noteId", noteId);
+		Query query = session.createQuery(" FROM Note WHERE noteId=:id");
+		query.setParameter("id", noteId);
 		return (Note) query.uniqueResult();
 	}
 
 	@Override
 	@Transactional
-	public boolean deleteNote(long noteId) {
+	public boolean isDeletedNote(long noteId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery("DELETE FROM Note where noteId=:noteId");
+		Query query = session.createQuery("DELETE FROM Note WHERE noteId=:noteId");
 		query.setParameter("noteId", noteId);
 		query.executeUpdate();
 		return true;
 	}
+
 
 }

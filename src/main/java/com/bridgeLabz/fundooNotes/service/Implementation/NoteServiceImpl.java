@@ -89,7 +89,7 @@ public class NoteServiceImpl implements INoteService {
 			// found note
 			Note fetchedNote = noteRepository.getNote(noteId);
 			if (fetchedNote != null) {
-				noteRepository.deleteNote(noteId);
+				noteRepository.isDeletedNote(noteId);
 				return true;
 			}
 			// note not found
@@ -97,6 +97,43 @@ public class NoteServiceImpl implements INoteService {
 		}
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public boolean archieveNote(long noteId, String token) {
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// found note
+			Note fetchedNote = noteRepository.getNote(noteId);
+			if (fetchedNote != null) {
+				// fetched note is not archived
+				if (!fetchedNote.isArchived()) {
+					fetchedNote.setArchived(true);
+					fetchedNote.setUpdatedDate(LocalDateTime.now());
+					noteRepository.saveOrUpdate(fetchedNote);
+					return true;
+				}
+				// if archived
+				return false;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public boolean pinNote(long id, String token) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean trashNote(long noteId, String token) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
