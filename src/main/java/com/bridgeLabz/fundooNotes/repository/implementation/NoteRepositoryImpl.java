@@ -57,6 +57,12 @@ public class NoteRepositoryImpl implements INoteRepository {
 		return (Note) query.uniqueResult();
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and fetching operation is carried out
+	 * which returns boolean value after deleting the data from database.
+	 */
 	@Override
 	@Transactional
 	public boolean isDeletedNote(long noteId) {
@@ -66,6 +72,5 @@ public class NoteRepositoryImpl implements INoteRepository {
 		query.executeUpdate();
 		return true;
 	}
-
 
 }

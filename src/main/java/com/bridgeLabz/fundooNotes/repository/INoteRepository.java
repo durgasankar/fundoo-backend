@@ -27,9 +27,14 @@ public interface INoteRepository {
 	 * @return User class
 	 */
 	public Note getNote(long noteId);
-	
-	public boolean isDeletedNote(long noteId);
 
-	
+	/**
+	 * UnImplemented functionality of deleting the note from database by taking
+	 * noteId as input parameter.
+	 * 
+	 * @param noteId as Long input parameter
+	 * @return Boolean
+	 */
+	public boolean isDeletedNote(long noteId);
 
 }

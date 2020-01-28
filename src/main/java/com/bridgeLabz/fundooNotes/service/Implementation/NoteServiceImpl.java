@@ -61,6 +61,14 @@ public class NoteServiceImpl implements INoteService {
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
+	/**
+	 * This function takes {@link NoteDTO} as input parameter and token as path
+	 * variable. Using token it authorize the user if the user is verified then all
+	 * data of noteDto is copied to the note class and update time and date is saved
+	 * in the database. If user is not valid then {@link AuthorizationException}, if
+	 * note is not found in the database then {@link NoteException} is thrown. on
+	 * Successful update it display proper message to the user.
+	 */
 	@Override
 	public boolean updateNote(NoteDTO noteDto, long noteId, String token) {
 		// found authorized user
@@ -81,6 +89,14 @@ public class NoteServiceImpl implements INoteService {
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find for the available note on the
+	 * database if it found valid note then it delete permanently from database.If
+	 * user is not valid then {@link AuthorizationException}, if note is not found
+	 * in the database then {@link NoteException} is thrown. on Successful deletion
+	 * of note it display proper message to the user.
+	 */
 	@Override
 	public boolean deleteNote(long noteId, String token) {
 		// found authorized user
@@ -99,6 +115,15 @@ public class NoteServiceImpl implements INoteService {
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find for the available of note on
+	 * the database. if found valid note then it change the status of archived on
+	 * database. If user is not valid then {@link AuthorizationException}, if note
+	 * is not found in the database then {@link NoteException} is thrown. if the
+	 * note is archived already then it return false. on Successful change of
+	 * archived status of note it return boolean value.
+	 */
 	@Override
 	public boolean archieveNote(long noteId, String token) {
 		// found authorized user
@@ -124,6 +149,15 @@ public class NoteServiceImpl implements INoteService {
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find for the available of note on
+	 * the database. if found valid note then it change the status of pinned on
+	 * database. If user is not valid then {@link AuthorizationException}, if note
+	 * is not found in the database then {@link NoteException} is thrown. if the
+	 * note is pinned already then it return false. on Successful change of pinned
+	 * status of note it return boolean value.
+	 */
 	@Override
 	public boolean pinNote(long noteId, String token) {
 		// found authorized user
@@ -150,6 +184,15 @@ public class NoteServiceImpl implements INoteService {
 
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find for the available of note on
+	 * the database. if found valid note then it change the status of trashed on
+	 * database. If user is not valid then {@link AuthorizationException}, if note
+	 * is not found in the database then {@link NoteException} is thrown. if the
+	 * note is trashed already then it return false. on Successful change of trashed
+	 * status of note it return boolean value.
+	 */
 	@Override
 	public boolean trashNote(long noteId, String token) {
 		// found authorized user
