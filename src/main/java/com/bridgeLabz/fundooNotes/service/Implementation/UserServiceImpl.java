@@ -33,9 +33,10 @@ import com.bridgeLabz.fundooNotes.utility.Util;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-	public static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
-	public static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
+	private static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
+	private static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
 	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
+	private static final String USER_NOT_FOUND_EXCEPTION = "Opps...User not found!";
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -105,6 +106,7 @@ public class UserServiceImpl implements IUserService {
 			if (passwordEncoder.matches(loginInformation.getPassword(), fetchedUser.getPassword())) {
 				// valid user with verified
 				if (fetchedUser.isVerified()) {
+					// valid user with all valid properties
 					return fetchedUser;
 				}
 				String emailBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
@@ -116,7 +118,7 @@ public class UserServiceImpl implements IUserService {
 			throw new UserException("Opps...Invalid credentials!", 400);
 		}
 		// not registered
-		throw new UserException("Opps...User not found!", 400);
+		throw new UserException(USER_NOT_FOUND_EXCEPTION, 400);
 	}
 
 	/**
@@ -146,7 +148,7 @@ public class UserServiceImpl implements IUserService {
 			return false;
 		}
 		// user not found
-		throw new UserException("Opps...User not found!", 400);
+		throw new UserException(USER_NOT_FOUND_EXCEPTION, 400);
 	}
 
 	/**

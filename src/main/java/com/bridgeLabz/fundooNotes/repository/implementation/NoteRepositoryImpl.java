@@ -4,10 +4,12 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgeLabz.fundooNotes.model.Note;
+import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 
 /**
@@ -21,6 +23,7 @@ import com.bridgeLabz.fundooNotes.repository.INoteRepository;
  * @version 1.0
  */
 @Repository
+@SuppressWarnings("rawtypes")
 public class NoteRepositoryImpl implements INoteRepository {
 
 	@Autowired
@@ -34,10 +37,25 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 */
 	@Override
 	@Transactional
-	public Note save(Note newNote) {
+	public Note saveOrUpdate(Note newNote) {
 		Session session = entityManager.unwrap(Session.class);
 		session.saveOrUpdate(newNote);
 		return newNote;
+	}
+
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and fetching operation is carried out
+	 * which returns the unique {@link Note} from data from database.
+	 */
+	@Override
+	@Transactional
+	public Note getNote(long noteId) {
+		Session session = entityManager.unwrap(Session.class);
+		Query query = session.createQuery(" FROM Note where noteId=:noteId");
+		query.setParameter("noteId", noteId);
+		return (Note) query.uniqueResult();
 	}
 
 }

@@ -17,8 +17,15 @@ public interface INoteRepository {
 	 * @param newNote as Note input parameter
 	 * @return Note class
 	 */
-	public Note save(Note newNote);
-	
+	public Note saveOrUpdate(Note newNote);
 
+	/**
+	 * UnImplemented functionality of finding a note from the database by taking
+	 * userId as input parameter.
+	 * 
+	 * @param noteId as Long input parameter
+	 * @return User class
+	 */
+	public Note getNote(long noteId);
 
 }

@@ -37,6 +37,7 @@ public class UserRepositoryImpl implements IUserRepository {
 	 * returns the data which is saved in the database.
 	 */
 	@Override
+	@Transactional
 	public User save(User newUser) {
 		Session session = entityManager.unwrap(Session.class);
 		session.saveOrUpdate(newUser);
@@ -91,11 +92,11 @@ public class UserRepositoryImpl implements IUserRepository {
 
 	/**
 	 * This function takes {@link UpdatePassword} and id of the user as Long input
-	 * paramater and The EntityManager and the EntityManagerFactory provide an
+	 * Parameter and The EntityManager and the EntityManagerFactory provide an
 	 * unwrap method which returns the corresponding classes of the JPA
 	 * implementation and by using HQL customized query from current session and
-	 * update the given input information with the database and after sucessful
-	 * updation it returns boolean value.
+	 * update the given input information with the database and after successful
+	 * update it returns boolean value.
 	 */
 	@Transactional
 	@Override
