@@ -52,8 +52,7 @@ public class NoteController {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response("Opps... Error creating note", 500));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps... Error creating note", 500));
 	}
 
 	@PutMapping("update")
@@ -80,7 +79,15 @@ public class NoteController {
 		if (noteService.archieveNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note archieved", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived",502));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", 502));
+	}
+
+	@PostMapping("pin/{id}")
+	public ResponseEntity<Response> pinNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+		if (noteService.pinNote(noteId, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Already pinned", 502));
 	}
 
 }

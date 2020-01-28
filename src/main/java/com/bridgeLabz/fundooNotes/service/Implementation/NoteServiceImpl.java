@@ -30,7 +30,7 @@ public class NoteServiceImpl implements INoteService {
 
 	private static final String NOTE_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Note not found!";
 	private static final String USER_AUTHORIZATION_EXCEPTION_MESSAGE = "Opps...Authorization failed!";
-	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 401;
+	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 402;
 	private static final int NOTE_NOT_FOUND_EXCEPTION_STATUS = 300;
 	@Autowired
 	private IUserRepository userRepository;
@@ -114,7 +114,7 @@ public class NoteServiceImpl implements INoteService {
 					noteRepository.saveOrUpdate(fetchedNote);
 					return true;
 				}
-				// if archived
+				// if archived already
 				return false;
 			}
 			// note not found
@@ -125,9 +125,30 @@ public class NoteServiceImpl implements INoteService {
 	}
 
 	@Override
-	public boolean pinNote(long id, String token) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean pinNote(long noteId, String token) {
+
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// found note
+			Note fetchedNote = noteRepository.getNote(noteId);
+			if (fetchedNote != null) {
+				// fetched note is not pinned
+				if (!fetchedNote.isPinned()) {
+					fetchedNote.setPinned(true);
+					fetchedNote.setUpdatedDate(LocalDateTime.now());
+					noteRepository.saveOrUpdate(fetchedNote);
+					return true;
+				}
+				// if pinned already
+				return false;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+
 	}
 
 	@Override
