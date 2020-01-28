@@ -52,7 +52,7 @@ public class NoteController {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps... Error creating note", 500));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps... Error creating note", 400));
 	}
 
 	@PutMapping("update")
@@ -61,7 +61,7 @@ public class NoteController {
 		if (noteService.updateNote(noteDto, noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error updating note", 502));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error updating note", 400));
 
 	}
 
@@ -70,32 +70,33 @@ public class NoteController {
 		if (noteService.deleteNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error deleting note", 502));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error deleting note", 400));
 
 	}
 
-	@PostMapping("archieve/{noteId}")
-	public ResponseEntity<Response> archieveNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+	@PostMapping("archieve/{id}")
+	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
+			@RequestHeader("token") String token) {
 		if (noteService.archieveNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note archieved", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", 502));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", 400));
 	}
 
-	@PostMapping("pin/{noteId}")
-	public ResponseEntity<Response> pinNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+	@PostMapping("pin/{id}")
+	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.pinNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Already pinned", 502));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already pinned", 400));
 	}
-	@PostMapping("trash/{id}")
+
+	@PostMapping("trash/{noteId}")
 	public ResponseEntity<Response> trashNote(@PathVariable long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error pinning note", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already trashed", 400));
 	}
-	
 
 }

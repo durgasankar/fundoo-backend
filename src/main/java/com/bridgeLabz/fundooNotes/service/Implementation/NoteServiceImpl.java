@@ -126,7 +126,6 @@ public class NoteServiceImpl implements INoteService {
 
 	@Override
 	public boolean pinNote(long noteId, String token) {
-
 		// found authorized user
 		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
 		if (fetchedUser != null) {
@@ -153,8 +152,28 @@ public class NoteServiceImpl implements INoteService {
 
 	@Override
 	public boolean trashNote(long noteId, String token) {
-		// TODO Auto-generated method stub
-		return false;
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// found note
+			Note fetchedNote = noteRepository.getNote(noteId);
+			if (fetchedNote != null) {
+				// fetched note is not trashed
+				if (!fetchedNote.isTrashed()) {
+					fetchedNote.setTrashed(true);
+					fetchedNote.setUpdatedDate(LocalDateTime.now());
+					noteRepository.saveOrUpdate(fetchedNote);
+					return true;
+				}
+				// if trashed already
+				return false;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+
 	}
 
 }
