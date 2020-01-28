@@ -30,6 +30,8 @@ public class NoteServiceImpl implements INoteService {
 
 	private static final String NOTE_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Note not found!";
 	private static final String USER_AUTHORIZATION_EXCEPTION_MESSAGE = "Opps...Authorization failed!";
+	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 401;
+	private static final int NOTE_NOT_FOUND_EXCEPTION_STATUS = 300;
 	@Autowired
 	private IUserRepository userRepository;
 	@Autowired
@@ -56,7 +58,7 @@ public class NoteServiceImpl implements INoteService {
 			noteRepository.saveOrUpdate(newNote);
 			return true;
 		}
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, 401);
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
 	@Override
@@ -73,10 +75,28 @@ public class NoteServiceImpl implements INoteService {
 				return true;
 			}
 			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, 300);
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
 		}
 		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, 401);
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public boolean deleteNote(long noteId, String token) {
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// found note
+			Note fetchedNote = noteRepository.getNote(noteId);
+			if (fetchedNote != null) {
+				noteRepository.deleteNote(noteId);
+				return true;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
 }

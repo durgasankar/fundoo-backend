@@ -23,4 +23,6 @@ public interface INoteService {
 	
 	public boolean updateNote(NoteDTO noteDto, long noteId, String token);
 
+	public boolean deleteNote(long noteId, String token);
+
 }

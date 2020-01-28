@@ -27,5 +27,7 @@ public interface INoteRepository {
 	 * @return User class
 	 */
 	public Note getNote(long noteId);
+	
+	public boolean deleteNote(long noteId);
 
 }

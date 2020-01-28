@@ -3,6 +3,7 @@ package com.bridgeLabz.fundooNotes.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +48,7 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 */
 	@PostMapping("create")
-	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader String token) {
+	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 200));
 		}
@@ -57,11 +58,20 @@ public class NoteController {
 
 	@PutMapping("update")
 	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam long noteId,
-			@RequestHeader String token) {
+			@RequestHeader("token") String token) {
 		if (noteService.updateNote(noteDto, noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error updating note", 400));
+
+	}
+
+	@PostMapping("delete/{id}")
+	public ResponseEntity<Response> deleteNote(@PathVariable long id, @RequestHeader("token") String token) {
+		if (noteService.deleteNote(id, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response("Opps...Error deleting note", 400));
 
 	}
 
