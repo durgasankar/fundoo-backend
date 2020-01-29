@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.service.Implementation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,7 +182,6 @@ public class NoteServiceImpl implements INoteService {
 		}
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
-
 	}
 
 	/**
@@ -216,7 +216,22 @@ public class NoteServiceImpl implements INoteService {
 		}
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
-
+	}
+	@Override
+	public List<Note> getallNotes(String token) {
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// note found
+			List<Note> fetchedNotes = noteRepository.getAllNotes(fetchedUser.getUserId());
+			if (fetchedNotes != null) {
+				return fetchedNotes;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
 }

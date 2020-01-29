@@ -1,5 +1,8 @@
 package com.bridgeLabz.fundooNotes.service;
 
+import java.util.List;
+
+import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
 
 /**
@@ -72,5 +75,7 @@ public interface INoteService {
 	 * @return Boolean
 	 */
 	public boolean trashNote(long noteId, String token);
+
+	public List<Note> getallNotes(String token);
 
 }

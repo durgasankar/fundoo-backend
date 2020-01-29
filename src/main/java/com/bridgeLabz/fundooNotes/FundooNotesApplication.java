@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * main configuartion run class of spring boot application "FundooNotes"
+ * main configuration run class of spring boot application "FundooNotes"
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-23

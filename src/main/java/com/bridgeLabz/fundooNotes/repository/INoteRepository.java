@@ -1,5 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository;
 
+import java.util.List;
+
 import com.bridgeLabz.fundooNotes.model.Note;
 
 /**
@@ -36,5 +38,7 @@ public interface INoteRepository {
 	 * @return Boolean
 	 */
 	public boolean isDeletedNote(long noteId);
+	
+	public List<Note> getAllNotes(long userId);
 
 }

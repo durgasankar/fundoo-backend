@@ -1,5 +1,7 @@
 package com.bridgeLabz.fundooNotes.repository.implementation;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -71,6 +73,15 @@ public class NoteRepositoryImpl implements INoteRepository {
 		query.setParameter("id", noteId);
 		query.executeUpdate();
 		return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Note> getAllNotes(long userId) {
+		Session session = entityManager.unwrap(Session.class);
+		return session.createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
+				.setParameter("id", userId).getResultList();
+
 	}
 
 }
