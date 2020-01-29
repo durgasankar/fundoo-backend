@@ -242,8 +242,26 @@ public class NoteServiceImpl implements INoteService {
 		if (fetchedUser != null) {
 			// note found
 			List<Note> fetchedTrashedNotes = noteRepository.getAllTrashedNotes(fetchedUser.getUserId());
-			if (fetchedTrashedNotes != null) {
+			if (!fetchedTrashedNotes.isEmpty()) {
 				return fetchedTrashedNotes;
+			}
+			// empty list
+			return fetchedTrashedNotes;
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public List<Note> getAllPinnedNotes(String token) {
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// note found
+			List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(fetchedUser.getUserId());
+			System.out.println("Fetched pinned notes are : " + fetchedPinnedNotes);
+			if (fetchedPinnedNotes != null) {
+				return fetchedPinnedNotes;
 			}
 			// note not found
 			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
@@ -251,7 +269,5 @@ public class NoteServiceImpl implements INoteService {
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
-
-	
 
 }

@@ -16,7 +16,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.stereotype.Component;
 
 /**
- * This is the configuration mail class which uses smtp authentication and runs
+ * This is the configuration mail class which uses SMTP authentication and runs
  * the service in the port 587 and gives the functionality of sending the mail
  * to user.
  * 
@@ -32,7 +32,7 @@ public class EMailServiceProvider {
 
 	/**
 	 * This function takes following input parameter and configure the
-	 * authentication of smtp and port 587 and authorisation and send the mail to
+	 * authentication of SMTP and port 587 and authorization and send the mail to
 	 * the assigned user details.
 	 * 
 	 * @param toEmailId

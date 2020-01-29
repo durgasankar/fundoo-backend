@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
 @Service
 public class UserServiceImpl implements IUserService {
 	private static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
-	private static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
+	private static final String IP_ADDRESS = "http://192.168.1.41:";
 	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
 	private static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...User not found!";
 	private static final int USER_NOT_FOUND_EXCEPTION_STATUS = 404;
@@ -48,6 +49,8 @@ public class UserServiceImpl implements IUserService {
 	private JWTToken jwtToken;
 	@Autowired
 	private EMailServiceProvider emailServiceProvider;
+	@Autowired
+	private Environment environment;
 
 	/**
 	 * This class takes the user inputed data and checks whether the user present in
@@ -69,8 +72,8 @@ public class UserServiceImpl implements IUserService {
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 		newUser.setVerified(false);
 		userRepository.save(newUser);
-
-		String emailBodyContaintLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
+		String emailBodyContaintLink = Util.createLink(
+				IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(newUser.getUserId()));
 		emailServiceProvider.sendMail(newUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyContaintLink);
 
@@ -112,7 +115,8 @@ public class UserServiceImpl implements IUserService {
 					// valid user with all valid properties
 					return fetchedUser;
 				}
-				String emailBodyLink = Util.createLink(SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK,
+				String emailBodyLink = Util.createLink(
+						IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
 				return null;
@@ -138,14 +142,16 @@ public class UserServiceImpl implements IUserService {
 		if (fetchedUser != null) {
 			// user verified
 			if (fetchedUser.isVerified()) {
-				String emailBodyLink = Util.createLink(SERVER_ADDRESS + "/user/updatePassword",
+				String emailBodyLink = Util.createLink(
+						IP_ADDRESS + environment.getProperty("server.port") + "/user/updatePassword",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
 				return true;
 			}
 			// not verified
 			String emailRegistrationVerificationBodyLink = Util.createLink(
-					SERVER_ADDRESS + REGESTATION_VERIFICATION_LINK, jwtToken.createJwtToken(fetchedUser.getUserId()));
+					IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
+					jwtToken.createJwtToken(fetchedUser.getUserId()));
 			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT,
 					emailRegistrationVerificationBodyLink);
 			return false;
@@ -187,7 +193,7 @@ public class UserServiceImpl implements IUserService {
 		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + updatePasswordInformation.getEmailId()
 				+ "\nPassword : " + updatePasswordInformation.getPassword();
 		String loginString = "\nClick on the link to login\n";
-		String loginLink = SERVER_ADDRESS + "/user/login";
+		String loginLink = IP_ADDRESS + environment.getProperty("server.port") + "/user/login";
 		return passwordUpdateBodyContent + loginString + loginLink;
 	}
 

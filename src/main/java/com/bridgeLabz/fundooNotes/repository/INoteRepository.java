@@ -43,6 +43,6 @@ public interface INoteRepository {
 
 	public List<Note> getAllTrashedNotes(long userId);
 
-//	public List<Note> getAllPinnedNotes(long userId);
+	public List<Note> getAllPinnedNotes(long userId);
 
 }

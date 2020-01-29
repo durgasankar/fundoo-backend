@@ -90,6 +90,10 @@ public class NoteRepositoryImpl implements INoteRepository {
 				.setParameter("id", userId).getResultList();
 	}
 
-	
+	@Override
+	public List<Note> getAllPinnedNotes(long userId) {
+		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_pinned=true")
+				.setParameter("id", userId).getResultList();
+	}
 
 }
