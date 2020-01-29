@@ -50,11 +50,20 @@ public class NoteController {
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 200));
+			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 201));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps... Error creating note", 400));
 	}
 
+	/**
+	 * This function takes {@link NoteDTO} as request body and token from
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and after update accordingly it returns the response.
+	 * 
+	 * @param noteDto as {@link UserDTO}
+	 * @param token   as String input parameter
+	 * @return ResponseEntity<Response>
+	 */
 	@PutMapping("update")
 	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam long noteId,
 			@RequestHeader("token") String token) {
@@ -65,6 +74,16 @@ public class NoteController {
 
 	}
 
+	/**
+	 * This function takes noteId as {@link PathVariable} and token as
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and after deletion operation of note accordingly it
+	 * returns the response.
+	 * 
+	 * @param noteId as {@link PathVariable}
+	 * @param token  as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@PostMapping("delete/{noteId}")
 	public ResponseEntity<Response> deleteNote(@PathVariable long noteId, @RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
@@ -74,6 +93,16 @@ public class NoteController {
 
 	}
 
+	/**
+	 * This function takes noteId as {@link PathVariable} and token as
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and after archive operation of note accordingly it
+	 * returns the response.
+	 * 
+	 * @param noteId as {@link PathVariable}
+	 * @param token  as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@PostMapping("archieve/{id}")
 	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
 			@RequestHeader("token") String token) {
@@ -83,6 +112,16 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", 400));
 	}
 
+	/**
+	 * This function takes noteId as {@link PathVariable} and token as
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and after pin operation of note accordingly it
+	 * returns the response.
+	 * 
+	 * @param noteId as {@link PathVariable}
+	 * @param token  as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@PostMapping("pin/{id}")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.pinNote(noteId, token)) {
@@ -91,10 +130,20 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already pinned", 400));
 	}
 
-	@PostMapping("trash/{noteId}")
-	public ResponseEntity<Response> trashNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+	/**
+	 * This function takes noteId as {@link PathVariable} and token as
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and after trash operation of note accordingly it
+	 * returns the response.
+	 * 
+	 * @param noteId as {@link PathVariable}
+	 * @param token  as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
+	@PostMapping("trash/{id}")
+	public ResponseEntity<Response> trashNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("note trashed", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already trashed", 400));
 	}

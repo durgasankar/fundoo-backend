@@ -68,7 +68,7 @@ public class UserRepositoryImpl implements IUserRepository {
 	@Transactional
 	public User getUser(Long id) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery(" FROM User where id=:id");
+		Query query = session.createQuery(" FROM User WHERE id=:id");
 		query.setParameter("id", id);
 		return (User) query.uniqueResult();
 	}
@@ -83,7 +83,7 @@ public class UserRepositoryImpl implements IUserRepository {
 	@Transactional
 	public boolean isVerifiedUser(Long id) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery("UPDATE User set is_verified=:verified" + " where id=:id");
+		Query query = session.createQuery("UPDATE User set is_verified=:verified" + " WHERE id=:id");
 		query.setParameter("verified", true);
 		query.setParameter("id", id);
 		query.executeUpdate();
@@ -102,7 +102,7 @@ public class UserRepositoryImpl implements IUserRepository {
 	@Override
 	public boolean updatePassword(UpdatePassword updatePasswordinformation, long id) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery("update User set password=:updatedPassword" + " where id=:id");
+		Query query = session.createQuery("UPDATE User set password=:updatedPassword" + " WHERE id=:id");
 		query.setParameter("updatedPassword", updatePasswordinformation.getConfirmPassword());
 		query.setParameter("id", id);
 		query.executeUpdate();
