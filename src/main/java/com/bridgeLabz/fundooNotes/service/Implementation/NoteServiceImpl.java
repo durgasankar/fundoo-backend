@@ -31,7 +31,7 @@ public class NoteServiceImpl implements INoteService {
 
 	private static final String NOTE_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Note not found!";
 	private static final String USER_AUTHORIZATION_EXCEPTION_MESSAGE = "Opps...Authorization failed!";
-	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 402;
+	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 401;
 	private static final int NOTE_NOT_FOUND_EXCEPTION_STATUS = 300;
 	@Autowired
 	private IUserRepository userRepository;
@@ -217,6 +217,7 @@ public class NoteServiceImpl implements INoteService {
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
+
 	@Override
 	public List<Note> getallNotes(String token) {
 		// found authorized user
@@ -233,5 +234,24 @@ public class NoteServiceImpl implements INoteService {
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
+
+	@Override
+	public List<Note> getAllTrashedNotes(String token) {
+		// found authorized user
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			// note found
+			List<Note> fetchedTrashedNotes = noteRepository.getAllTrashedNotes(fetchedUser.getUserId());
+			if (fetchedTrashedNotes != null) {
+				return fetchedTrashedNotes;
+			}
+			// note not found
+			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		}
+		// authentication failed
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	
 
 }

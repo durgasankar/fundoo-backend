@@ -32,6 +32,8 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
  * @version 1.0
  * @see {@link IUserService} implementation of all the required functionality*
  * @see {@link Response} if there is any type of response it will reflect out
+ * @updated 2020-01-29
+ * @modified -> {@link HttpStatus} for all API
  */
 @RestController
 @RequestMapping("user")
@@ -55,10 +57,10 @@ public class UserController {
 		boolean resultStatus = userService.register(newUserDTO);
 		if (!resultStatus) {
 			return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
-					.body(new Response("user already exist", 400, resultStatus));
+					.body(new Response("user already exist", 208, resultStatus));
 		}
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new Response("registration successful", 200, resultStatus));
+				.body(new Response("registration successful", 201, resultStatus));
 
 	}
 
@@ -74,9 +76,9 @@ public class UserController {
 	public ResponseEntity<Response> verifyRegistration(@PathVariable("token") String token) {
 
 		if (userService.isVerifiedUserToken(token)) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("verified sucessfully.", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("verified sucessfully.", 200));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("Invalid verification attempt", 400));
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("Invalid verification attempt", 406));
 
 	}
 
@@ -95,7 +97,7 @@ public class UserController {
 
 		if (fetchedUserInformation != null) {
 			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
-			return ResponseEntity.status(HttpStatus.ACCEPTED).header(generatedToken, loginInformation.getEmailId())
+			return ResponseEntity.status(HttpStatus.OK).header(generatedToken, loginInformation.getEmailId())
 					.body(new UserDetailResponse("login successful", 200, loginInformation));
 		}
 		// not registered
@@ -116,9 +118,9 @@ public class UserController {
 	public ResponseEntity<Response> forgotPassword(@RequestParam("emailId") String emailId) {
 		boolean fetchedUserStatus = userService.isUserPresent(emailId);
 		if (fetchedUserStatus) {
-			return ResponseEntity.status(HttpStatus.FOUND).body(new Response("found user", 200));
+			return ResponseEntity.status(HttpStatus.FOUND).body(new Response("found user", 302));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("not verified", 400));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("not verified", 401));
 	}
 
 	/**
@@ -136,7 +138,7 @@ public class UserController {
 			@RequestBody() UpdatePassword upadatePassword) {
 		boolean updationStatus = userService.updatePassword(upadatePassword, token);
 		if (updationStatus) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("updated sucessfully", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("updated sucessfully", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("updation failed", 400));
 

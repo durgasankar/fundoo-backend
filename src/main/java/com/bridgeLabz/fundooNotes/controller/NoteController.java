@@ -152,10 +152,18 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already trashed", 400));
 	}
 
-	@GetMapping("fetchNote")
-	public ResponseEntity<Response> fetchNote(@RequestHeader("token") String token) {
+	@GetMapping("fetch/notes")
+	public ResponseEntity<Response> fetchNotes(@RequestHeader("token") String token) {
 		List<Note> notes = noteService.getallNotes(token);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("Notes are ", 200, notes));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("Notes are", 200, notes));
 	}
+
+	@GetMapping("fetch/trashedNotes")
+	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
+		List<Note> trashedNotes = noteService.getAllTrashedNotes(token);
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("Trashed notes are", 200, trashedNotes));
+	}
+
+	
 
 }

@@ -24,7 +24,7 @@ import com.bridgeLabz.fundooNotes.repository.INoteRepository;
  * @version 1.0
  */
 @Repository
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NoteRepositoryImpl implements INoteRepository {
 
 	@Autowired
@@ -65,6 +65,7 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 * customized query from current session and fetching operation is carried out
 	 * which returns boolean value after deleting the data from database.
 	 */
+
 	@Override
 	@Transactional
 	public boolean isDeletedNote(long noteId) {
@@ -75,7 +76,6 @@ public class NoteRepositoryImpl implements INoteRepository {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Note> getAllNotes(long userId) {
 		Session session = entityManager.unwrap(Session.class);
@@ -83,5 +83,13 @@ public class NoteRepositoryImpl implements INoteRepository {
 				.setParameter("id", userId).getResultList();
 
 	}
+
+	@Override
+	public List<Note> getAllTrashedNotes(long userId) {
+		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_trashed=true")
+				.setParameter("id", userId).getResultList();
+	}
+
+	
 
 }

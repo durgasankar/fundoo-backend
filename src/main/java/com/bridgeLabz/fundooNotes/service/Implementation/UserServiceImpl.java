@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
+import com.bridgeLabz.fundooNotes.exception.InvalidCredentialsException;
 import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
@@ -36,7 +38,8 @@ public class UserServiceImpl implements IUserService {
 	private static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
 	private static final String SERVER_ADDRESS = "http://192.168.1.41:8080";
 	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
-	private static final String USER_NOT_FOUND_EXCEPTION = "Opps...User not found!";
+	private static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...User not found!";
+	private static final int USER_NOT_FOUND_EXCEPTION_STATUS = 404;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -115,10 +118,10 @@ public class UserServiceImpl implements IUserService {
 				return null;
 			}
 			// password don't match
-			throw new UserException("Opps...Invalid credentials!", 400);
+			throw new InvalidCredentialsException("Opps...Invalid Credentials!", 400);
 		}
 		// not registered
-		throw new UserException(USER_NOT_FOUND_EXCEPTION, 400);
+		throw new UserException(USER_NOT_FOUND_EXCEPTION_MESSAGE, USER_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
 	/**
@@ -148,7 +151,7 @@ public class UserServiceImpl implements IUserService {
 			return false;
 		}
 		// user not found
-		throw new UserException(USER_NOT_FOUND_EXCEPTION, 400);
+		throw new UserException(USER_NOT_FOUND_EXCEPTION_MESSAGE, USER_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
 	/**
@@ -169,7 +172,7 @@ public class UserServiceImpl implements IUserService {
 					mailContaintAfterUpdatingPassword(updatePasswordInformation));
 			return true;
 		}
-		throw new UserException("Opps...password did not match!", 400);
+		throw new AuthorizationException("Opps...password did not match!", 401);
 	}
 
 	/**

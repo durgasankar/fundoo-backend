@@ -38,7 +38,11 @@ public interface INoteRepository {
 	 * @return Boolean
 	 */
 	public boolean isDeletedNote(long noteId);
-	
+
 	public List<Note> getAllNotes(long userId);
+
+	public List<Note> getAllTrashedNotes(long userId);
+
+//	public List<Note> getAllPinnedNotes(long userId);
 
 }
