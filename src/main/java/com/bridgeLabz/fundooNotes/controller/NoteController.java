@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,7 @@ public class NoteController {
 	private static final int BAD_REQUEST_RESPONSE_CODE = 400;
 	private static final int OK_RESPONSE_CODE = 200;
 	private static final int NOT_FOUND_RESPONSE_CODE = 404;
+	private static final int CREATED_RESPONSE_CODE = 201;
 	@Autowired
 	private INoteService noteService;
 
@@ -60,7 +62,7 @@ public class NoteController {
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 201));
+			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", CREATED_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps... Error creating note", BAD_REQUEST_RESPONSE_CODE));
@@ -97,7 +99,7 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/76/delete
 	 */
-	@PostMapping("{id}/delete")
+	@DeleteMapping("{id}/delete")
 	public ResponseEntity<Response> deleteNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", OK_RESPONSE_CODE));
@@ -159,7 +161,7 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/91/trash
 	 */
-	@PostMapping("{id}/trash")
+	@DeleteMapping("{id}/trash")
 	public ResponseEntity<Response> trashNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note trashed", OK_RESPONSE_CODE));
@@ -247,7 +249,7 @@ public class NoteController {
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
-	// URL-> http://localhost:8080/note/colour/92?color=black
+	// URL-> http://localhost:8080/note/88/colour?color=red
 	@PostMapping("{id}/colour")
 	public ResponseEntity<Response> changeColour(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestParam("color") String noteColour) {
@@ -255,11 +257,20 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.OK).body(new Response("color changed", OK_RESPONSE_CODE));
 	}
 
+	// URL -> http://localhost:8080/note/41/remainder/add
 	@PutMapping("{id}/remainder/add")
 	public ResponseEntity<Response> setRemainder(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestBody RemainderDTO remainderDTO) {
 		noteService.setRemainderforNote(token, noteId, remainderDTO);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("remainder set", OK_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("remainder created", CREATED_RESPONSE_CODE));
+	}
+
+	// URL -> http://localhost:8080/note/79/remainder/remove
+	@DeleteMapping("{id}/remainder/remove")
+	public ResponseEntity<Response> removeRemainder(@RequestHeader("token") String token,
+			@PathVariable("id") long noteId) {
+		noteService.removeRemainderforNote(token, noteId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("remainder removed", CREATED_RESPONSE_CODE));
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
 import com.bridgeLabz.fundooNotes.exception.NoteException;
+import com.bridgeLabz.fundooNotes.exception.RemainderException;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
@@ -281,9 +282,28 @@ public class NoteServiceImpl implements INoteService {
 		authenticatedUser(token);
 		// validate note
 		Note fetchedNote = verifiedNote(noteId);
-		fetchedNote.setUpdatedDate(LocalDateTime.now());
-		fetchedNote.setRemainderDate(remainderDTO.getRemainder());
-		noteRepository.saveOrUpdate(fetchedNote);
+		if (fetchedNote.getRemainderDate() == null) {
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			fetchedNote.setRemainderDate(remainderDTO.getRemainder());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return;
+		}
+		throw new RemainderException("Opps...Remainder already set!", 502);
+	}
+
+	@Override
+	public void removeRemainderforNote(String token, long noteId) {
+		// authenticate user
+		authenticatedUser(token);
+		// validate note
+		Note fetchedNote = verifiedNote(noteId);
+		if (fetchedNote.getRemainderDate() != null) {
+			fetchedNote.setRemainderDate(null);
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return;
+		}
+		throw new RemainderException("Opps...Remainder already removed!", 502);
 	}
 
 }

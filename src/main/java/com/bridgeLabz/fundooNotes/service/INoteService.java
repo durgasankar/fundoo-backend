@@ -117,4 +117,6 @@ public interface INoteService {
 
 	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO);
 
+	public void removeRemainderforNote(String token, long noteId);
+
 }

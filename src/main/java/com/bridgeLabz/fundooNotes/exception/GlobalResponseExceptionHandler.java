@@ -11,7 +11,8 @@ import com.bridgeLabz.fundooNotes.response.Response;
 /**
  * Global Exception Handler which handles all runtime exceptions like
  * {@link UserException}, {@link NoteException}, {@link AuthorizationException},
- * {@link InvalidCredentialsException} from service layer itself.
+ * {@link InvalidCredentialsException}, {@link RemainderException} from service
+ * layer itself.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-29
@@ -64,5 +65,16 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 			InvalidCredentialsException invalidCredentialsException) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response(invalidCredentialsException.getMessage(), 400));
+	}
+
+	/**
+	 * Handles all incoming {@link RemainderException} during Runtime.
+	 * 
+	 * @param invalidCredentialsException as {@link RemainderException}
+	 * @return ResponseEntity<Response>
+	 */
+	@ExceptionHandler(RemainderException.class)
+	public ResponseEntity<Response> handleAllRemainderException(RemainderException remainderException) {
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response(remainderException.getMessage(), 502));
 	}
 }
