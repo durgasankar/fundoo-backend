@@ -39,12 +39,40 @@ public interface INoteRepository {
 	 */
 	public boolean isDeletedNote(long noteId);
 
+	/**
+	 * UnImplemented functionality of fetching all user's note which are not trashed
+	 * and archived from database by taking noteId as input parameter.
+	 * 
+	 * @param userId as Long input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllNotes(long userId);
 
+	/**
+	 * UnImplemented functionality of fetching all user's note which are trashed
+	 * from database by taking noteId as input parameter.
+	 * 
+	 * @param userId as Long input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllTrashedNotes(long userId);
 
+	/**
+	 * UnImplemented functionality of fetching all user's note which are pinned from
+	 * database by taking noteId as input parameter.
+	 * 
+	 * @param userId as Long input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllPinnedNotes(long userId);
 
+	/**
+	 * UnImplemented functionality of fetching all user's note which are archived
+	 * from database by taking noteId as input parameter.
+	 * 
+	 * @param userId as Long input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllArchivedNotes(long userId);
 
 }

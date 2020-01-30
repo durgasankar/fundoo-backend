@@ -97,9 +97,7 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes {@link NoteDTO} as input parameter and token as path
 	 * variable. Using token it authorize the user if the user is verified then all
 	 * data of noteDto is copied to the note class and update time and date is saved
-	 * in the database. If user is not valid then {@link AuthorizationException}, if
-	 * note is not found in the database then {@link NoteException} is thrown. on
-	 * Successful update it display proper message to the user.
+	 * in the database. On Successful update it display proper message to the user.
 	 */
 	@Override
 	public boolean updateNote(NoteDTO noteDto, long noteId, String token) {
@@ -116,10 +114,8 @@ public class NoteServiceImpl implements INoteService {
 	/**
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available note on the
-	 * database if it found valid note then it delete permanently from database.If
-	 * user is not valid then {@link AuthorizationException}, if note is not found
-	 * in the database then {@link NoteException} is thrown. on Successful deletion
-	 * of note it display proper message to the user.
+	 * database if it found valid note then it delete permanently from database. On
+	 * Successful deletion of note it display proper message to the user.
 	 */
 	@Override
 	public boolean deleteNote(long noteId, String token) {
@@ -135,10 +131,8 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available of note on
 	 * the database. if found valid note then it change the status of archived on
-	 * database. If user is not valid then {@link AuthorizationException}, if note
-	 * is not found in the database then {@link NoteException} is thrown. if the
-	 * note is archived already then it return false. on Successful change of
-	 * archived status of note it return boolean value.
+	 * database. if the note is archived already then it return false. on Successful
+	 * change of archived status of note it return boolean value.
 	 */
 	@Override
 	public boolean archieveNote(long noteId, String token) {
@@ -161,10 +155,8 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available of note on
 	 * the database. if found valid note then it change the status of pinned on
-	 * database. If user is not valid then {@link AuthorizationException}, if note
-	 * is not found in the database then {@link NoteException} is thrown. if the
-	 * note is pinned already then it return false. on Successful change of pinned
-	 * status of note it return boolean value.
+	 * database. if the note is pinned already then it return false. on Successful
+	 * change of pinned status of note it return boolean value.
 	 */
 	@Override
 	public boolean pinNote(long noteId, String token) {
@@ -186,10 +178,8 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available of note on
 	 * the database. if found valid note then it change the status of trashed on
-	 * database. If user is not valid then {@link AuthorizationException}, if note
-	 * is not found in the database then {@link NoteException} is thrown. if the
-	 * note is trashed already then it return false. on Successful change of trashed
-	 * status of note it return boolean value.
+	 * database. if the note is trashed already then it return false. on Successful
+	 * change of trashed status of note it return boolean value.
 	 */
 	@Override
 	public boolean trashNote(long noteId, String token) {
@@ -207,6 +197,11 @@ public class NoteServiceImpl implements INoteService {
 		return false;
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find all the available notes which
+	 * are not trashed from database and return it.
+	 */
 	@Override
 	public List<Note> getallNotes(String token) {
 		// found authorized user
@@ -220,6 +215,11 @@ public class NoteServiceImpl implements INoteService {
 		return fetchedNotes;
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find all the available trashed
+	 * notes from database and return it.
+	 */
 	@Override
 	public List<Note> getAllTrashedNotes(String token) {
 		// note found of authenticated user
@@ -231,6 +231,11 @@ public class NoteServiceImpl implements INoteService {
 		return fetchedTrashedNotes;
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find all the available pinned notes
+	 * from database and return it.
+	 */
 	@Override
 	public List<Note> getAllPinnedNotes(String token) {
 		// note found of authenticated user
@@ -241,6 +246,12 @@ public class NoteServiceImpl implements INoteService {
 		// empty list
 		return fetchedPinnedNotes;
 	}
+
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find all the available archived
+	 * notes from database and return it.
+	 */
 	@Override
 	public List<Note> getAllArchivedNotes(String token) {
 		List<Note> fetchedArchivedNotes = noteRepository.getAllArchivedNotes(authenticatedUser(token).getUserId());

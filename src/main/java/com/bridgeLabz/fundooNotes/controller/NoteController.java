@@ -162,6 +162,14 @@ public class NoteController {
 				.body(new Response("Opps...Already trashed", BAD_REQUEST_RESPONSE_CODE));
 	}
 
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to get all notes which are not trashed.
+	 * 
+	 * @param token as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@GetMapping("fetch/notes")
 	public ResponseEntity<Response> fetchNotes(@RequestHeader("token") String token) {
 		List<Note> notes = noteService.getallNotes(token);
@@ -172,6 +180,14 @@ public class NoteController {
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of user {@link NoteServiceImpl} after verification allows user to
+	 * get all trashed notes.
+	 * 
+	 * @param token as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@GetMapping("fetch/notes/trashed")
 	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
 		List<Note> trashedNotes = noteService.getAllTrashedNotes(token);
@@ -183,6 +199,14 @@ public class NoteController {
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to get all notes which are pinned.
+	 * 
+	 * @param token as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@GetMapping("fetch/notes/pinned")
 	public ResponseEntity<Response> fetchPinnedNotes(@RequestHeader("token") String token) {
 		List<Note> pinnedNotes = noteService.getAllPinnedNotes(token);
@@ -193,7 +217,15 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
-	
+
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to get all notes which are archived.
+	 * 
+	 * @param token as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 */
 	@GetMapping("fetch/notes/archived")
 	public ResponseEntity<Response> fetchArchivedNotes(@RequestHeader("token") String token) {
 		List<Note> archivedNotes = noteService.getAllArchivedNotes(token);
@@ -204,6 +236,5 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
-
 
 }

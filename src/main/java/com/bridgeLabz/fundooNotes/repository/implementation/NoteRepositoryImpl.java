@@ -76,6 +76,12 @@ public class NoteRepositoryImpl implements INoteRepository {
 		return true;
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and if the notes are not trashed and
+	 * archived then simply fetch them.
+	 */
 	@Override
 	public List<Note> getAllNotes(long userId) {
 		Session session = entityManager.unwrap(Session.class);
@@ -84,17 +90,36 @@ public class NoteRepositoryImpl implements INoteRepository {
 
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and if the notes are not trashed then
+	 * simply fetch them.
+	 */
 	@Override
 	public List<Note> getAllTrashedNotes(long userId) {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_trashed=true")
 				.setParameter("id", userId).getResultList();
 	}
 
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and if the notes are not pinned then
+	 * simply fetch them.
+	 */
 	@Override
 	public List<Note> getAllPinnedNotes(long userId) {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_pinned=true")
 				.setParameter("id", userId).getResultList();
 	}
+
+	/**
+	 * The EntityManager and the EntityManagerFactory provide an unwrap method which
+	 * returns the corresponding classes of the JPA implementation and by using HQL
+	 * customized query from current session and if the notes are not archived then
+	 * simply fetch them.
+	 */
 	@Override
 	public List<Note> getAllArchivedNotes(long userId) {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_archived=true")

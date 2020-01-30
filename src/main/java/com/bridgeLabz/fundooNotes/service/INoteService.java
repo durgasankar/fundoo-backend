@@ -76,12 +76,40 @@ public interface INoteService {
 	 */
 	public boolean trashNote(long noteId, String token);
 
+	/**
+	 * UnImplemented functionality of getting all personalized notes of the user
+	 * after validating the authorization token based on note id.
+	 * 
+	 * @param token as String input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getallNotes(String token);
 
+	/**
+	 * UnImplemented functionality of getting all personalized trashed notes of the
+	 * user after validating the authorization token based on note id.
+	 * 
+	 * @param token as String input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllTrashedNotes(String token);
 
+	/**
+	 * UnImplemented functionality of getting all personalized pinned notes of the
+	 * user after validating the authorization token based on note id.
+	 * 
+	 * @param token as String input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllPinnedNotes(String token);
 
+	/**
+	 * UnImplemented functionality of getting all personalized archived notes of the
+	 * user after validating the authorization token based on note id.
+	 * 
+	 * @param token as String input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> getAllArchivedNotes(String token);
 
 }
