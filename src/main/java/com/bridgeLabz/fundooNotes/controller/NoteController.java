@@ -249,7 +249,17 @@ public class NoteController {
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
-	// URL-> http://localhost:8080/note/88/colour?color=red
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to change color of the personalized note.
+	 * 
+	 * @param token      as {@link RequestHeader}
+	 * @param noteId     as {@link PathVariable}
+	 * @param noteColour as {@link RequestParam}
+	 * @return ResponseEntity<Response>
+	 * @URL -> http://localhost:8080/note/88/colour?color=red
+	 */
 	@PostMapping("{id}/colour")
 	public ResponseEntity<Response> changeColour(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestParam("color") String noteColour) {
@@ -257,7 +267,17 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.OK).body(new Response("color changed", OK_RESPONSE_CODE));
 	}
 
-	// URL -> http://localhost:8080/note/41/remainder/add
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to add remainder to the personalized note.
+	 * 
+	 * @param token        as {@link RequestHeader}
+	 * @param noteId       as {@link PathVariable}
+	 * @param remainderDTO as {@link RequestBody RemainderDTO}
+	 * @return ResponseEntity<Response>
+	 * @URL -> http://localhost:8080/note/41/remainder/add
+	 */
 	@PutMapping("{id}/remainder/add")
 	public ResponseEntity<Response> setRemainder(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestBody RemainderDTO remainderDTO) {
@@ -265,7 +285,16 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("remainder created", CREATED_RESPONSE_CODE));
 	}
 
-	// URL -> http://localhost:8080/note/79/remainder/remove
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to remove the remainder from the personalized note.
+	 * 
+	 * @param token  as {@link RequestHeader}
+	 * @param noteId as {@link PathVariable}
+	 * @return ResponseEntity<Response>
+	 * @URL -> http://localhost:8080/note/79/remainder/remove
+	 */
 	@DeleteMapping("{id}/remainder/remove")
 	public ResponseEntity<Response> removeRemainder(@RequestHeader("token") String token,
 			@PathVariable("id") long noteId) {

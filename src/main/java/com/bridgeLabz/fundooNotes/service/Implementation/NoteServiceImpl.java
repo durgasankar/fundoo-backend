@@ -265,6 +265,12 @@ public class NoteServiceImpl implements INoteService {
 		return fetchedArchivedNotes;
 	}
 
+	/**
+	 * This function takes note id and authorized token and note color from the user
+	 * checks for user authentication if valid customer found then it set the color
+	 * of the valid fetched note and also record the update time then save to
+	 * database.
+	 */
 	@Override
 	public void changeColour(String token, long noteId, String noteColour) {
 		// authenticate user
@@ -276,6 +282,12 @@ public class NoteServiceImpl implements INoteService {
 		noteRepository.saveOrUpdate(fetchedNote);
 	}
 
+	/**
+	 * This function takes note id, {@link RemainderDTO} and authorized token from
+	 * the user checks for user authentication if valid customer found then it
+	 * checks whether remainder is set before or not if not set it set the remainder
+	 * for note and add the update time then add to database.
+	 */
 	@Override
 	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO) {
 		// authenticate user
@@ -291,6 +303,12 @@ public class NoteServiceImpl implements INoteService {
 		throw new RemainderException("Opps...Remainder already set!", 502);
 	}
 
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authentication if valid customer found then it checks whether remainder
+	 * is set before or not if set it removes remainder for note and add the update
+	 * time then add to database.
+	 */
 	@Override
 	public void removeRemainderforNote(String token, long noteId) {
 		// authenticate user

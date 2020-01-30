@@ -113,10 +113,33 @@ public interface INoteService {
 	 */
 	public List<Note> getAllArchivedNotes(String token);
 
+	/**
+	 * UnImplemented functionality of changing the color of personalized note after
+	 * after validating the authorization token based on note id.
+	 * 
+	 * @param token     as String input parameter
+	 * @param noteId    as long input parameter
+	 * @param noteColor as String input parameter
+	 */
 	public void changeColour(String token, long noteId, String noteColor);
 
+	/**
+	 * UnImplemented functionality of setting remainder for personalized note after
+	 * after validating the authorization token based on note id.
+	 * 
+	 * @param token        as String input parameter
+	 * @param noteId       as long input parameter
+	 * @param remainderDTO as {@link RemainderDTO}
+	 */
 	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO);
 
+	/**
+	 * UnImplemented functionality of removing remainder for personalized note after
+	 * after validating the authorization token based on note id.
+	 * 
+	 * @param token  as String input parameter
+	 * @param noteId as long input parameter
+	 */
 	public void removeRemainderforNote(String token, long noteId);
 
 }
