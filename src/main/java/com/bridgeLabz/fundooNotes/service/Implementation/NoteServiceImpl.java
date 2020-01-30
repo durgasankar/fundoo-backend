@@ -25,6 +25,8 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
  * @author Durgasankar Mishra
  * @created 2020-01-27
  * @version 1.0
+ * @updated 2020-01-30
+ * @modified -> optimized code for authentication of user and validation of note
  */
 @Service
 public class NoteServiceImpl implements INoteService {
@@ -41,6 +43,37 @@ public class NoteServiceImpl implements INoteService {
 	private JWTToken jwtToken;
 
 	/**
+	 * This function takes authentication token as String input parameter and decode
+	 * token an authenticate user after successful authentication it return the
+	 * verified user else throw {@link AuthorizationException}
+	 * 
+	 * @param token as String input parameter
+	 * @return {@link User}
+	 */
+	private User authenticatedUser(String token) {
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
+		if (fetchedUser != null) {
+			return fetchedUser;
+		}
+		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+	}
+
+	/**
+	 * This function takes note id as input parameter check for it's existence in
+	 * the database if found valid then return it else throw {@link NoteException}
+	 * 
+	 * @param noteId as Long input parameter
+	 * @return {@link Note}
+	 */
+	private Note verifiedNote(long noteId) {
+		Note fetchedNote = noteRepository.getNote(noteId);
+		if (fetchedNote != null) {
+			return fetchedNote;
+		}
+		throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+	}
+
+	/**
 	 * This function takes {@link NoteDTO} as input parameter and token as path
 	 * variable. Using token it authorize the user if the user is verified then all
 	 * data of noteDto is copied to the note class and creation dateTime and color
@@ -49,17 +82,15 @@ public class NoteServiceImpl implements INoteService {
 	 */
 	@Override
 	public boolean createNote(NoteDTO noteDto, String token) {
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			Note newNote = new Note();
-			BeanUtils.copyProperties(noteDto, newNote);
-			newNote.setCreatedDate(LocalDateTime.now());
-			newNote.setColor("white");
-			fetchedUser.getNotes().add(newNote);
-			noteRepository.saveOrUpdate(newNote);
-			return true;
-		}
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// found authorized user
+		User fetchedUser = authenticatedUser(token);
+		Note newNote = new Note();
+		BeanUtils.copyProperties(noteDto, newNote);
+		newNote.setCreatedDate(LocalDateTime.now());
+		newNote.setColor("white");
+		fetchedUser.getNotes().add(newNote);
+		noteRepository.saveOrUpdate(newNote);
+		return true;
 	}
 
 	/**
@@ -73,21 +104,13 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean updateNote(NoteDTO noteDto, long noteId, String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			Note fetchedNote = noteRepository.getNote(noteId);
-			// found note
-			if (fetchedNote != null) {
-				BeanUtils.copyProperties(noteDto, fetchedNote);
-				fetchedNote.setUpdatedDate(LocalDateTime.now());
-				noteRepository.saveOrUpdate(fetchedNote);
-				return true;
-			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
-		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		authenticatedUser(token);
+		// verified valid note
+		Note fetchedNote = verifiedNote(noteId);
+		BeanUtils.copyProperties(noteDto, fetchedNote);
+		fetchedNote.setUpdatedDate(LocalDateTime.now());
+		noteRepository.saveOrUpdate(fetchedNote);
+		return true;
 	}
 
 	/**
@@ -101,19 +124,11 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean deleteNote(long noteId, String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// found note
-			Note fetchedNote = noteRepository.getNote(noteId);
-			if (fetchedNote != null) {
-				noteRepository.isDeletedNote(noteId);
-				return true;
-			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
-		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		authenticatedUser(token);
+		// verified valid note
+		verifiedNote(noteId);
+		noteRepository.isDeletedNote(noteId);
+		return true;
 	}
 
 	/**
@@ -128,26 +143,18 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean archieveNote(long noteId, String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// found note
-			Note fetchedNote = noteRepository.getNote(noteId);
-			if (fetchedNote != null) {
-				// fetched note is not archived
-				if (!fetchedNote.isArchived()) {
-					fetchedNote.setArchived(true);
-					fetchedNote.setUpdatedDate(LocalDateTime.now());
-					noteRepository.saveOrUpdate(fetchedNote);
-					return true;
-				}
-				// if archived already
-				return false;
-			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		authenticatedUser(token);
+		// verified valid note
+		Note fetchedNote = verifiedNote(noteId);
+		// fetched note is not archived
+		if (!fetchedNote.isArchived()) {
+			fetchedNote.setArchived(true);
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return true;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// if archived already
+		return false;
 	}
 
 	/**
@@ -162,26 +169,17 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean pinNote(long noteId, String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// found note
-			Note fetchedNote = noteRepository.getNote(noteId);
-			if (fetchedNote != null) {
-				// fetched note is not pinned
-				if (!fetchedNote.isPinned()) {
-					fetchedNote.setPinned(true);
-					fetchedNote.setUpdatedDate(LocalDateTime.now());
-					noteRepository.saveOrUpdate(fetchedNote);
-					return true;
-				}
-				// if pinned already
-				return false;
-			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		authenticatedUser(token);
+		// verified valid note
+		Note fetchedNote = verifiedNote(noteId);
+		if (!fetchedNote.isPinned()) {
+			fetchedNote.setPinned(true);
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return true;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// if pinned already
+		return false;
 	}
 
 	/**
@@ -196,77 +194,51 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean trashNote(long noteId, String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// found note
-			Note fetchedNote = noteRepository.getNote(noteId);
-			if (fetchedNote != null) {
-				// fetched note is not trashed
-				if (!fetchedNote.isTrashed()) {
-					fetchedNote.setTrashed(true);
-					fetchedNote.setUpdatedDate(LocalDateTime.now());
-					noteRepository.saveOrUpdate(fetchedNote);
-					return true;
-				}
-				// if trashed already
-				return false;
-			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		authenticatedUser(token);
+		// verified valid note
+		Note fetchedNote = verifiedNote(noteId);
+		if (!fetchedNote.isTrashed()) {
+			fetchedNote.setTrashed(true);
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return true;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// if trashed already
+		return false;
 	}
 
 	@Override
 	public List<Note> getallNotes(String token) {
 		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// note found
-			List<Note> fetchedNotes = noteRepository.getAllNotes(fetchedUser.getUserId());
-			if (!fetchedNotes.isEmpty()) {
-				return fetchedNotes;
-			}
-			// empty list
+		User fetchedUser = authenticatedUser(token);
+		// note found
+		List<Note> fetchedNotes = noteRepository.getAllNotes(fetchedUser.getUserId());
+		if (!fetchedNotes.isEmpty()) {
 			return fetchedNotes;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// empty list
+		return fetchedNotes;
 	}
 
 	@Override
 	public List<Note> getAllTrashedNotes(String token) {
-		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// note found
-			List<Note> fetchedTrashedNotes = noteRepository.getAllTrashedNotes(fetchedUser.getUserId());
-			if (!fetchedTrashedNotes.isEmpty()) {
-				return fetchedTrashedNotes;
-			}
-			// empty list
+		// note found of authenticated user
+		List<Note> fetchedTrashedNotes = noteRepository.getAllTrashedNotes(authenticatedUser(token).getUserId());
+		if (!fetchedTrashedNotes.isEmpty()) {
 			return fetchedTrashedNotes;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// empty list
+		return fetchedTrashedNotes;
 	}
 
 	@Override
 	public List<Note> getAllPinnedNotes(String token) {
-		// found authorized user
-		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
-		if (fetchedUser != null) {
-			// note found
-			List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(fetchedUser.getUserId());
-			if (!fetchedPinnedNotes.isEmpty()) {
-				return fetchedPinnedNotes;
-			}
-			// empty list
+		// note found of authenticated user
+		List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(authenticatedUser(token).getUserId());
+		if (!fetchedPinnedNotes.isEmpty()) {
 			return fetchedPinnedNotes;
 		}
-		// authentication failed
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		// empty list
+		return fetchedPinnedNotes;
 	}
-
 }
