@@ -259,11 +259,11 @@ public class NoteServiceImpl implements INoteService {
 		if (fetchedUser != null) {
 			// note found
 			List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(fetchedUser.getUserId());
-			if (fetchedPinnedNotes != null) {
+			if (!fetchedPinnedNotes.isEmpty()) {
 				return fetchedPinnedNotes;
 			}
-			// note not found
-			throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+			// empty list
+			return fetchedPinnedNotes;
 		}
 		// authentication failed
 		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);

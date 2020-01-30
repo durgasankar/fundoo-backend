@@ -60,7 +60,8 @@ public class NoteController {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note created", 201));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps... Error creating note", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps... Error creating note", BAD_REQUEST_RESPONSE_CODE));
 	}
 
 	/**
@@ -78,7 +79,8 @@ public class NoteController {
 		if (noteService.updateNote(noteDto, noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error updating note", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Error updating note", BAD_REQUEST_RESPONSE_CODE));
 
 	}
 
@@ -97,7 +99,8 @@ public class NoteController {
 		if (noteService.deleteNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Error deleting note", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Error deleting note", BAD_REQUEST_RESPONSE_CODE));
 
 	}
 
@@ -117,7 +120,8 @@ public class NoteController {
 		if (noteService.archieveNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note archieved", OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already archived", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Already archived", BAD_REQUEST_RESPONSE_CODE));
 	}
 
 	/**
@@ -135,7 +139,8 @@ public class NoteController {
 		if (noteService.pinNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already pinned", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Already pinned", BAD_REQUEST_RESPONSE_CODE));
 	}
 
 	/**
@@ -153,7 +158,8 @@ public class NoteController {
 		if (noteService.trashNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note trashed", OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Opps...Already trashed", BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Already trashed", BAD_REQUEST_RESPONSE_CODE));
 	}
 
 	@GetMapping("fetch/notes")
@@ -162,22 +168,30 @@ public class NoteController {
 		if (!notes.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("Notes are", OK_RESPONSE_CODE, notes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
 	@GetMapping("fetch/notes/trashed")
 	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
 		List<Note> trashedNotes = noteService.getAllTrashedNotes(token);
 		if (!trashedNotes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("Trashed notes are", OK_RESPONSE_CODE, trashedNotes));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Trashed notes are", OK_RESPONSE_CODE, trashedNotes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
-	@GetMapping("fetch/pinnedNotes")
+	@GetMapping("fetch/notes/pinned")
 	public ResponseEntity<Response> fetchPinnedNotes(@RequestHeader("token") String token) {
 		List<Note> pinnedNotes = noteService.getAllPinnedNotes(token);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("Pinned notes are", OK_RESPONSE_CODE, pinnedNotes));
+		if (!pinnedNotes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Pinned notes are", OK_RESPONSE_CODE, pinnedNotes));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
 
 }
