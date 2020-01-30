@@ -262,4 +262,15 @@ public class NoteServiceImpl implements INoteService {
 		// empty list
 		return fetchedArchivedNotes;
 	}
+
+	@Override
+	public void changeColour(String token, long noteId, String noteColour) {
+		// authenticate user
+		authenticatedUser(token);
+		// validate note
+		Note fetchedNote = verifiedNote(noteId);
+		fetchedNote.setColor(noteColour);
+		fetchedNote.setUpdatedDate(LocalDateTime.now());
+		noteRepository.saveOrUpdate(fetchedNote);
+	}
 }

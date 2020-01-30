@@ -54,6 +54,7 @@ public class NoteController {
 	 * @param noteDto as {@link UserDTO}
 	 * @param token   as String input parameter
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/create
 	 */
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
@@ -72,16 +73,16 @@ public class NoteController {
 	 * @param noteDto as {@link UserDTO}
 	 * @param token   as String input parameter
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/update?id=85
 	 */
 	@PutMapping("update")
-	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam long noteId,
+	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam("id") long noteId,
 			@RequestHeader("token") String token) {
 		if (noteService.updateNote(noteDto, noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", OK_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Error updating note", BAD_REQUEST_RESPONSE_CODE));
-
 	}
 
 	/**
@@ -93,9 +94,10 @@ public class NoteController {
 	 * @param noteId as {@link PathVariable}
 	 * @param token  as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/76/delete
 	 */
-	@PostMapping("delete/{noteId}")
-	public ResponseEntity<Response> deleteNote(@PathVariable long noteId, @RequestHeader("token") String token) {
+	@PostMapping("{id}/delete")
+	public ResponseEntity<Response> deleteNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", OK_RESPONSE_CODE));
 		}
@@ -113,8 +115,9 @@ public class NoteController {
 	 * @param noteId as {@link PathVariable}
 	 * @param token  as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/77/archieve
 	 */
-	@PostMapping("archieve/{id}")
+	@PostMapping("{id}/archieve")
 	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
 			@RequestHeader("token") String token) {
 		if (noteService.archieveNote(noteId, token)) {
@@ -133,8 +136,9 @@ public class NoteController {
 	 * @param noteId as {@link PathVariable}
 	 * @param token  as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/78/pin
 	 */
-	@PostMapping("pin/{id}")
+	@PostMapping("{id}/pin")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.pinNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", OK_RESPONSE_CODE));
@@ -152,8 +156,9 @@ public class NoteController {
 	 * @param noteId as {@link PathVariable}
 	 * @param token  as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/91/trash
 	 */
-	@PostMapping("trash/{id}")
+	@PostMapping("{id}/trash")
 	public ResponseEntity<Response> trashNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note trashed", OK_RESPONSE_CODE));
@@ -169,6 +174,7 @@ public class NoteController {
 	 * 
 	 * @param token as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/fetch/notes
 	 */
 	@GetMapping("fetch/notes")
 	public ResponseEntity<Response> fetchNotes(@RequestHeader("token") String token) {
@@ -187,6 +193,7 @@ public class NoteController {
 	 * 
 	 * @param token as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/fetch/notes/trashed
 	 */
 	@GetMapping("fetch/notes/trashed")
 	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
@@ -206,6 +213,7 @@ public class NoteController {
 	 * 
 	 * @param token as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/fetch/notes/pinned
 	 */
 	@GetMapping("fetch/notes/pinned")
 	public ResponseEntity<Response> fetchPinnedNotes(@RequestHeader("token") String token) {
@@ -225,6 +233,7 @@ public class NoteController {
 	 * 
 	 * @param token as {@link RequestHeader}
 	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/fetch/notes/archived
 	 */
 	@GetMapping("fetch/notes/archived")
 	public ResponseEntity<Response> fetchArchivedNotes(@RequestHeader("token") String token) {
@@ -235,6 +244,14 @@ public class NoteController {
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
+	}
+
+	// URL-> http://localhost:8080/note/colour/92?color=black
+	@PostMapping("{id}/colour")
+	public ResponseEntity<Response> changeColour(@RequestHeader("token") String token, @PathVariable("id") long noteId,
+			@RequestParam("color") String noteColour) {
+		noteService.changeColour(token, noteId, noteColour);
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("color changed", OK_RESPONSE_CODE));
 	}
 
 }

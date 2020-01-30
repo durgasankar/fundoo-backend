@@ -112,4 +112,6 @@ public interface INoteService {
 	 */
 	public List<Note> getAllArchivedNotes(String token);
 
+	public void changeColour(String token, long noteId, String noteColor);
+
 }

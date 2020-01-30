@@ -54,7 +54,7 @@ public class NoteRepositoryImpl implements INoteRepository {
 	@Transactional
 	public Note getNote(long noteId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query query = session.createQuery(" FROM Note WHERE noteId=:id");
+		Query query = session.createQuery("FROM Note WHERE noteId=:id");
 		query.setParameter("id", noteId);
 		return (Note) query.uniqueResult();
 	}
@@ -84,8 +84,7 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 */
 	@Override
 	public List<Note> getAllNotes(long userId) {
-		Session session = entityManager.unwrap(Session.class);
-		return session.createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
+		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
 				.setParameter("id", userId).getResultList();
 
 	}
