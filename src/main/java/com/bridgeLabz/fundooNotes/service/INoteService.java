@@ -82,4 +82,6 @@ public interface INoteService {
 
 	public List<Note> getAllPinnedNotes(String token);
 
+	public List<Note> getAllArchivedNotes(String token);
+
 }

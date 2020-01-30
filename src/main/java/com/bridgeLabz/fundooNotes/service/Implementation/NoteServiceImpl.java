@@ -241,4 +241,14 @@ public class NoteServiceImpl implements INoteService {
 		// empty list
 		return fetchedPinnedNotes;
 	}
+	@Override
+	public List<Note> getAllArchivedNotes(String token) {
+		List<Note> fetchedArchivedNotes = noteRepository.getAllArchivedNotes(authenticatedUser(token).getUserId());
+		// note found of authenticated user
+		if (!fetchedArchivedNotes.isEmpty()) {
+			return fetchedArchivedNotes;
+		}
+		// empty list
+		return fetchedArchivedNotes;
+	}
 }

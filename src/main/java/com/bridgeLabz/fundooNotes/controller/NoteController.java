@@ -193,5 +193,17 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
 	}
+	
+	@GetMapping("fetch/notes/archived")
+	public ResponseEntity<Response> fetchArchivedNotes(@RequestHeader("token") String token) {
+		List<Note> archivedNotes = noteService.getAllArchivedNotes(token);
+		if (!archivedNotes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Archived notes are", OK_RESPONSE_CODE, archivedNotes));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(EMPTY_CONTENT_LIST_MESSAGE, NOT_FOUND_RESPONSE_CODE));
+	}
+
 
 }

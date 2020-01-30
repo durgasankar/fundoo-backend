@@ -95,5 +95,10 @@ public class NoteRepositoryImpl implements INoteRepository {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_pinned=true")
 				.setParameter("id", userId).getResultList();
 	}
+	@Override
+	public List<Note> getAllArchivedNotes(long userId) {
+		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_archived=true")
+				.setParameter("id", userId).getResultList();
+	}
 
 }

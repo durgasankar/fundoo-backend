@@ -45,4 +45,6 @@ public interface INoteRepository {
 
 	public List<Note> getAllPinnedNotes(long userId);
 
+	public List<Note> getAllArchivedNotes(long userId);
+
 }
