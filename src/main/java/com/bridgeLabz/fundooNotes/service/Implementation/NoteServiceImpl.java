@@ -259,7 +259,6 @@ public class NoteServiceImpl implements INoteService {
 		if (fetchedUser != null) {
 			// note found
 			List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(fetchedUser.getUserId());
-			System.out.println("Fetched pinned notes are : " + fetchedPinnedNotes);
 			if (fetchedPinnedNotes != null) {
 				return fetchedPinnedNotes;
 			}

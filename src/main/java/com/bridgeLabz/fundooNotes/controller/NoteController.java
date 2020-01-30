@@ -39,7 +39,7 @@ import com.bridgeLabz.fundooNotes.service.Implementation.NoteServiceImpl;
 @RequestMapping("note")
 public class NoteController {
 
-	private static final String EMPTY_CONTENT_LIST_MESSAGE = "Opps...Empty No Result Found!";
+	private static final String EMPTY_CONTENT_LIST_MESSAGE = "Opps...No Result Found!";
 	@Autowired
 	private INoteService noteService;
 
@@ -166,7 +166,7 @@ public class NoteController {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("Trashed notes are", 200, trashedNotes));
 		}
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(EMPTY_CONTENT_LIST_MESSAGE, 404));
 	}
 
 	@GetMapping("fetch/pinnedNotes")
