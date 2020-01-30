@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
+import com.bridgeLabz.fundooNotes.model.dto.RemainderDTO;
 
 /**
  * This interface has the UnImplemented functionality of registering note,
@@ -113,5 +114,7 @@ public interface INoteService {
 	public List<Note> getAllArchivedNotes(String token);
 
 	public void changeColour(String token, long noteId, String noteColor);
+
+	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO);
 
 }

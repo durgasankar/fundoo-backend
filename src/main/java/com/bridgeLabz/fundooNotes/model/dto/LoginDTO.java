@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
-public class LoginInformation {
+public class LoginDTO {
 	@Email
 	private String emailId;
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Enter a valid password")

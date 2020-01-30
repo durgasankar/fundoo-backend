@@ -12,6 +12,7 @@ import com.bridgeLabz.fundooNotes.exception.NoteException;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
+import com.bridgeLabz.fundooNotes.model.dto.RemainderDTO;
 import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.INoteService;
@@ -273,4 +274,16 @@ public class NoteServiceImpl implements INoteService {
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
 	}
+
+	@Override
+	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO) {
+		// authenticate user
+		authenticatedUser(token);
+		// validate note
+		Note fetchedNote = verifiedNote(noteId);
+		fetchedNote.setUpdatedDate(LocalDateTime.now());
+		fetchedNote.setRemainderDate(remainderDTO.getRemainder());
+		noteRepository.saveOrUpdate(fetchedNote);
+	}
+
 }

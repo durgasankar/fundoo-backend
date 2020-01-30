@@ -1,7 +1,7 @@
 package com.bridgeLabz.fundooNotes.service;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.LoginDTO;
 import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 
@@ -37,11 +37,11 @@ public interface IUserService {
 	 * UnImplemented functionality of login which takes userDto as class type input
 	 * parameter and returns complete user class after verifying the user.
 	 * 
-	 * @param loginInformation as {@link LoginInformation}
+	 * @param loginInformation as {@link LoginDTO}
 	 * @return User class
 	 */
 
-	public User login(LoginInformation loginInformation);
+	public User login(LoginDTO loginInformation);
 
 	/**
 	 * UnImplemented functionality of verifying user which takes email id as String

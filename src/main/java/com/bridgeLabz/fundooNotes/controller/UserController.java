@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.LoginDTO;
 import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
@@ -88,11 +88,11 @@ public class UserController {
 	 * whether the user is verified or not and also checks whether he is registered
 	 * or not and works accordingly.
 	 * 
-	 * @param loginInformation as {@link LoginInformation}
+	 * @param loginInformation as {@link LoginDTO}
 	 * @return ResponseEntity<Response>
 	 */
 	@PostMapping("login")
-	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginInformation loginInformation) {
+	public ResponseEntity<UserDetailResponse> loginUser(@RequestBody LoginDTO loginInformation) {
 		User fetchedUserInformation = userService.login(loginInformation);
 
 		if (fetchedUserInformation != null) {

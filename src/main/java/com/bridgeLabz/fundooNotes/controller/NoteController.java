@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
+import com.bridgeLabz.fundooNotes.model.dto.RemainderDTO;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.service.INoteService;
@@ -252,6 +253,13 @@ public class NoteController {
 			@RequestParam("color") String noteColour) {
 		noteService.changeColour(token, noteId, noteColour);
 		return ResponseEntity.status(HttpStatus.OK).body(new Response("color changed", OK_RESPONSE_CODE));
+	}
+
+	@PutMapping("{id}/remainder/add")
+	public ResponseEntity<Response> setRemainder(@RequestHeader("token") String token, @PathVariable("id") long noteId,
+			@RequestBody RemainderDTO remainderDTO) {
+		noteService.setRemainderforNote(token, noteId, remainderDTO);
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("remainder set", OK_RESPONSE_CODE));
 	}
 
 }

@@ -12,7 +12,7 @@ import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
 import com.bridgeLabz.fundooNotes.exception.InvalidCredentialsException;
 import com.bridgeLabz.fundooNotes.exception.UserException;
 import com.bridgeLabz.fundooNotes.model.User;
-import com.bridgeLabz.fundooNotes.model.dto.LoginInformation;
+import com.bridgeLabz.fundooNotes.model.dto.LoginDTO;
 import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
@@ -104,7 +104,7 @@ public class UserServiceImpl implements IUserService {
 	 * information of user else it proceed with the verification.
 	 */
 	@Override
-	public User login(LoginInformation loginInformation) {
+	public User login(LoginDTO loginInformation) {
 		User fetchedUser = userRepository.getUser(loginInformation.getEmailId());
 		// valid user
 		if (fetchedUser != null) {
