@@ -157,11 +157,11 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available of note on
 	 * the database. if found valid note then it change the status of pinned on
-	 * database. if the note is pinned already then it return false. on Successful
-	 * change of pinned status of note it return boolean value.
+	 * database. on Successful change of pinned status of note it return boolean
+	 * value. if already pinned it will unPin it on second request.
 	 */
 	@Override
-	public boolean pinNote(long noteId, String token) {
+	public boolean isPinnedNote(long noteId, String token) {
 		// found authorized user
 		authenticatedUser(token);
 		// verified valid note
@@ -173,6 +173,9 @@ public class NoteServiceImpl implements INoteService {
 			return true;
 		}
 		// if pinned already
+		fetchedNote.setPinned(false);
+		fetchedNote.setUpdatedDate(LocalDateTime.now());
+		noteRepository.saveOrUpdate(fetchedNote);
 		return false;
 	}
 

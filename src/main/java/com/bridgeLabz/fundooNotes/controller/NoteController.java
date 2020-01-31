@@ -141,11 +141,10 @@ public class NoteController {
 	 */
 	@PatchMapping("{id}/pin")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
-		if (noteService.pinNote(noteId, token)) {
+		if (noteService.isPinnedNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", Util.OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response("Opps...Already pinned", Util.BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("note unpinned", Util.OK_RESPONSE_CODE));
 	}
 
 	/**

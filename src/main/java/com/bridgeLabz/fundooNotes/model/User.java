@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.bridgeLabz.fundooNotes.annotation.ValidEmailId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * User model which has the parameters which will hit with the database
@@ -39,6 +40,7 @@ public class User {
 	private LocalDateTime createdDate;
 	private boolean isVerified;
 
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userId")
 	private List<Note> notes;

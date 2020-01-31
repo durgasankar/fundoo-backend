@@ -65,7 +65,7 @@ public interface INoteService {
 	 * @param token  as String input parameter
 	 * @return Boolean
 	 */
-	public boolean pinNote(long noteId, String token);
+	public boolean isPinnedNote(long noteId, String token);
 
 	/**
 	 * UnImplemented functionality of adding a personalized note of a customer to
