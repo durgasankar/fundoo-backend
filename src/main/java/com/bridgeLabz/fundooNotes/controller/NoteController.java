@@ -304,6 +304,15 @@ public class NoteController {
 	}
 
 	// URL -> http://localhost:8080/note/search?title=string
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of client {@link NoteServiceImpl} after verification allows user
+	 * to search for notes based on title.
+	 * 
+	 * @param token     as {@link RequestHeader}
+	 * @param noteTitle as as {@link RequestParam}
+	 * @return ResponseEntity<Response>
+	 */
 	@GetMapping("search")
 	public ResponseEntity<Response> searchByTitle(@RequestHeader("token") String token,
 			@RequestParam("title") String noteTitle) {

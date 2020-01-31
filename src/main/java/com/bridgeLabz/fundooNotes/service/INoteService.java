@@ -142,6 +142,14 @@ public interface INoteService {
 	 */
 	public void removeRemainderforNote(String token, long noteId);
 
+	/**
+	 * UnImplemented functionality of searching personalized notes of a valid user
+	 * based on the note title.
+	 * 
+	 * @param token     as String input parameter
+	 * @param noteTitle as String input parameter
+	 * @return List<Note>
+	 */
 	public List<Note> searchByTitle(String token, String noteTitle);
 
 }

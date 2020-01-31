@@ -324,6 +324,11 @@ public class NoteServiceImpl implements INoteService {
 		throw new RemainderException("Opps...Remainder already removed!", 502);
 	}
 
+	/**
+	 * This function takes note title and authorized token from the user checks for
+	 * user authorization if valid customer then find all the available notes which
+	 * are not trashed of the authenticated user based on title String.
+	 */
 	@Override
 	public List<Note> searchByTitle(String token, String noteTitle) {
 		// authenticate user

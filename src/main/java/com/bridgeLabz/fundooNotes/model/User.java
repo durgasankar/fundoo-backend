@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.bridgeLabz.fundooNotes.annotation.ValidEmailId;
+
 /**
  * User model which has the parameters which will hit with the database
  * 
@@ -30,6 +32,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	@Column(unique = true)
+	@ValidEmailId
 	private String emailId;
 	private String password;
 	private String mobileNumber;
