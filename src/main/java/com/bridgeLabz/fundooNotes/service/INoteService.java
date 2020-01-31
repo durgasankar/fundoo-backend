@@ -142,4 +142,6 @@ public interface INoteService {
 	 */
 	public void removeRemainderforNote(String token, long noteId);
 
+	public List<Note> searchByTitle(String token, String noteTitle);
+
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -120,7 +121,7 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/77/archieve
 	 */
-	@PostMapping("{id}/archieve")
+	@PatchMapping("{id}/archieve")
 	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
 			@RequestHeader("token") String token) {
 		if (noteService.archieveNote(noteId, token)) {
@@ -141,7 +142,7 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/78/pin
 	 */
-	@PostMapping("{id}/pin")
+	@PatchMapping("{id}/pin")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.pinNote(noteId, token)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", OK_RESPONSE_CODE));
@@ -300,6 +301,14 @@ public class NoteController {
 			@PathVariable("id") long noteId) {
 		noteService.removeRemainderforNote(token, noteId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("remainder removed", CREATED_RESPONSE_CODE));
+	}
+
+	// URL -> http://localhost:8080/note/search?title=string
+	@GetMapping("search")
+	public ResponseEntity<Response> searchByTitle(@RequestHeader("token") String token,
+			@RequestParam("title") String noteTitle) {
+		List<Note> fetchedNotes = noteService.searchByTitle(token, noteTitle);
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("found note", OK_RESPONSE_CODE, fetchedNotes));
 	}
 
 }

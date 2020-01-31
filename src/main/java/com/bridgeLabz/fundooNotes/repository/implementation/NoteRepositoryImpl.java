@@ -84,7 +84,8 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 */
 	@Override
 	public List<Note> getAllNotes(long userId) {
-		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
+		return entityManager.unwrap(Session.class)
+				.createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
 				.setParameter("id", userId).getResultList();
 
 	}
@@ -123,6 +124,12 @@ public class NoteRepositoryImpl implements INoteRepository {
 	public List<Note> getAllArchivedNotes(long userId) {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_archived=true")
 				.setParameter("id", userId).getResultList();
+	}
+
+	@Override
+	public List<Note> searchBy(String noteTitle) {
+		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE title=:title and is_trashed=false")
+				.setParameter("title", noteTitle).getResultList();
 	}
 
 }

@@ -75,4 +75,13 @@ public interface INoteRepository {
 	 */
 	public List<Note> getAllArchivedNotes(long userId);
 
+	/**
+	 * UnImplemented functionality of fetching all non trashed user's note which are
+	 * not trashed.
+	 * 
+	 * @param noteTitle as String input parameter
+	 * @return List<Note>
+	 */
+	public List<Note> searchBy(String noteTitle);
+
 }

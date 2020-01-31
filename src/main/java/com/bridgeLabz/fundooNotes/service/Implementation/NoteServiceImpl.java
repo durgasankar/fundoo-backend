@@ -324,4 +324,17 @@ public class NoteServiceImpl implements INoteService {
 		throw new RemainderException("Opps...Remainder already removed!", 502);
 	}
 
+	@Override
+	public List<Note> searchByTitle(String token, String noteTitle) {
+		// authenticate user
+		authenticatedUser(token);
+		List<Note> fetchedNotes = noteRepository.searchBy(noteTitle);
+		// notes are not empty
+		if (!fetchedNotes.isEmpty()) {
+			return fetchedNotes;
+		}
+		// if empty
+		throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+	}
+
 }
