@@ -27,9 +27,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class EMailServiceProvider {
 
-	private static final String SENDER_EMAIL_ID = System.getenv("email");
-	private static final String SENDER_PASSWORD = System.getenv("password");
-
 	/**
 	 * This function takes following input parameter and configure the
 	 * authentication of SMTP and port 587 and authorization and send the mail to
@@ -39,21 +36,21 @@ public class EMailServiceProvider {
 	 * @param subject
 	 * @param bodyContaint
 	 */
-	public void sendMail(String toEmailId, String subject, String bodyContaint) {
+	public boolean sendMail(String toEmailId, String subject, String bodyContaint) {
 		Authenticator authentication = new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(SENDER_EMAIL_ID, SENDER_PASSWORD);
+				return new PasswordAuthentication(Util.SENDER_EMAIL_ID, Util.SENDER_PASSWORD);
 			}
 		};
 		Session session = Session.getInstance(mailPropertiesSettings(), authentication);
 		try {
 			Transport.send(mimeMessageConfiguration(session, toEmailId, subject, bodyContaint));
+			return true;
 		} catch (MessagingException e) {
 			e.printStackTrace();
-
 		}
-
+		return false;
 	}
 
 	/**
@@ -74,8 +71,8 @@ public class EMailServiceProvider {
 			mimeMessage.addHeader("Content-type", "text/HTML; charset=UTF-8");
 			mimeMessage.addHeader("format", "flowed");
 			mimeMessage.addHeader("Content-Transfer-Encoding", "8bit");
-			mimeMessage.setFrom(new InternetAddress(SENDER_EMAIL_ID, "Fundoo Note Application"));
-			mimeMessage.setReplyTo(InternetAddress.parse(SENDER_EMAIL_ID, false));
+			mimeMessage.setFrom(new InternetAddress(Util.SENDER_EMAIL_ID, "Fundoo Note Application"));
+			mimeMessage.setReplyTo(InternetAddress.parse(Util.SENDER_EMAIL_ID, false));
 			mimeMessage.setSubject(subject, "UTF-8");
 			mimeMessage.setText(body, "UTF-8");
 			mimeMessage.setSentDate(new Date());
@@ -87,7 +84,7 @@ public class EMailServiceProvider {
 	}
 
 	/**
-	 * This class sets the properties configuaration of the mail and return it.
+	 * This class sets the properties configuration of the mail and return it.
 	 * 
 	 * @return Properties class
 	 */

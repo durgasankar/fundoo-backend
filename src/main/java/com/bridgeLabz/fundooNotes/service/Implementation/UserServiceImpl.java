@@ -36,11 +36,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
  */
 @Service
 public class UserServiceImpl implements IUserService {
-	private static final String REGISTRATION_EMAIL_SUBJECT = "Registration Verification Link";
-	private static final String IP_ADDRESS = "http://192.168.1.41:";
-	private static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
-	private static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...User not found!";
-	private static final int USER_NOT_FOUND_EXCEPTION_STATUS = 404;
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
@@ -73,11 +69,13 @@ public class UserServiceImpl implements IUserService {
 		newUser.setVerified(false);
 		userRepository.save(newUser);
 		String emailBodyContaintLink = Util.createLink(
-				IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
+				Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(newUser.getUserId()));
-		emailServiceProvider.sendMail(newUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyContaintLink);
-
-		return true;
+		if (emailServiceProvider.sendMail(newUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
+				emailBodyContaintLink)) {
+			return true;
+		}
+		throw new UserException("Opps...Internal server error!", 500);
 	}
 
 	/**
@@ -116,16 +114,16 @@ public class UserServiceImpl implements IUserService {
 					return fetchedUser;
 				}
 				String emailBodyLink = Util.createLink(
-						IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
+						Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
-				emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
+				emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
 				return null;
 			}
 			// password don't match
 			throw new InvalidCredentialsException("Opps...Invalid Credentials!", 400);
 		}
 		// not registered
-		throw new UserException(USER_NOT_FOUND_EXCEPTION_MESSAGE, USER_NOT_FOUND_EXCEPTION_STATUS);
+		throw new UserException(Util.USER_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 	/**
@@ -143,21 +141,21 @@ public class UserServiceImpl implements IUserService {
 			// user verified
 			if (fetchedUser.isVerified()) {
 				String emailBodyLink = Util.createLink(
-						IP_ADDRESS + environment.getProperty("server.port") + "/user/updatePassword",
+						Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/updatePassword",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
 				return true;
 			}
 			// not verified
 			String emailRegistrationVerificationBodyLink = Util.createLink(
-					IP_ADDRESS + environment.getProperty("server.port") + REGESTATION_VERIFICATION_LINK,
+					Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
-			emailServiceProvider.sendMail(fetchedUser.getEmailId(), REGISTRATION_EMAIL_SUBJECT,
+			emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
 					emailRegistrationVerificationBodyLink);
 			return false;
 		}
 		// user not found
-		throw new UserException(USER_NOT_FOUND_EXCEPTION_MESSAGE, USER_NOT_FOUND_EXCEPTION_STATUS);
+		throw new UserException(Util.USER_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 	/**
@@ -193,7 +191,7 @@ public class UserServiceImpl implements IUserService {
 		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + updatePasswordInformation.getEmailId()
 				+ "\nPassword : " + updatePasswordInformation.getPassword();
 		String loginString = "\nClick on the link to login\n";
-		String loginLink = IP_ADDRESS + environment.getProperty("server.port") + "/user/login";
+		String loginLink = Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/login";
 		return passwordUpdateBodyContent + loginString + loginLink;
 	}
 
