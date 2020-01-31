@@ -26,9 +26,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	 * @param userException as {@link UserException}
 	 * @return ResponseEntity<Response>
 	 */
-	@ExceptionHandler(UserException.class)
-	public ResponseEntity<Response> handleAllUserException(UserException userException) {
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response(userException.getMessage(), 502));
+	@ExceptionHandler({ UserException.class, RemainderException.class })
+	public ResponseEntity<Response> handleAllUserException(Exception exception) {
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response(exception.getMessage(), 502));
 	}
 
 	/**
@@ -65,16 +65,5 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 			InvalidCredentialsException invalidCredentialsException) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response(invalidCredentialsException.getMessage(), 400));
-	}
-
-	/**
-	 * Handles all incoming {@link RemainderException} during Runtime.
-	 * 
-	 * @param invalidCredentialsException as {@link RemainderException}
-	 * @return ResponseEntity<Response>
-	 */
-	@ExceptionHandler(RemainderException.class)
-	public ResponseEntity<Response> handleAllRemainderException(RemainderException remainderException) {
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new Response(remainderException.getMessage(), 502));
 	}
 }
