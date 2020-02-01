@@ -1,9 +1,12 @@
 package com.bridgeLabz.fundooNotes.model.dto;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.stereotype.Component;
+
+import com.bridgeLabz.fundooNotes.annotation.ValidEmailId;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Model class for login which has two parameters like email id and password.
@@ -14,9 +17,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LoginDTO {
-	@Email
+	@ValidEmailId
+	@ApiModelProperty(notes = "valid email id for login", name = "email id")
 	private String emailId;
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Enter a valid password")
+	@ApiModelProperty("password for login")
 	private String password;
 
 	/**
