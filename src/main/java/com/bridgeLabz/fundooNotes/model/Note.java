@@ -1,12 +1,17 @@
 package com.bridgeLabz.fundooNotes.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
@@ -20,7 +25,7 @@ import javax.persistence.Table;
 @Table(name = "note_details")
 public class Note {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "note_id")
 	private long noteId;
 	private String title;
@@ -33,12 +38,19 @@ public class Note {
 	private LocalDateTime updatedDate;
 	private LocalDateTime remainderDate;
 
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "Note_Label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "label_id")})
+//	 @JsonBackReference
+//	 @JsonIgnore
+	private List<Label> labelsList;
+
 	/**
 	 * Getter method for id
 	 * 
 	 * @return Long
 	 */
-	public long getId() {
+	public long getNoteId() {
 		return noteId;
 	}
 
@@ -47,7 +59,7 @@ public class Note {
 	 * 
 	 * @param noteId as Long input parameter
 	 */
-	public void setId(long noteId) {
+	public void setNoteId(long noteId) {
 		this.noteId = noteId;
 	}
 
@@ -211,6 +223,14 @@ public class Note {
 	 */
 	public void setRemainderDate(LocalDateTime remainderDate) {
 		this.remainderDate = remainderDate;
+	}
+
+	public List<Label> getLabelsList() {
+		return labelsList;
+	}
+
+	public void setLabelsList(List<Label> labelsList) {
+		this.labelsList = labelsList;
 	}
 
 	/**

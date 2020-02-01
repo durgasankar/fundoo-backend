@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "user_details")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private long userId;
 	private String firstName;
@@ -42,8 +42,12 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "user_id")
 	private List<Note> notes;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private List<Label> labels;
 
 	/**
 	 * Constructor by using fields for constructor injection
@@ -231,6 +235,14 @@ public class User {
 	 */
 	public void setNotes(List<Note> notes) {
 		this.notes = notes;
+	}
+
+	public List<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 
 	/**

@@ -18,6 +18,7 @@ import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.INoteService;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
+import com.bridgeLabz.fundooNotes.utility.Util;
 
 /**
  * This class implements {@link INoteService} interface which has the
@@ -33,10 +34,6 @@ import com.bridgeLabz.fundooNotes.utility.JWTToken;
 @Service
 public class NoteServiceImpl implements INoteService {
 
-	private static final String NOTE_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Note not found!";
-	private static final String USER_AUTHORIZATION_EXCEPTION_MESSAGE = "Opps...Authorization failed!";
-	private static final int USER_AUTHENTICATION_EXCEPTION_STATUS = 401;
-	private static final int NOTE_NOT_FOUND_EXCEPTION_STATUS = 300;
 	@Autowired
 	private IUserRepository userRepository;
 	@Autowired
@@ -57,7 +54,8 @@ public class NoteServiceImpl implements INoteService {
 		if (fetchedUser != null) {
 			return fetchedUser;
 		}
-		throw new AuthorizationException(USER_AUTHORIZATION_EXCEPTION_MESSAGE, USER_AUTHENTICATION_EXCEPTION_STATUS);
+		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
+				Util.USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
 	/**
@@ -72,7 +70,7 @@ public class NoteServiceImpl implements INoteService {
 		if (fetchedNote != null) {
 			return fetchedNote;
 		}
-		throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
 	/**
@@ -342,7 +340,7 @@ public class NoteServiceImpl implements INoteService {
 			return fetchedNotes;
 		}
 		// if empty
-		throw new NoteException(NOTE_NOT_FOUND_EXCEPTION_MESSAGE, NOTE_NOT_FOUND_EXCEPTION_STATUS);
+		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
 }

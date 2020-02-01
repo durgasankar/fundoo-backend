@@ -63,7 +63,7 @@ public class NoteController {
 	@ApiOperation(value = "create a new note for valid user")
 	@ApiResponses(value = { 
 			@ApiResponse(code = 201, message = "note created"),
-			@ApiResponse(code = 400, message = "Opps... Error creating note") })
+			@ApiResponse(code = 400, message = "Opps... Error creating note")})
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
