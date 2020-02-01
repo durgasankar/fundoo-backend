@@ -4,6 +4,8 @@ import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
 
 public interface ILabelService {
 	
-	public boolean createLabel(String token, LabelDTO labelDTO);
+	public void createLabel(String token, LabelDTO labelDTO);
+	
+	public boolean createLabelAndMap(String token, long noteId,LabelDTO labelDTO);
 	
 }

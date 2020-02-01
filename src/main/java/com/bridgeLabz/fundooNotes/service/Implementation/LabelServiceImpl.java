@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
+import com.bridgeLabz.fundooNotes.exception.LabelException;
+import com.bridgeLabz.fundooNotes.exception.NoteException;
 import com.bridgeLabz.fundooNotes.model.Label;
+import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
 import com.bridgeLabz.fundooNotes.repository.ILabelRepository;
+import com.bridgeLabz.fundooNotes.repository.INoteRepository;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.service.ILabelService;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
@@ -23,6 +27,8 @@ public class LabelServiceImpl implements ILabelService {
 	private IUserRepository userRepository;
 	@Autowired
 	private ILabelRepository labelRepository;
+	@Autowired
+	private INoteRepository noteRepository;
 	@Autowired
 	private JWTToken jwtToken;
 
@@ -43,19 +49,49 @@ public class LabelServiceImpl implements ILabelService {
 				Util.USER_AUTHENTICATION_EXCEPTION_STATUS);
 	}
 
+	/**
+	 * This function takes note id as input parameter check for it's existence in
+	 * the database if found valid then return it else throw {@link NoteException}
+	 * 
+	 * @param noteId as Long input parameter
+	 * @return {@link Note}
+	 */
+	private Note verifiedNote(long noteId) {
+		Note fetchedNote = noteRepository.getNote(noteId);
+		if (fetchedNote != null) {
+			return fetchedNote;
+		}
+		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
+	}
+
 	@Override
-	public boolean createLabel(String token, LabelDTO labelDTO) {
+	public void createLabel(String token, LabelDTO labelDTO) {
 		User fetchedUser = authenticatedUser(token);
 		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());
 		if (fetchedLabel != null) {
-			return false;
+			throw new LabelException("Opps...Label already exist!", 208);
 		}
 		Label newLabel = new Label();
 		BeanUtils.copyProperties(labelDTO, newLabel);
 		newLabel.setCreatedDate(LocalDateTime.now());
 		fetchedUser.getLabels().add(newLabel);
 		labelRepository.save(newLabel);
-		return true;
+	}
+
+	@Override
+	public boolean createLabelAndMap(String token, long noteId, LabelDTO labelDTO) {
+		User fetchedUser = authenticatedUser(token);
+		Note fetchedNote = verifiedNote(noteId);
+		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());		
+		if (fetchedLabel != null) {
+			fetchedUser.getLabels().add(fetchedLabel);
+			fetchedNote.getLabelsList().add(fetchedLabel);
+			userRepository.save(fetchedUser);
+			noteRepository.saveOrUpdate(fetchedNote);
+			return true;
+		}
+		
+		throw new LabelException("Opps...Label already exist!", 208);
 	}
 
 }

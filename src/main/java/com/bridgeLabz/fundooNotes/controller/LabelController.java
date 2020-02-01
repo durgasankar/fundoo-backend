@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
@@ -22,9 +23,14 @@ public class LabelController {
 
 	@PostMapping("create")
 	public ResponseEntity<Response> createLabel(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO) {
-		if (labelService.createLabel(token, labelDTO)) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 200, labelDTO));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("label creation failed", 400));
+		labelService.createLabel(token, labelDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 200, labelDTO));
+	}
+
+	@PostMapping("create/map")
+	public ResponseEntity<Response> createandMap(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO,
+			@RequestParam("id") long noteId) {
+		labelService.createLabelAndMap(token, noteId, labelDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 200, labelDTO));
 	}
 }

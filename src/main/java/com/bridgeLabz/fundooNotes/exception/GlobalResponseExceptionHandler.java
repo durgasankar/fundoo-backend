@@ -33,15 +33,15 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	}
 
 	/**
-	 * Handles all incoming {@link NoteException}, {@link LabelException} during
-	 * Runtime.
+	 * Handles all incoming {@link NoteException} during Runtime.
 	 * 
 	 * @param noteException as {@link NoteException}
 	 * @return ResponseEntity<Response>
 	 */
-	@ExceptionHandler({ NoteException.class, LabelException.class })
-	public ResponseEntity<Response> handleAllNoteException(Exception exception) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(exception.getMessage(), 404));
+	@ExceptionHandler(NoteException.class)
+	public ResponseEntity<Response> handleAllNoteException(NoteException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(exception.getMessage(), exception.getStatus()));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	@ExceptionHandler(AuthorizationException.class)
 	public ResponseEntity<Response> handleAllNoteException(AuthorizationException authorizationException) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new Response(authorizationException.getMessage(), 401));
+				.body(new Response(authorizationException.getMessage(), authorizationException.getStatus()));
 	}
 
 	/**
@@ -66,7 +66,19 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	public ResponseEntity<Response> handelAllInvalidCredentialException(
 			InvalidCredentialsException invalidCredentialsException) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response(invalidCredentialsException.getMessage(), 400));
+				.body(new Response(invalidCredentialsException.getMessage(), invalidCredentialsException.getStatus()));
+	}
+
+	/**
+	 * Handles all incoming {@link NoteException} during Runtime.
+	 * 
+	 * @param noteException as {@link NoteException}
+	 * @return ResponseEntity<Response>
+	 */
+	@ExceptionHandler(LabelException.class)
+	public ResponseEntity<Response> handleAllLabelException(LabelException labelException) {
+		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
+				.body(new Response(labelException.getMessage(), labelException.getStatus()));
 	}
 
 }
