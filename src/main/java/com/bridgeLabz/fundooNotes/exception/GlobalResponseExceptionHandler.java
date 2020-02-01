@@ -11,8 +11,8 @@ import com.bridgeLabz.fundooNotes.response.Response;
 /**
  * Global Exception Handler which handles all runtime exceptions like
  * {@link UserException}, {@link NoteException}, {@link AuthorizationException},
- * {@link InvalidCredentialsException}, {@link RemainderException} from service
- * layer itself.
+ * {@link InvalidCredentialsException}, {@link RemainderException},
+ * {@link LabelException} from service layer itself.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-29
@@ -21,7 +21,8 @@ import com.bridgeLabz.fundooNotes.response.Response;
 @RestControllerAdvice
 public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	/**
-	 * Handles all incoming {@link UserException} during Runtime.
+	 * Handles all incoming {@link UserException}, {@link RemainderException} during
+	 * Runtime.
 	 * 
 	 * @param userException as {@link UserException}
 	 * @return ResponseEntity<Response>
@@ -32,14 +33,15 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	}
 
 	/**
-	 * Handles all incoming {@link NoteException} during Runtime.
+	 * Handles all incoming {@link NoteException}, {@link LabelException} during
+	 * Runtime.
 	 * 
 	 * @param noteException as {@link NoteException}
 	 * @return ResponseEntity<Response>
 	 */
-	@ExceptionHandler(NoteException.class)
-	public ResponseEntity<Response> handleAllNoteException(NoteException noteException) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(noteException.getMessage(), 404));
+	@ExceptionHandler({ NoteException.class, LabelException.class })
+	public ResponseEntity<Response> handleAllNoteException(Exception exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(exception.getMessage(), 404));
 	}
 
 	/**
@@ -66,4 +68,5 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response(invalidCredentialsException.getMessage(), 400));
 	}
+
 }

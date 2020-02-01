@@ -21,11 +21,6 @@ public class Label {
 	private String labelName;
 	private LocalDateTime createdDate;
 
-//	@ManyToMany()
-//	@JoinTable(name = "label_note", joinColumns = { @JoinColumn(name = "label_id") }, inverseJoinColumns = {
-//			@JoinColumn(name = "note_id") })
-//	private List<Note> notesList;
-	
 	@ManyToMany(mappedBy = "labelsList")
 	private List<Note> noteList;
 

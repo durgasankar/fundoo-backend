@@ -39,7 +39,7 @@ public class Note {
 	private LocalDateTime remainderDate;
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "Note_Label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
+	@JoinTable(name = "note_label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "label_id")})
 //	 @JsonBackReference
 //	 @JsonIgnore

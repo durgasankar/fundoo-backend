@@ -22,7 +22,7 @@ public class LabelServiceImpl implements ILabelService {
 	@Autowired
 	private IUserRepository userRepository;
 	@Autowired
-	private ILabelRepository labelJpa;
+	private ILabelRepository labelRepository;
 	@Autowired
 	private JWTToken jwtToken;
 
@@ -46,7 +46,7 @@ public class LabelServiceImpl implements ILabelService {
 	@Override
 	public boolean createLabel(String token, LabelDTO labelDTO) {
 		User fetchedUser = authenticatedUser(token);
-		Label fetchedLabel = labelJpa.findOneBylabelName(labelDTO.getLabelName());
+		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());
 		if (fetchedLabel != null) {
 			return false;
 		}
@@ -54,7 +54,7 @@ public class LabelServiceImpl implements ILabelService {
 		BeanUtils.copyProperties(labelDTO, newLabel);
 		newLabel.setCreatedDate(LocalDateTime.now());
 		fetchedUser.getLabels().add(newLabel);
-		labelJpa.save(newLabel);
+		labelRepository.save(newLabel);
 		return true;
 	}
 
