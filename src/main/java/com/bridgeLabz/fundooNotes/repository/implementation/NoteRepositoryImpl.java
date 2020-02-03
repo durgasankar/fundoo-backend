@@ -82,6 +82,7 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 * customized query from current session and if the notes are not trashed and
 	 * archived then simply fetch them.
 	 */
+	@Transactional
 	@Override
 	public List<Note> getAllNotes(long userId) {
 		return entityManager.unwrap(Session.class)

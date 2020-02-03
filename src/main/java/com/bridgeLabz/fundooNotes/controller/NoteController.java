@@ -61,9 +61,8 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/create
 	 */
 	@ApiOperation(value = "create a new note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "note created"),
-			@ApiResponse(code = 400, message = "Opps... Error creating note")})
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "note created"),
+			@ApiResponse(code = 400, message = "Opps... Error creating note") })
 	@PostMapping("create")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
@@ -85,11 +84,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/update?id=85
 	 */
 	@ApiOperation(value = "update an existing note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "note updated"),	
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note updated"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 400, message = "Opps...Error updating note!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@PutMapping("update")
 	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam("id") long noteId,
 			@RequestHeader("token") String token) {
@@ -112,11 +110,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/76/delete
 	 */
 	@ApiOperation(value = "delete an existing note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "note deleted"),	
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note deleted"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 400, message = "Opps...Error deleting note!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@DeleteMapping("{id}/delete")
 	public ResponseEntity<Response> deleteNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
@@ -139,11 +136,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/77/archieve
 	 */
 	@ApiOperation(value = "archive an existing note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "note archived"),	
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note archived"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 400, message = "Opps...Already archived!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@PatchMapping("{id}/archieve")
 	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
 			@RequestHeader("token") String token) {
@@ -166,11 +162,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/78/pin
 	 */
 	@ApiOperation(value = "pin/unpin operation of existing note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "note pinned"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note pinned"),
 			@ApiResponse(code = 201, message = "note unpinned"),
-			@ApiResponse(code = 300, message = "Opps...Note not found!"),			
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 300, message = "Opps...Note not found!"),
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@PatchMapping("{id}/pin")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.isPinnedNote(noteId, token)) {
@@ -191,11 +186,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/91/trash
 	 */
 	@ApiOperation(value = "trash operation for an existing note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "note pinned"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note pinned"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 400, message = "Opps...Already trashed!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@DeleteMapping("{id}/trash")
 	public ResponseEntity<Response> trashNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
@@ -214,16 +208,13 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/fetch/notes
 	 */
-	@ApiOperation(value = "fetch all notes for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Notes are"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 404, message = "Opps...No notes Found!")})
-	@GetMapping("fetch/notes")
-	public ResponseEntity<Response> fetchNotes(@RequestHeader("token") String token) {
+	@GetMapping("get/notes")
+	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
 		List<Note> notes = noteService.getallNotes(token);
+		System.out.println(notes);
 		if (!notes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("Notes are", Util.OK_RESPONSE_CODE, notes));
+			System.out.println(notes);
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, notes));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
@@ -239,10 +230,9 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/fetch/notes/trashed
 	 */
 	@ApiOperation(value = "fetch all trashed notes for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Trashed notes are"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Trashed notes are"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 404, message = "Opps...No notes Found!")})
+			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/trashed")
 	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
 		List<Note> trashedNotes = noteService.getAllTrashedNotes(token);
@@ -264,10 +254,9 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/fetch/notes/pinned
 	 */
 	@ApiOperation(value = "fetch all pinned notes for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Pinned notes are"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pinned notes are"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 404, message = "Opps...No notes Found!")})
+			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/pinned")
 	public ResponseEntity<Response> fetchPinnedNotes(@RequestHeader("token") String token) {
 		List<Note> pinnedNotes = noteService.getAllPinnedNotes(token);
@@ -289,11 +278,10 @@ public class NoteController {
 	 * @URL http://localhost:8080/note/fetch/notes/archived
 	 */
 	@ApiOperation(value = "fetch all archived notes for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Archived notes are"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Archived notes are"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 404, message = "Opps...No notes Found!")})
+			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/archived")
 	public ResponseEntity<Response> fetchArchivedNotes(@RequestHeader("token") String token) {
 		List<Note> archivedNotes = noteService.getAllArchivedNotes(token);
@@ -317,10 +305,9 @@ public class NoteController {
 	 * @URL -> http://localhost:8080/note/88/colour?color=red
 	 */
 	@ApiOperation(value = "change color of a note for valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Pinned notes are"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pinned notes are"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@PostMapping("{id}/colour")
 	public ResponseEntity<Response> changeColour(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestParam("color") String noteColour) {
@@ -340,11 +327,10 @@ public class NoteController {
 	 * @URL -> http://localhost:8080/note/41/remainder/add
 	 */
 	@ApiOperation(value = "set remainder for a note of valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "remainder created"),
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "remainder created"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 502, message = "Opps...Remainder already set!")})
+			@ApiResponse(code = 502, message = "Opps...Remainder already set!") })
 	@PutMapping("{id}/remainder/add")
 	public ResponseEntity<Response> setRemainder(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestBody RemainderDTO remainderDTO) {
@@ -364,11 +350,10 @@ public class NoteController {
 	 * @URL -> http://localhost:8080/note/79/remainder/remove
 	 */
 	@ApiOperation(value = "remove remainder for a note of valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "remainder removed"),
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "remainder removed"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
-			@ApiResponse(code = 502, message = "Opps...Remainder already removed!")})
+			@ApiResponse(code = 502, message = "Opps...Remainder already removed!") })
 	@DeleteMapping("{id}/remainder/remove")
 	public ResponseEntity<Response> removeRemainder(@RequestHeader("token") String token,
 			@PathVariable("id") long noteId) {
@@ -388,10 +373,9 @@ public class NoteController {
 	 * @URL -> http://localhost:8080/note/search?title=note1
 	 */
 	@ApiOperation(value = "search operation for note based on title of valid user")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "found notes"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "found notes"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
-			@ApiResponse(code = 401, message = "Opps...Authorization failed!")})
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@GetMapping("search")
 	public ResponseEntity<Response> searchByTitle(@RequestHeader("token") String token,
 			@RequestParam("title") String noteTitle) {

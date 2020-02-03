@@ -207,15 +207,7 @@ public class NoteServiceImpl implements INoteService {
 	 */
 	@Override
 	public List<Note> getallNotes(String token) {
-		// found authorized user
-		User fetchedUser = authenticatedUser(token);
-		// note found
-		List<Note> fetchedNotes = noteRepository.getAllNotes(fetchedUser.getUserId());
-		if (!fetchedNotes.isEmpty()) {
-			return fetchedNotes;
-		}
-		// empty list
-		return fetchedNotes;
+		return noteRepository.getAllNotes(authenticatedUser(token).getUserId());
 	}
 
 	/**

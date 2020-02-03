@@ -69,15 +69,15 @@ public class LabelServiceImpl implements ILabelService {
 	public void createLabel(String token, LabelDTO labelDTO) {
 		User fetchedUser = authenticatedUser(token);
 		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());
-		if (fetchedLabel != null) {
-			throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE,
-					Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+		if (fetchedLabel == null) {
+			Label newLabel = new Label();
+			BeanUtils.copyProperties(labelDTO, newLabel);
+			newLabel.setCreatedDate(LocalDateTime.now());
+			fetchedUser.getLabels().add(newLabel);
+			labelRepository.save(newLabel);
 		}
-		Label newLabel = new Label();
-		BeanUtils.copyProperties(labelDTO, newLabel);
-		newLabel.setCreatedDate(LocalDateTime.now());
-		fetchedUser.getLabels().add(newLabel);
-		labelRepository.save(newLabel);
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+
 	}
 
 	@Override
@@ -98,16 +98,29 @@ public class LabelServiceImpl implements ILabelService {
 	}
 
 	@Override
-	public boolean addNoteToLabel(String token, long noteId, long labelIdInfo) {
+	public boolean addNoteToLabel(String token, long noteId, long labelId) {
 		authenticatedUser(token);
 		Note fetchedNote = verifiedNote(noteId);
-		Optional<Label> fetchedLabel = labelRepository.findById(labelIdInfo);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
 		if (fetchedLabel.isPresent()) {
 			fetchedNote.getLabelsList().add(fetchedLabel.get());
 			labelRepository.save(fetchedLabel.get());
 			return true;
 		}
 		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public boolean removeNoteFromLabel(String token, long noteId, long labelId) {
+		authenticatedUser(token);
+		Note fetchedNote = verifiedNote(noteId);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
+		if (fetchedLabel.isPresent()) {
+			fetchedNote.getLabelsList().remove(fetchedLabel.get());
+			noteRepository.saveOrUpdate(fetchedNote);
+			return true;
+		}
+		throw new LabelException("Label not found", 404);
 	}
 
 }

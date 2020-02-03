@@ -8,6 +8,7 @@ package com.bridgeLabz.fundooNotes.exception;
  * @author Durgasankar Mishra
  * @created 2020-02-01
  * @version 1.0
+ * @see {@link GlobalResponseExceptionHandler}
  */
 public class LabelException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

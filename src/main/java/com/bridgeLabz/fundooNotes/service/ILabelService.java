@@ -9,5 +9,7 @@ public interface ILabelService {
 	public boolean createLabelAndMap(String token, long noteId,LabelDTO labelDTO);
 
 	public boolean addNoteToLabel(String token, long noteId, long labelId);
+
+	public boolean removeNoteFromLabel(String token, long noteId, long labelId);
 	
 }
