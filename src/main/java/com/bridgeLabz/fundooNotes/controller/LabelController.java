@@ -24,13 +24,13 @@ public class LabelController {
 	@PostMapping("create")
 	public ResponseEntity<Response> createLabel(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO) {
 		labelService.createLabel(token, labelDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 200, labelDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 201, labelDTO));
 	}
 
 	@PostMapping("create/map")
-	public ResponseEntity<Response> createandMap(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO,
+	public ResponseEntity<Response> createandMapLabel(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO,
 			@RequestParam("id") long noteId) {
 		labelService.createLabelAndMap(token, noteId, labelDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 200, labelDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created and mapped", 201, labelDTO));
 	}
 }

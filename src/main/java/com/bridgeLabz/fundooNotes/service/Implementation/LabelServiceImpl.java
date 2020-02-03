@@ -75,6 +75,7 @@ public class LabelServiceImpl implements ILabelService {
 		BeanUtils.copyProperties(labelDTO, newLabel);
 		newLabel.setCreatedDate(LocalDateTime.now());
 		fetchedUser.getLabels().add(newLabel);
+		userRepository.save(fetchedUser);
 		labelRepository.save(newLabel);
 	}
 
@@ -82,16 +83,20 @@ public class LabelServiceImpl implements ILabelService {
 	public boolean createLabelAndMap(String token, long noteId, LabelDTO labelDTO) {
 		User fetchedUser = authenticatedUser(token);
 		Note fetchedNote = verifiedNote(noteId);
-		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());		
-		if (fetchedLabel != null) {
-			fetchedUser.getLabels().add(fetchedLabel);
-			fetchedNote.getLabelsList().add(fetchedLabel);
+		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());
+		if (fetchedLabel == null) {
+			Label newLabel = new Label();
+			BeanUtils.copyProperties(labelDTO, newLabel);
+			newLabel.setCreatedDate(LocalDateTime.now());
+			fetchedUser.getLabels().add(newLabel);
+			fetchedNote.getLabelsList().add(newLabel);
 			userRepository.save(fetchedUser);
 			noteRepository.saveOrUpdate(fetchedNote);
+			labelRepository.save(newLabel);
 			return true;
 		}
-		
 		throw new LabelException("Opps...Label already exist!", 208);
 	}
+	
 
 }
