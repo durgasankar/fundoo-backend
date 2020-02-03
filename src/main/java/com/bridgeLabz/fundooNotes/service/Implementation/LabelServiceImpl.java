@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.service.Implementation;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +70,13 @@ public class LabelServiceImpl implements ILabelService {
 		User fetchedUser = authenticatedUser(token);
 		Label fetchedLabel = labelRepository.findOneBylabelName(labelDTO.getLabelName());
 		if (fetchedLabel != null) {
-			throw new LabelException("Opps...Label already exist!", 208);
+			throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE,
+					Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
 		}
 		Label newLabel = new Label();
 		BeanUtils.copyProperties(labelDTO, newLabel);
 		newLabel.setCreatedDate(LocalDateTime.now());
 		fetchedUser.getLabels().add(newLabel);
-		userRepository.save(fetchedUser);
 		labelRepository.save(newLabel);
 	}
 
@@ -90,13 +91,23 @@ public class LabelServiceImpl implements ILabelService {
 			newLabel.setCreatedDate(LocalDateTime.now());
 			fetchedUser.getLabels().add(newLabel);
 			fetchedNote.getLabelsList().add(newLabel);
-			userRepository.save(fetchedUser);
-			noteRepository.saveOrUpdate(fetchedNote);
 			labelRepository.save(newLabel);
 			return true;
 		}
-		throw new LabelException("Opps...Label already exist!", 208);
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
 	}
-	
+
+	@Override
+	public boolean addNoteToLabel(String token, long noteId, long labelIdInfo) {
+		authenticatedUser(token);
+		Note fetchedNote = verifiedNote(noteId);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelIdInfo);
+		if (fetchedLabel.isPresent()) {
+			fetchedNote.getLabelsList().add(fetchedLabel.get());
+			labelRepository.save(fetchedLabel.get());
+			return true;
+		}
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+	}
 
 }
