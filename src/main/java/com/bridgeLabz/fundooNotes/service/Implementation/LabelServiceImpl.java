@@ -75,6 +75,7 @@ public class LabelServiceImpl implements ILabelService {
 			newLabel.setCreatedDate(LocalDateTime.now());
 			fetchedUser.getLabels().add(newLabel);
 			labelRepository.save(newLabel);
+			return;
 		}
 		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
 
@@ -121,6 +122,25 @@ public class LabelServiceImpl implements ILabelService {
 			return true;
 		}
 		throw new LabelException("Label not found", 404);
+	}
+
+	@Override
+	public boolean isLabelEdited(String token, LabelDTO labelDTO, long labelId) {
+		authenticatedUser(token);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
+		if (fetchedLabel.isPresent() && isValidNameForEdit(fetchedLabel, labelDTO)) {
+			labelRepository.updateLabelName(labelDTO.getLabelName(), fetchedLabel.get().getLabelId());
+			return true;
+		}
+		throw new LabelException("Label not found", 404);
+	}
+
+	private boolean isValidNameForEdit(Optional<Label> fetchedLabel, LabelDTO labelDTO) {
+
+		if (labelRepository.checkLabelWithDb(labelDTO.getLabelName()).isEmpty()) {
+			return !fetchedLabel.get().getLabelName().equals(labelDTO.getLabelName());
+		}
+		throw new LabelException("label name can't be same", 500);
 	}
 
 }

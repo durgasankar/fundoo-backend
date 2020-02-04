@@ -208,12 +208,10 @@ public class NoteController {
 	 * @return ResponseEntity<Response>
 	 * @URL http://localhost:8080/note/fetch/notes
 	 */
-	@GetMapping("get/notes")
+	@GetMapping("fetch/notes")
 	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
 		List<Note> notes = noteService.getallNotes(token);
-		System.out.println(notes);
 		if (!notes.isEmpty()) {
-			System.out.println(notes);
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, notes));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
