@@ -1,5 +1,8 @@
 package com.bridgeLabz.fundooNotes.service;
 
+import java.util.List;
+
+import com.bridgeLabz.fundooNotes.model.Label;
 import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
 
 public interface ILabelService {
@@ -15,5 +18,7 @@ public interface ILabelService {
 	public boolean isLabelEdited(String token, LabelDTO labelDTO, long labelId);
 
 	public boolean idDeletedLabel(String token, long labelId);
+
+	public List<Label> foundLabelsList(String token);
 	
 }

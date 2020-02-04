@@ -1,6 +1,7 @@
 package com.bridgeLabz.fundooNotes.service.Implementation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -156,6 +157,12 @@ public class LabelServiceImpl implements ILabelService {
 			return true;
 		}
 		throw new LabelException(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
+	}
+
+	@Override
+	public List<Label> foundLabelsList(String token) {
+		authenticatedUser(token);	
+		return labelRepository.getAllLabels();
 	}
 
 }

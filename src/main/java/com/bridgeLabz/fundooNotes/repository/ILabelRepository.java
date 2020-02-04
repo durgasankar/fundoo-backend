@@ -27,5 +27,7 @@ public interface ILabelRepository extends JpaRepository<Label, Long> {
 	@Query(value = "select * from label_details where label_name = ?", nativeQuery = true)
 	public List<Label> checkLabelWithDb(String labelName);
 	
+	@Query(value = "select * from label_details", nativeQuery = true)
+	public List<Label> getAllLabels();
 
 }
