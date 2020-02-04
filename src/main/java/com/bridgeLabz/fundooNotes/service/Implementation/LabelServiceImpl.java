@@ -77,7 +77,7 @@ public class LabelServiceImpl implements ILabelService {
 			labelRepository.save(newLabel);
 			return;
 		}
-		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.ALREADY_EXIST_EXCEPTION_STATUS);
 
 	}
 
@@ -95,7 +95,7 @@ public class LabelServiceImpl implements ILabelService {
 			labelRepository.save(newLabel);
 			return true;
 		}
-		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.ALREADY_EXIST_EXCEPTION_STATUS);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class LabelServiceImpl implements ILabelService {
 			labelRepository.save(fetchedLabel.get());
 			return true;
 		}
-		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.LABEL_ALREADY_EXIST_EXCEPTION_STATUS);
+		throw new LabelException(Util.LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE, Util.ALREADY_EXIST_EXCEPTION_STATUS);
 	}
 
 	@Override
@@ -121,18 +121,21 @@ public class LabelServiceImpl implements ILabelService {
 			noteRepository.saveOrUpdate(fetchedNote);
 			return true;
 		}
-		throw new LabelException("Label not found", 404);
+		throw new LabelException(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 	@Override
 	public boolean isLabelEdited(String token, LabelDTO labelDTO, long labelId) {
 		authenticatedUser(token);
 		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
-		if (fetchedLabel.isPresent() && isValidNameForEdit(fetchedLabel, labelDTO)) {
-			labelRepository.updateLabelName(labelDTO.getLabelName(), fetchedLabel.get().getLabelId());
-			return true;
+		if (fetchedLabel.isPresent()) {
+			if (isValidNameForEdit(fetchedLabel, labelDTO)) {
+				labelRepository.updateLabelName(labelDTO.getLabelName(), fetchedLabel.get().getLabelId());
+				return true;
+			}
+			return false;
 		}
-		throw new LabelException("Label not found", 404);
+		throw new LabelException(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 	private boolean isValidNameForEdit(Optional<Label> fetchedLabel, LabelDTO labelDTO) {
@@ -140,7 +143,19 @@ public class LabelServiceImpl implements ILabelService {
 		if (labelRepository.checkLabelWithDb(labelDTO.getLabelName()).isEmpty()) {
 			return !fetchedLabel.get().getLabelName().equals(labelDTO.getLabelName());
 		}
-		throw new LabelException("label name can't be same", 500);
+		throw new LabelException("name with the given label already exist in your account",
+				Util.ALREADY_EXIST_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public boolean idDeletedLabel(String token, long labelId) {
+		authenticatedUser(token);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
+		if (fetchedLabel.isPresent()) {
+			labelRepository.delete(fetchedLabel.get());
+			return true;
+		}
+		throw new LabelException(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 }

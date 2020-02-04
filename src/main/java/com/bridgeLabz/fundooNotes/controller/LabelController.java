@@ -3,6 +3,7 @@ package com.bridgeLabz.fundooNotes.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,18 @@ public class LabelController {
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...new Label name can't be same!", Util.BAD_REQUEST_RESPONSE_CODE));
+	}
+
+	// URL -> http://localhost:8080/label/5/delete
+	@DeleteMapping("/{labelId}/delete")
+	@ApiOperation(value = "Api to delete the label", response = Response.class)
+	public ResponseEntity<Response> deleteLabel(@RequestHeader("token") String token,
+			@PathVariable("labelId") long labelId) {
+		if (labelService.idDeletedLabel(token, labelId)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("label deleted sucessfully", 200));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new Response("Opps...Error deleting label", Util.BAD_REQUEST_RESPONSE_CODE));
 	}
 
 }
