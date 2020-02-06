@@ -2,6 +2,7 @@ package com.bridgeLabz.fundooNotes.service;
 
 import java.util.List;
 
+import com.bridgeLabz.fundooNotes.model.Label;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
 import com.bridgeLabz.fundooNotes.model.dto.RemainderDTO;
@@ -151,5 +152,7 @@ public interface INoteService {
 	 * @return List<Note>
 	 */
 	public List<Note> searchByTitle(String token, String noteTitle);
+
+	public List<Label> getLabelsOfNote(String token, long noteId);
 
 }

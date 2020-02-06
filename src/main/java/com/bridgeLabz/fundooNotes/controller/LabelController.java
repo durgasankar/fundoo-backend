@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgeLabz.fundooNotes.model.Label;
+import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
 import com.bridgeLabz.fundooNotes.response.Response;
 import com.bridgeLabz.fundooNotes.service.ILabelService;
@@ -26,7 +27,7 @@ import com.bridgeLabz.fundooNotes.utility.Util;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("label")
+@RequestMapping("labels")
 public class LabelController {
 
 	@Autowired
@@ -40,15 +41,15 @@ public class LabelController {
 	}
 
 	@PostMapping("/create/{noteId}")
-	@ApiOperation(value = "Api to create and add label with note", response = Response.class)
+	@ApiOperation(value = "Api to create a lebel and add a note", response = Response.class)
 	public ResponseEntity<Response> createandMapLabel(@RequestHeader("token") String token,
 			@RequestBody LabelDTO labelDTO, @PathVariable("noteId") long noteId) {
 		labelService.createLabelAndMap(token, noteId, labelDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created and mapped", 201, labelDTO));
 	}
 
-	@PostMapping("/addlabels")
-	@ApiOperation(value = "Api to add existing label with note", response = Response.class)
+	@PostMapping("/map")
+	@ApiOperation(value = "Api to add note to existing label", response = Response.class)
 	public ResponseEntity<Response> addLabelsToNote(@RequestHeader("token") String token,
 			@RequestParam("noteId") long noteId, @RequestParam("labelId") long labelId) {
 		labelService.addNoteToLabel(token, noteId, labelId);
@@ -89,12 +90,24 @@ public class LabelController {
 	@GetMapping("/fetch/labels")
 	@ApiOperation(value = "Api to delete a particular label", response = Response.class)
 	public ResponseEntity<Response> getAllLabels(@RequestHeader("token") String token) {
-		List<Label> foundLabelList = labelService.foundLabelsList(token);
+		List<Label> foundLabelList = labelService.listOfLabels(token);
 		if (!foundLabelList.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("found labels", 200, foundLabelList));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response("Opps...No labels founds", Util.NOT_FOUND_RESPONSE_CODE));
+				.body(new Response("Opps...No labels found", Util.NOT_FOUND_RESPONSE_CODE));
+	}
+
+	@GetMapping("/fetch/{labelId}")
+	@ApiOperation(value = "Api to fetch all notes of a particular label", response = Response.class)
+	public ResponseEntity<Response> getAllNotesOfLabel(@RequestHeader("token") String token,
+			@PathVariable("labelId") long labelId) {
+		List<Note> foundNotesOfLabelList = labelService.listOfNotesOfLabel(token, labelId);
+		if (!foundNotesOfLabelList.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("found notes", 200, foundNotesOfLabelList));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response("Opps...No Notes founds", Util.NOT_FOUND_RESPONSE_CODE));
 	}
 
 }

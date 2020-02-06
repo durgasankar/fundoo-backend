@@ -3,6 +3,7 @@ package com.bridgeLabz.fundooNotes.service;
 import java.util.List;
 
 import com.bridgeLabz.fundooNotes.model.Label;
+import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.LabelDTO;
 
 public interface ILabelService {
@@ -19,6 +20,8 @@ public interface ILabelService {
 
 	public boolean idDeletedLabel(String token, long labelId);
 
-	public List<Label> foundLabelsList(String token);
+	public List<Label> listOfLabels(String token);
+
+	public List<Note> listOfNotesOfLabel(String token, long labelId);
 	
 }

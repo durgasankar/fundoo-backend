@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgeLabz.fundooNotes.model.Label;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
 import com.bridgeLabz.fundooNotes.model.dto.RemainderDTO;
@@ -240,6 +241,18 @@ public class NoteController {
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+	}
+
+	@GetMapping("fetch/notes/{noteId}/labels")
+	public ResponseEntity<Response> fetchLabelsOfNote(@RequestHeader("token") String token,
+			@PathVariable("noteId") long noteId) {
+		List<Label> fetchedLabels = noteService.getLabelsOfNote(token, noteId);
+		if (!fetchedLabels.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Labels are", Util.OK_RESPONSE_CODE, fetchedLabels));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
 	}
 
 	/**

@@ -132,6 +132,5 @@ public class NoteRepositoryImpl implements INoteRepository {
 		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE title=:title and is_trashed=false")
 				.setParameter("title", noteTitle).getResultList();
 	}
-	
 
 }

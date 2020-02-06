@@ -2,14 +2,17 @@ package com.bridgeLabz.fundooNotes.service.Implementation;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
 import com.bridgeLabz.fundooNotes.exception.NoteException;
 import com.bridgeLabz.fundooNotes.exception.RemainderException;
+import com.bridgeLabz.fundooNotes.model.Label;
 import com.bridgeLabz.fundooNotes.model.Note;
 import com.bridgeLabz.fundooNotes.model.User;
 import com.bridgeLabz.fundooNotes.model.dto.NoteDTO;
@@ -40,6 +43,8 @@ public class NoteServiceImpl implements INoteService {
 	private INoteRepository noteRepository;
 	@Autowired
 	private JWTToken jwtToken;
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
 	/**
 	 * This function takes authentication token as String input parameter and decode
@@ -73,6 +78,18 @@ public class NoteServiceImpl implements INoteService {
 		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
+	private long getRedisCacheId(String token) {
+		// split token on basis of . and stored in an array
+		String[] splitedToken = token.split("\\.");
+		// concatenation of the separated token by removing .
+		String redisTokenKey = splitedToken[1] + splitedToken[2];
+		if (redisTemplate.opsForValue().get(redisTokenKey) == null) {
+			long idForRedis = jwtToken.decodeToken(token);
+			redisTemplate.opsForValue().set(redisTokenKey, idForRedis, 3 * 60, TimeUnit.SECONDS);
+		}
+		return (Long) redisTemplate.opsForValue().get(redisTokenKey);
+	}
+
 	/**
 	 * This function takes {@link NoteDTO} as input parameter and token as path
 	 * variable. Using token it authorize the user if the user is verified then all
@@ -83,14 +100,21 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean createNote(NoteDTO noteDto, String token) {
 		// found authorized user
-		User fetchedUser = authenticatedUser(token);
-		Note newNote = new Note();
-		BeanUtils.copyProperties(noteDto, newNote);
-		newNote.setCreatedDate(LocalDateTime.now());
-		newNote.setColor("white");
-		fetchedUser.getNotes().add(newNote);
-		noteRepository.saveOrUpdate(newNote);
-		return true;
+
+		// implemented redisCache functionality
+		User fetchedUser = userRepository.getUser(getRedisCacheId(token));
+		if (fetchedUser != null) {
+			Note newNote = new Note();
+			BeanUtils.copyProperties(noteDto, newNote);
+			newNote.setCreatedDate(LocalDateTime.now());
+			newNote.setColor("white");
+			fetchedUser.getNotes().add(newNote);
+			noteRepository.saveOrUpdate(newNote);
+			return true;
+		}
+		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
+				Util.USER_AUTHENTICATION_EXCEPTION_STATUS);
+
 	}
 
 	/**
@@ -333,6 +357,13 @@ public class NoteServiceImpl implements INoteService {
 		}
 		// if empty
 		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
+	}
+
+	@Override
+	public List<Label> getLabelsOfNote(String token, long noteId) {
+		// authenticate user
+		authenticatedUser(token);
+		return verifiedNote(noteId).getLabelsList();
 	}
 
 }

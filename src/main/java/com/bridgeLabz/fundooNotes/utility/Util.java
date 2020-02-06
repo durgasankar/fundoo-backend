@@ -23,9 +23,9 @@ public class Util {
 	public static final String REGESTATION_VERIFICATION_LINK = "/user/verification";
 	public static final String USER_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...User not found!";
 	public static final String NOTE_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Note not found!";
+	public static final String LABEL_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Label not found!";
 	public static final String USER_AUTHORIZATION_EXCEPTION_MESSAGE = "Opps...Authorization failed!";
 	public static final String LABEL_ALREADY_EXIST_EXCEPTION_MESSAGE = "Opps...Label already exist!";
-	public static final String LABEL_NOT_FOUND_EXCEPTION_MESSAGE = "Opps...Label not found!";
 	// environment variable
 	public static final String SENDER_EMAIL_ID = System.getenv("email");
 	public static final String SENDER_PASSWORD = System.getenv("password");

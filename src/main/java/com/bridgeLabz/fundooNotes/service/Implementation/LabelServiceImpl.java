@@ -160,9 +160,19 @@ public class LabelServiceImpl implements ILabelService {
 	}
 
 	@Override
-	public List<Label> foundLabelsList(String token) {
-		authenticatedUser(token);	
+	public List<Label> listOfLabels(String token) {
+		authenticatedUser(token);
 		return labelRepository.getAllLabels();
+	}
+
+	@Override
+	public List<Note> listOfNotesOfLabel(String token, long labelId) {
+		authenticatedUser(token);
+		Optional<Label> fetchedLabel = labelRepository.findById(labelId);
+		if (fetchedLabel.isPresent()) {
+			return fetchedLabel.get().getNoteList();
+		}
+		throw new LabelException(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 }
