@@ -16,9 +16,11 @@ import com.bridgeLabz.fundooNotes.model.dto.LoginDTO;
 import com.bridgeLabz.fundooNotes.model.dto.UpdatePassword;
 import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
+import com.bridgeLabz.fundooNotes.response.MailObject;
 import com.bridgeLabz.fundooNotes.service.IUserService;
 import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
+import com.bridgeLabz.fundooNotes.utility.RabbitMQSender;
 import com.bridgeLabz.fundooNotes.utility.Util;
 
 /**
@@ -47,6 +49,12 @@ public class UserServiceImpl implements IUserService {
 	private EMailServiceProvider emailServiceProvider;
 	@Autowired
 	private Environment environment;
+	
+	@Autowired
+	private MailObject mailObject;
+
+	@Autowired
+	private RabbitMQSender rabbitMQSender;
 
 	/**
 	 * This class takes the user inputed data and checks whether the user present in
@@ -73,8 +81,15 @@ public class UserServiceImpl implements IUserService {
 				jwtToken.createJwtToken(newUser.getUserId()));
 		if (emailServiceProvider.sendMail(newUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
 				emailBodyContaintLink)) {
+			mailObject.setMessage(emailBodyContaintLink);
+			mailObject.setEmail(newUser.getEmailId());
+			mailObject.setSubject(Util.REGISTRATION_EMAIL_SUBJECT);
+			rabbitMQSender.send(mailObject);
 			return true;
 		}
+		System.out.println("rabbit msg");
+	
+		
 		throw new UserException("Opps...Internal server error!", 500);
 	}
 

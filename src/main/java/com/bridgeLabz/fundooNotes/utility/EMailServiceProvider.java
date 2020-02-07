@@ -13,7 +13,10 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import com.bridgeLabz.fundooNotes.response.MailObject;
 
 /**
  * This is the configuration mail class which uses SMTP authentication and runs
@@ -96,5 +99,13 @@ public class EMailServiceProvider {
 		properties.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
 		return properties;
 
+	}
+
+	@RabbitListener(queues = "rmq.rube.queue")
+	public void recievedMessage(MailObject fetchedUserMailingDetails) {
+
+		sendMail(fetchedUserMailingDetails.getEmail(), fetchedUserMailingDetails.getSubject(),
+				fetchedUserMailingDetails.getMessage());
+		System.out.println("Recieved Message From RabbitMQ: " + fetchedUserMailingDetails);
 	}
 }
