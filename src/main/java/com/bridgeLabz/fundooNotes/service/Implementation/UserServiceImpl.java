@@ -18,7 +18,7 @@ import com.bridgeLabz.fundooNotes.model.dto.UserDTO;
 import com.bridgeLabz.fundooNotes.repository.IUserRepository;
 import com.bridgeLabz.fundooNotes.response.MailObject;
 import com.bridgeLabz.fundooNotes.service.IUserService;
-import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
+//import com.bridgeLabz.fundooNotes.utility.EMailServiceProvider;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
 import com.bridgeLabz.fundooNotes.utility.RabbitMQSender;
 import com.bridgeLabz.fundooNotes.utility.Util;

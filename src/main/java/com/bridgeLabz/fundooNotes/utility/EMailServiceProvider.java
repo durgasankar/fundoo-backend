@@ -43,8 +43,10 @@ public class EMailServiceProvider {
 	 * @param subject
 	 * @param bodyContaint
 	 */
+	
 	private boolean sendMail(String toEmailId, String subject, String bodyContaint) {
 		Authenticator authentication = new Authenticator() {
+
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(Util.SENDER_EMAIL_ID, Util.SENDER_PASSWORD);
@@ -54,11 +56,13 @@ public class EMailServiceProvider {
 		try {
 			Transport.send(mimeMessageConfiguration(session, toEmailId, subject, bodyContaint));
 			return true;
-		} catch (MessagingException e) {
-			e.printStackTrace();
+		} catch ( MessagingException e) {
+			return false;
 		}
-		return false;
+		
+		
 	}
+	 
 
 	/**
 	 * This function takes following information and sets all the header information

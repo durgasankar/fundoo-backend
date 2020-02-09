@@ -2,8 +2,6 @@ package com.bridgeLabz.fundooNotes.response;
 
 import java.io.Serializable;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Configuration class for rabbit MQ. which contains the Template for rabbitMQ
  * 
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  *
  */
-@Component
 public class MailObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
