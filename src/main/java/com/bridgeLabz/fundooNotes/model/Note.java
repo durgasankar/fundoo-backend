@@ -42,9 +42,12 @@ public class Note {
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "note_label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "label_id")})
-	 @JsonIgnore
+			@JoinColumn(name = "label_id") })
+	@JsonIgnore
 	private List<Label> labelsList;
+	@JsonIgnore
+	@ManyToMany(mappedBy = "colaboratedNotes")
+	private List<User> colaboratedUsers;
 
 	/**
 	 * Getter method for id
@@ -232,6 +235,14 @@ public class Note {
 
 	public void setLabelsList(List<Label> labelsList) {
 		this.labelsList = labelsList;
+	}
+
+	public List<User> getColaboratedUsers() {
+		return colaboratedUsers;
+	}
+
+	public void setColaboratedUsers(List<User> colaboratedUsers) {
+		this.colaboratedUsers = colaboratedUsers;
 	}
 
 	/**

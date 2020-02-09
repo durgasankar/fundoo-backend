@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiResponses;
  * @see {@link Response} if there is any type of response it will reflect out
  */
 @RestController
-@RequestMapping("note")
+@RequestMapping("notes")
 public class NoteController {
 
 	@Autowired

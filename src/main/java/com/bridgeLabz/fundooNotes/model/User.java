@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -51,6 +53,11 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private List<Label> labels;
+	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "colaborator_note", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "note_id") })
+	private List<Note> colaboratedNotes;
 
 	/**
 	 * Constructor by using fields for constructor injection
@@ -246,6 +253,14 @@ public class User {
 
 	public void setLabels(List<Label> labels) {
 		this.labels = labels;
+	}
+
+	public List<Note> getColaboratedNotes() {
+		return colaboratedNotes;
+	}
+
+	public void setColaboratedNotes(List<Note> colaboratedNotes) {
+		this.colaboratedNotes = colaboratedNotes;
 	}
 
 	/**

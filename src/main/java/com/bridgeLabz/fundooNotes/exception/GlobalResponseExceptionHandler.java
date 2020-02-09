@@ -12,8 +12,8 @@ import com.bridgeLabz.fundooNotes.response.Response;
  * Global Exception Handler which handles all runtime exceptions like
  * {@link UserException}, {@link NoteException}, {@link AuthorizationException},
  * {@link InvalidCredentialsException}, {@link RemainderException},
- * {@link LabelException}, {@link MailSendingException} from service layer
- * itself.
+ * {@link LabelException}, {@link MailSendingException}
+ * {@link ColaboratorException} from service layer itself.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-29
@@ -80,6 +80,18 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	public ResponseEntity<Response> handleAllLabelException(LabelException labelException) {
 		return ResponseEntity.status(HttpStatus.ALREADY_REPORTED)
 				.body(new Response(labelException.getMessage(), labelException.getStatus()));
+	}
+
+	/**
+	 * Handles all incoming {@link ColaboratorException} during Runtime.
+	 * 
+	 * @param noteException as {@link ColaboratorException}
+	 * @return ResponseEntity<Response>
+	 */
+	@ExceptionHandler(ColaboratorException.class)
+	public ResponseEntity<Response> handleAllColaboratorException(ColaboratorException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(exception.getMessage(), exception.getStatus()));
 	}
 
 }

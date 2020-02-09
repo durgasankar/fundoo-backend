@@ -100,9 +100,9 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public boolean createNote(NoteDTO noteDto, String token) {
 		// found authorized user
-
+		User fetchedUser = authenticatedUser(token);
 		// implemented redisCache functionality
-		User fetchedUser = userRepository.getUser(getRedisCacheId(token));
+//		User fetchedUser = userRepository.getUser(getRedisCacheId(token));
 		if (fetchedUser != null) {
 			Note newNote = new Note();
 			BeanUtils.copyProperties(noteDto, newNote);
