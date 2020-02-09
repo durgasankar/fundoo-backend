@@ -13,9 +13,11 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import com.bridgeLabz.fundooNotes.exception.MailSendingException;
 import com.bridgeLabz.fundooNotes.response.MailObject;
 
 /**
@@ -26,6 +28,8 @@ import com.bridgeLabz.fundooNotes.response.MailObject;
  * @author Durgasankar Mishra
  * @created 2020-01-22
  * @version 1.0
+ * @modified -> 2020-02-09
+ * @updated -> RabbitMQ functionality added to the existing JMS mail service.
  */
 @Component
 public class EMailServiceProvider {
@@ -39,7 +43,7 @@ public class EMailServiceProvider {
 	 * @param subject
 	 * @param bodyContaint
 	 */
-	public boolean sendMail(String toEmailId, String subject, String bodyContaint) {
+	private boolean sendMail(String toEmailId, String subject, String bodyContaint) {
 		Authenticator authentication = new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -98,14 +102,21 @@ public class EMailServiceProvider {
 		properties.put("mail.smtp.auth", "true"); // enable authentication
 		properties.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
 		return properties;
-
 	}
 
+	/**
+	 * This function fetch the mail server based on key of the {@link Queue} it send
+	 * to the RabbitMQ Server.
+	 * 
+	 * @param mailObject as {@link MailObject}
+	 * @throws {@link MailSendingException}
+	 */
 	@RabbitListener(queues = "rmq.rube.queue")
-	public void recievedMessage(MailObject fetchedUserMailingDetails) {
+	public void recievedMessage(MailObject mailObject) {
 
-		sendMail(fetchedUserMailingDetails.getEmail(), fetchedUserMailingDetails.getSubject(),
-				fetchedUserMailingDetails.getMessage());
-		System.out.println("Recieved Message From RabbitMQ: " + fetchedUserMailingDetails);
+		if (sendMail(mailObject.getEmail(), mailObject.getSubject(), mailObject.getMessage())) {
+			return;
+		}
+		throw new MailSendingException("Opps...Error Sending mail!", 502);
 	}
 }

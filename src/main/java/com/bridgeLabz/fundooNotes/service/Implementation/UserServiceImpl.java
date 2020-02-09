@@ -31,10 +31,12 @@ import com.bridgeLabz.fundooNotes.utility.Util;
  * @author Durgasankar Mishra
  * @created 2020-01-22
  * @version 1.0
+ * @modified -> 2020-02-09
+ * @updated -> RabbitMQ functionality added to the existing JMS mail service.
  * @see {@link BCryptPasswordEncoder} for creating encrypted password
  * @see {@link IUserRepository} for storing data with the database
  * @see {@link JWTToken} fore creation of token
- * @see {@link EMailServiceProvider} for mail facilities
+ * @see {@link RabbitMQSender}, {@link EMailServiceProvider} for mail facilities
  */
 @Service
 public class UserServiceImpl implements IUserService {
@@ -46,13 +48,7 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private JWTToken jwtToken;
 	@Autowired
-	private EMailServiceProvider emailServiceProvider;
-	@Autowired
 	private Environment environment;
-	
-	@Autowired
-	private MailObject mailObject;
-
 	@Autowired
 	private RabbitMQSender rabbitMQSender;
 
@@ -70,27 +66,23 @@ public class UserServiceImpl implements IUserService {
 		if (fetchedUser != null) {
 			return false;
 		}
+		// new user created and saved to DB
 		User newUser = new User();
 		BeanUtils.copyProperties(userDto, newUser);
 		newUser.setCreatedDate(LocalDateTime.now());
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 		newUser.setVerified(false);
 		userRepository.save(newUser);
+		// user again fetched from database and mail sent for verification
+		User fetchedUserForVerification = userRepository.getUser(newUser.getEmailId());
 		String emailBodyContaintLink = Util.createLink(
 				Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
-				jwtToken.createJwtToken(newUser.getUserId()));
-		if (emailServiceProvider.sendMail(newUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
-				emailBodyContaintLink)) {
-			mailObject.setMessage(emailBodyContaintLink);
-			mailObject.setEmail(newUser.getEmailId());
-			mailObject.setSubject(Util.REGISTRATION_EMAIL_SUBJECT);
-			rabbitMQSender.send(mailObject);
+				jwtToken.createJwtToken(fetchedUserForVerification.getUserId()));
+		if (rabbitMQSender.send(new MailObject(fetchedUserForVerification.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
+				emailBodyContaintLink))) {
 			return true;
 		}
-		System.out.println("rabbit msg");
-	
-		
-		throw new UserException("Opps...Internal server error!", 500);
+		throw new UserException("Opps...Error sending verification mail!", 500);
 	}
 
 	/**
@@ -131,7 +123,9 @@ public class UserServiceImpl implements IUserService {
 				String emailBodyLink = Util.createLink(
 						Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
-				emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
+//				emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
+				rabbitMQSender
+						.send(new MailObject(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT, emailBodyLink));
 				return null;
 			}
 			// password don't match
@@ -158,15 +152,18 @@ public class UserServiceImpl implements IUserService {
 				String emailBodyLink = Util.createLink(
 						Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/updatePassword",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
-				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
+//				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
+				rabbitMQSender.send(new MailObject(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink));
 				return true;
 			}
 			// not verified
 			String emailRegistrationVerificationBodyLink = Util.createLink(
 					Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
-			emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
-					emailRegistrationVerificationBodyLink);
+//			emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
+//					emailRegistrationVerificationBodyLink);
+			rabbitMQSender.send(new MailObject(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
+					emailRegistrationVerificationBodyLink));
 			return false;
 		}
 		// user not found
@@ -187,8 +184,10 @@ public class UserServiceImpl implements IUserService {
 					.setConfirmPassword(passwordEncoder.encode(updatePasswordInformation.getConfirmPassword()));
 			userRepository.updatePassword(updatePasswordInformation, jwtToken.decodeToken(token));
 			// sends mail after updating password
-			emailServiceProvider.sendMail(updatePasswordInformation.getEmailId(), "Password updated sucessfully...",
-					mailContaintAfterUpdatingPassword(updatePasswordInformation));
+//			emailServiceProvider.sendMail(updatePasswordInformation.getEmailId(), "Password updated sucessfully...",
+//					mailContaintAfterUpdatingPassword(updatePasswordInformation));
+			rabbitMQSender.send(new MailObject(updatePasswordInformation.getEmailId(),
+					"Password updated sucessfully...", mailContaintAfterUpdatingPassword(updatePasswordInformation)));
 			return true;
 		}
 		throw new AuthorizationException("Opps...password did not match!", 401);

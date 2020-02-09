@@ -4,6 +4,14 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Configuration class for rabbit MQ. which contains the Template for rabbitMQ
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-02-09
+ * @version 1.0
+ *
+ */
 @Component
 public class MailObject implements Serializable {
 
@@ -14,6 +22,15 @@ public class MailObject implements Serializable {
 	private String subject;
 
 	private String message;
+
+	public MailObject(String email, String subject, String message) {
+		this.email = email;
+		this.subject = subject;
+		this.message = message;
+	}
+
+	public MailObject() {
+	}
 
 	public String getEmail() {
 		return email;
@@ -37,10 +54,6 @@ public class MailObject implements Serializable {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }
