@@ -39,7 +39,6 @@ public class Note {
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 	private LocalDateTime remainderDate;
-
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "note_label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "label_id") })

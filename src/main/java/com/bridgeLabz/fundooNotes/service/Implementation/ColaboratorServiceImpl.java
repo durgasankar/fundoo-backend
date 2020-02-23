@@ -83,7 +83,7 @@ public class ColaboratorServiceImpl implements IColaboratorService {
 		User fetchedValidColaborator = validColaborator(emailId);
 		fetchedValidNote.getColaboratedUsers().add(fetchedValidColaborator);
 		fetchedValidColaborator.getColaboratedNotes().add(fetchedValidNote);
-		noteRepository.saveOrUpdate(fetchedValidNote);
+		userRepository.save(fetchedValidColaborator);
 		return true;
 	}
 
@@ -91,6 +91,17 @@ public class ColaboratorServiceImpl implements IColaboratorService {
 	public List<User> getColaboratorsOfNote(String token, long noteId) {
 		authenticatedMainUser(token);
 		return verifiedNote(noteId).getColaboratedUsers();
+	}
+
+	@Override
+	public boolean removeColaborator(String token, long noteId, String emailId) {
+		authenticatedMainUser(token);
+		Note fetchedValidNote = verifiedNote(noteId);
+		User fetchedValidColaborator = validColaborator(emailId);
+		fetchedValidNote.getColaboratedUsers().remove(fetchedValidColaborator);
+		fetchedValidColaborator.getColaboratedNotes().remove(fetchedValidNote);
+		userRepository.save(fetchedValidColaborator);
+		return true;
 	}
 
 }

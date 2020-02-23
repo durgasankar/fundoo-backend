@@ -17,4 +17,6 @@ public interface IColaboratorService {
 
 	public List<User> getColaboratorsOfNote(String token, long noteId);
 
+	public boolean removeColaborator(String token, long noteId, String emailId);
+
 }

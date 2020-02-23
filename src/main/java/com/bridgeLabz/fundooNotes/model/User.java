@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.bridgeLabz.fundooNotes.annotation.ValidEmailId;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -43,12 +42,10 @@ public class User {
 	private LocalDateTime createdDate;
 	private boolean isVerified;
 
-	@JsonBackReference
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private List<Note> notes;
-	@JsonBackReference
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
