@@ -1,5 +1,7 @@
 package com.bridgeLabz.fundooNotes.service.Implementation;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,12 @@ import com.bridgeLabz.fundooNotes.service.IColaboratorService;
 import com.bridgeLabz.fundooNotes.utility.JWTToken;
 import com.bridgeLabz.fundooNotes.utility.Util;
 
+/**
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-02-09
+ * @version 1.0
+ */
 @Service
 public class ColaboratorServiceImpl implements IColaboratorService {
 	@Autowired
@@ -68,13 +76,21 @@ public class ColaboratorServiceImpl implements IColaboratorService {
 
 	@Override
 	public boolean addColaborator(String token, long noteId, String emailId) {
-		authenticatedMainUser(token);
+		if (authenticatedMainUser(token).getEmailId().equals(emailId)) {
+			throw new ColaboratorException("Opps...Can't add own account as colaborator", 400);
+		}
 		Note fetchedValidNote = verifiedNote(noteId);
 		User fetchedValidColaborator = validColaborator(emailId);
 		fetchedValidNote.getColaboratedUsers().add(fetchedValidColaborator);
 		fetchedValidColaborator.getColaboratedNotes().add(fetchedValidNote);
 		noteRepository.saveOrUpdate(fetchedValidNote);
 		return true;
+	}
+
+	@Override
+	public List<User> getColaboratorsOfNote(String token, long noteId) {
+		authenticatedMainUser(token);
+		return verifiedNote(noteId).getColaboratedUsers();
 	}
 
 }

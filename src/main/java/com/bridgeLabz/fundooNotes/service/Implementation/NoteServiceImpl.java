@@ -2,11 +2,9 @@ package com.bridgeLabz.fundooNotes.service.Implementation;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bridgeLabz.fundooNotes.exception.AuthorizationException;
@@ -43,8 +41,8 @@ public class NoteServiceImpl implements INoteService {
 	private INoteRepository noteRepository;
 	@Autowired
 	private JWTToken jwtToken;
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+//	@Autowired
+//	private RedisTemplate<String, Object> redisTemplate;
 
 	/**
 	 * This function takes authentication token as String input parameter and decode
@@ -78,17 +76,17 @@ public class NoteServiceImpl implements INoteService {
 		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
 	}
 
-	private long getRedisCacheId(String token) {
-		// split token on basis of . and stored in an array
-		String[] splitedToken = token.split("\\.");
-		// concatenation of the separated token by removing .
-		String redisTokenKey = splitedToken[1] + splitedToken[2];
-		if (redisTemplate.opsForValue().get(redisTokenKey) == null) {
-			long idForRedis = jwtToken.decodeToken(token);
-			redisTemplate.opsForValue().set(redisTokenKey, idForRedis, 3 * 60, TimeUnit.SECONDS);
-		}
-		return (Long) redisTemplate.opsForValue().get(redisTokenKey);
-	}
+//	private long getRedisCacheId(String token) {
+//		// split token on basis of . and stored in an array
+//		String[] splitedToken = token.split("\\.");
+//		// concatenation of the separated token by removing .
+//		String redisTokenKey = splitedToken[1] + splitedToken[2];
+//		if (redisTemplate.opsForValue().get(redisTokenKey) == null) {
+//			long idForRedis = jwtToken.decodeToken(token);
+//			redisTemplate.opsForValue().set(redisTokenKey, idForRedis, 3 * 60, TimeUnit.SECONDS);
+//		}
+//		return (Long) redisTemplate.opsForValue().get(redisTokenKey);
+//	}
 
 	/**
 	 * This function takes {@link NoteDTO} as input parameter and token as path

@@ -98,8 +98,8 @@ public class UserController {
 		if (fetchedUserInformation != null) {
 			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
 			System.out.println("generated token : " + generatedToken);
-			return ResponseEntity.status(HttpStatus.OK).header(generatedToken, loginInformation.getEmailId())
-					.body(new UserDetailResponse("login successful", 200, loginInformation));
+			return ResponseEntity.status(HttpStatus.OK).header(generatedToken)
+					.body(new UserDetailResponse("login successful", 200));
 		}
 		// not registered
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
