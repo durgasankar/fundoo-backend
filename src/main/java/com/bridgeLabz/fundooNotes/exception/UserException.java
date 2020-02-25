@@ -14,8 +14,8 @@ public class UserException extends RuntimeException {
 	private final int status;
 
 	/**
-	 * Constructor takes message and Status code as input parameter and fetch message
-	 * from its superclass.
+	 * Constructor takes message and Status code as input parameter and fetch
+	 * message from its superclass.
 	 * 
 	 * @param message as String input parameter
 	 * @param status  as Integer input parameter
