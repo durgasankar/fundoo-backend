@@ -100,12 +100,12 @@ public class UserController {
 		if (fetchedUserInformation != null) {
 			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
 			System.out.println("generated token : " + generatedToken);
-			return ResponseEntity.status(HttpStatus.OK).header(generatedToken)
-					.body(new UserDetailResponse("login successful", 200));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new UserDetailResponse("login successful", 200, generatedToken));
 		}
 		// not registered
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new UserDetailResponse("check mail for verification", 400));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(new UserDetailResponse("Check Your mail for verification...", 401));
 	}
 
 	/**

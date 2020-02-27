@@ -1,7 +1,5 @@
 package com.bridgelabz.fundoonotes.model.dto;
 
-import javax.validation.constraints.Pattern;
-
 import org.springframework.stereotype.Component;
 
 import com.bridgelabz.fundoonotes.annotation.ValidEmailId;
@@ -20,7 +18,7 @@ public class LoginDTO {
 	@ValidEmailId
 	@ApiModelProperty(notes = "valid email id for login", name = "email id")
 	private String emailId;
-	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Enter a valid password")
+//	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Enter a valid password")
 	@ApiModelProperty("password for login")
 	private String password;
 

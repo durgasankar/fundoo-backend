@@ -1,7 +1,5 @@
 package com.bridgelabz.fundoonotes.response;
 
-import com.bridgelabz.fundoonotes.model.dto.LoginDTO;
-
 /**
  * Response class for login which holds the token code of the user and status
  * code.
@@ -12,49 +10,28 @@ import com.bridgelabz.fundoonotes.model.dto.LoginDTO;
  */
 public class UserDetailResponse {
 
-	private String tokenCode;
+	private String message;
 	private int statusCode;
-	private LoginDTO loginInformation;
+	private String token;
 
-	/**
-	 * Constructor takes token code and status code and user information as input
-	 * parameter
-	 * 
-	 * @param tokenCode        as String input parameter
-	 * @param statusCode       as Integer input parameter
-	 * @param loginInformation as LoginInformation class
-	 */
-	public UserDetailResponse(String tokenCode, int statusCode, LoginDTO loginInformation) {
-		this.tokenCode = tokenCode;
+	public UserDetailResponse(String message, int statusCode, String token) {
+		this.message = message;
 		this.statusCode = statusCode;
-		this.loginInformation = loginInformation;
+		this.token = token;
 	}
 
-	/**
-	 * Constructor takes token code and status code as input parameter
-	 * 
-	 * @param tokenCode  as String input parameter
-	 * @param statusCode as Integer input parameter
-	 */
-	public UserDetailResponse(String tokenCode, int statusCode) {
-		this.tokenCode = tokenCode;
+	public UserDetailResponse(String message, int statusCode) {
+
+		this.message = message;
 		this.statusCode = statusCode;
 	}
 
-	/**
-	 * super class non parameterized constructor
-	 */
-	public UserDetailResponse() {
-		super();
-
+	public String getMessage() {
+		return message;
 	}
 
-	public String getTokenCode() {
-		return tokenCode;
-	}
-
-	public void setTokenCode(String tokenCode) {
-		this.tokenCode = tokenCode;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public int getStatusCode() {
@@ -65,12 +42,12 @@ public class UserDetailResponse {
 		this.statusCode = statusCode;
 	}
 
-	public LoginDTO getLoginInformation() {
-		return loginInformation;
+	public String getToken() {
+		return token;
 	}
 
-	public void setLoginInformation(LoginDTO loginInformation) {
-		this.loginInformation = loginInformation;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }
