@@ -31,7 +31,7 @@ public interface IUserService {
 	 * @param token as String input parameter
 	 * @return Boolean
 	 */
-	public boolean isVerifiedUserToken(String token);
+	public User verifiedUser(String token);
 
 	/**
 	 * UnImplemented functionality of login which takes userDto as class type input

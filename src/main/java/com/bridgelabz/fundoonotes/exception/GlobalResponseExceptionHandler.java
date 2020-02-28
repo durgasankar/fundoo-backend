@@ -41,7 +41,7 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	 */
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<Response> handleAllUserException(UserException exception) {
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(exception.getMessage(), exception.getStatus()));
 	}
 

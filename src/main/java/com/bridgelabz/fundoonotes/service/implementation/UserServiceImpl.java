@@ -18,6 +18,7 @@ import com.bridgelabz.fundoonotes.model.dto.UserDTO;
 import com.bridgelabz.fundoonotes.repository.IUserRepository;
 import com.bridgelabz.fundoonotes.response.MailObject;
 import com.bridgelabz.fundoonotes.service.IUserService;
+import com.bridgelabz.fundoonotes.utility.EMailServiceProvider;
 import com.bridgelabz.fundoonotes.utility.JWTToken;
 import com.bridgelabz.fundoonotes.utility.RabbitMQSender;
 import com.bridgelabz.fundoonotes.utility.Util;
@@ -79,7 +80,7 @@ public class UserServiceImpl implements IUserService {
 		// user again fetched from database and mail sent for verification
 		User fetchedUserForVerification = userRepository.getUser(newUser.getEmailId());
 		String emailBodyContaintLink = Util.createLink(
-				Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
+				Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + Util.REGESTATION_VERIFICATION_LINK,
 				jwtToken.createJwtToken(fetchedUserForVerification.getUserId()));
 		if (rabbitMQSender.send(new MailObject(fetchedUserForVerification.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
 				emailBodyContaintLink))) {
@@ -96,13 +97,13 @@ public class UserServiceImpl implements IUserService {
 	 * returns boolean value
 	 */
 	@Override
-	public boolean isVerifiedUserToken(String token) {
+	public User verifiedUser(String token) {
 		long fetchedId = jwtToken.decodeToken(token);
 		if (fetchedId > 0) {
 			userRepository.isVerifiedUser(fetchedId);
-			return true;
+			return userRepository.getUser(fetchedId);
 		}
-		return false;
+		return null;
 	}
 
 	/**
