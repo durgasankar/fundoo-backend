@@ -136,7 +136,7 @@ public class UserController {
 	 * @param upadatePassword as {@link UpdatePassword} class
 	 * @return ResponseEntity<Response>
 	 */
-	@PutMapping("updatePassword/{token}")
+	@PutMapping("update-password/{token}")
 	public ResponseEntity<Response> updatePassword(@PathVariable("token") String token,
 			@RequestBody() UpdatePassword upadatePassword) {
 		boolean updationStatus = userService.updatePassword(upadatePassword, token);

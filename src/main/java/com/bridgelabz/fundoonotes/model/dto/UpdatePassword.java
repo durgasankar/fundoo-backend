@@ -10,27 +10,8 @@ package com.bridgelabz.fundoonotes.model.dto;
  */
 public class UpdatePassword {
 
-	private String emailId;
 	private String password;
 	private String confirmPassword;
-
-	/**
-	 * Getter method to fetch emailId
-	 * 
-	 * @return String
-	 */
-	public String getEmailId() {
-		return emailId;
-	}
-
-	/**
-	 * Setter method to set email id
-	 * 
-	 * @param emailId as String input parameter
-	 */
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
 
 	/**
 	 * Getter method to fetch password
@@ -73,7 +54,7 @@ public class UpdatePassword {
 	 */
 	@Override
 	public String toString() {
-		return "UpdatePassword [emailId=" + emailId + ", password=" + password + ", confirmPassword=" + confirmPassword
+		return "UpdatePassword [password=" + password + ", confirmPassword=" + confirmPassword
 				+ "]";
 	}
 

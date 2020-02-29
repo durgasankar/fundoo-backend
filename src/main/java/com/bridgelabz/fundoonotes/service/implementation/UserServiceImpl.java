@@ -154,7 +154,7 @@ public class UserServiceImpl implements IUserService {
 			// user verified
 			if (fetchedUser.isVerified()) {
 				String emailBodyLink = Util.createLink(
-						Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/updatePassword",
+						Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + "/update-password",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 //				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
 				rabbitMQSender.send(new MailObject(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink));
@@ -162,7 +162,7 @@ public class UserServiceImpl implements IUserService {
 			}
 			// not verified
 			String emailRegistrationVerificationBodyLink = Util.createLink(
-					Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
+					Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + Util.REGESTATION_VERIFICATION_LINK,
 					jwtToken.createJwtToken(fetchedUser.getUserId()));
 //			emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT,
 //					emailRegistrationVerificationBodyLink);
@@ -182,7 +182,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public boolean updatePassword(UpdatePassword updatePasswordInformation, String token) {
-
+		User fetchedUser = userRepository.getUser(jwtToken.decodeToken(token));
 		if (updatePasswordInformation.getPassword().equals(updatePasswordInformation.getConfirmPassword())) {
 			updatePasswordInformation
 					.setConfirmPassword(passwordEncoder.encode(updatePasswordInformation.getConfirmPassword()));
@@ -190,8 +190,8 @@ public class UserServiceImpl implements IUserService {
 			// sends mail after updating password
 //			emailServiceProvider.sendMail(updatePasswordInformation.getEmailId(), "Password updated sucessfully...",
 //					mailContaintAfterUpdatingPassword(updatePasswordInformation));
-			rabbitMQSender.send(new MailObject(updatePasswordInformation.getEmailId(),
-					"Password updated sucessfully...", mailContaintAfterUpdatingPassword(updatePasswordInformation)));
+			rabbitMQSender.send(new MailObject(fetchedUser.getEmailId(), "Password updated sucessfully...",
+					mailContaintAfterUpdatingPassword(fetchedUser)));
 			return true;
 		}
 		throw new AuthorizationException("Opps...password did not match!", 401);
@@ -205,9 +205,9 @@ public class UserServiceImpl implements IUserService {
 	 * @param updatePasswordInformation as {@link UpdatePassword} input parameter
 	 * @return String
 	 */
-	private String mailContaintAfterUpdatingPassword(UpdatePassword updatePasswordInformation) {
-		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + updatePasswordInformation.getEmailId()
-				+ "\nPassword : " + updatePasswordInformation.getPassword();
+	private String mailContaintAfterUpdatingPassword(User fetchedUser) {
+		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + fetchedUser.getEmailId()
+				+ "\nPassword : " + fetchedUser.getPassword();
 		String loginString = "\nClick on the link to login\n";
 		String loginLink = Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/login";
 		return passwordUpdateBodyContent + loginString + loginLink;
