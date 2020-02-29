@@ -37,7 +37,7 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	 * Handles all incoming {@link UserException} during Runtime.
 	 * 
 	 * @param userException as {@link UserException}
-	 * @return ResponseEntity<Response>
+	 * @return ResponseEntity<Response>	
 	 */
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<Response> handleAllUserException(UserException exception) {

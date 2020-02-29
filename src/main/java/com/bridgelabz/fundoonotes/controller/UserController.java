@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.model.User;
+import com.bridgelabz.fundoonotes.model.dto.ForgetPasswordDTO;
 import com.bridgelabz.fundoonotes.model.dto.LoginDTO;
 import com.bridgelabz.fundoonotes.model.dto.UpdatePassword;
 import com.bridgelabz.fundoonotes.model.dto.UserDTO;
@@ -76,9 +76,10 @@ public class UserController {
 	@PutMapping("verification/{token}")
 	public ResponseEntity<Response> verifyRegistration(@PathVariable("token") String token) {
 		User fetchedUser = userService.verifiedUser(token);
-		
+
 		if (fetchedUser != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("account verified sucessfully.", 200, fetchedUser.getFirstName()));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("account verified sucessfully.", 200, fetchedUser.getFirstName()));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response("Invalid verification attempt", 406));
 
@@ -117,13 +118,12 @@ public class UserController {
 	 * @param emailId as String input parameter
 	 * @return ResponseEntity<Response>
 	 */
-	@PostMapping("forgotPassword")
-	public ResponseEntity<Response> forgotPassword(@RequestParam("emailId") String emailId) {
-		boolean fetchedUserStatus = userService.isUserPresent(emailId);
-		if (fetchedUserStatus) {
-			return ResponseEntity.status(HttpStatus.FOUND).body(new Response("found user", 302));
+	@PostMapping("forgot-password")
+	public ResponseEntity<Response> forgotPassword(@RequestBody ForgetPasswordDTO forgetPasswordDTO) {
+		if (userService.isUserPresent(forgetPasswordDTO.getEmailId())) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Check mail for password updation", 200));
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("not verified", 401));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("Account not verified...Check mail for verification", 401));
 	}
 
 	/**
