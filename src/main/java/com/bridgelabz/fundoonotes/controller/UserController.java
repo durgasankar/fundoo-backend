@@ -141,9 +141,9 @@ public class UserController {
 			@RequestBody() UpdatePassword upadatePassword) {
 		boolean updationStatus = userService.updatePassword(upadatePassword, token);
 		if (updationStatus) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("updated sucessfully", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Password updated sucessfully...", 200));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("updation failed", 400));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response("Password updated failed...", 400));
 
 	}
 

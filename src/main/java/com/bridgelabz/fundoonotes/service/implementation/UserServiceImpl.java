@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.fundoonotes.exception.AuthorizationException;
 import com.bridgelabz.fundoonotes.exception.InvalidCredentialsException;
 import com.bridgelabz.fundoonotes.exception.UserException;
+import com.bridgelabz.fundoonotes.exception.UserVerificationException;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.model.dto.LoginDTO;
 import com.bridgelabz.fundoonotes.model.dto.UpdatePassword;
@@ -99,11 +100,15 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public User verifiedUser(String token) {
 		long fetchedId = jwtToken.decodeToken(token);
-		if (fetchedId > 0) {
-			userRepository.isVerifiedUser(fetchedId);
-			return userRepository.getUser(fetchedId);
+		User fetchedUser = userRepository.getUser(fetchedId);
+		if (fetchedId > 0 && fetchedUser != null) {
+			if (!fetchedUser.isVerified()) {
+				userRepository.isVerifiedUser(fetchedId);
+				return fetchedUser;
+			}
+			throw new UserVerificationException("Opps...User already verified!", 422);
 		}
-		return null;
+		throw new UserException(Util.USER_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE);
 	}
 
 	/**
@@ -208,8 +213,7 @@ public class UserServiceImpl implements IUserService {
 
 		String passwordUpdateBodyContent = "Hallo Mr/s. " + fetchedUser.getFirstName() + " " + fetchedUser.getLastName()
 				+ ",\n\n";
-		String message = "password updated sucessfully at : " + LocalDateTime.now()
-				+ "\n😱. Click ☟\n";
+		String message = "password updated sucessfully at : " + LocalDateTime.now() + "\n😱. Click ☟\n\n";
 		String loginLink = Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + "/login";
 		return passwordUpdateBodyContent + message + loginLink;
 	}

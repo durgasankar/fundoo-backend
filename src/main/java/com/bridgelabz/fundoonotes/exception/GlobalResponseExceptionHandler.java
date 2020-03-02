@@ -12,8 +12,9 @@ import com.bridgelabz.fundoonotes.response.Response;
  * Global Exception Handler which handles all runtime exceptions like
  * {@link UserException}, {@link NoteException}, {@link AuthorizationException},
  * {@link InvalidCredentialsException}, {@link RemainderException},
- * {@link LabelException}, {@link MailSendingException}
- * {@link ColaboratorException} from service layer itself.
+ * {@link LabelException}, {@link MailSendingException},
+ * {@link UserVerificationException} {@link ColaboratorException} from service
+ * layer itself.
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-29
@@ -37,7 +38,7 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	 * Handles all incoming {@link UserException} during Runtime.
 	 * 
 	 * @param userException as {@link UserException}
-	 * @return ResponseEntity<Response>	
+	 * @return ResponseEntity<Response>
 	 */
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<Response> handleAllUserException(UserException exception) {
@@ -103,6 +104,18 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
 	@ExceptionHandler(ColaboratorException.class)
 	public ResponseEntity<Response> handleAllColaboratorException(ColaboratorException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(exception.getMessage(), exception.getStatus()));
+	}
+
+	/**
+	 * Handles all incoming {@link UserVerificationException} during Runtime.
+	 * 
+	 * @param noteException as {@link UserVerificationException}
+	 * @return ResponseEntity<Response>
+	 */
+	@ExceptionHandler(UserVerificationException.class)
+	public ResponseEntity<Response> handleAllUserVerificationException(UserVerificationException exception) {
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 				.body(new Response(exception.getMessage(), exception.getStatus()));
 	}
 
