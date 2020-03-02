@@ -153,8 +153,7 @@ public class UserServiceImpl implements IUserService {
 		if (fetchedUser != null) {
 			// user verified
 			if (fetchedUser.isVerified()) {
-				String emailBodyLink = Util.createLink(
-						Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + "/update-password",
+				String emailBodyLink = Util.createLink(Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + "/update-password",
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 //				emailServiceProvider.sendMail(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink);
 				rabbitMQSender.send(new MailObject(fetchedUser.getEmailId(), "Update Password Link", emailBodyLink));
@@ -202,15 +201,17 @@ public class UserServiceImpl implements IUserService {
 	 * prepare a body contains for sending mail to the concern user. along with user
 	 * valid details it sends login link to the user.
 	 * 
-	 * @param updatePasswordInformation as {@link UpdatePassword} input parameter
+	 * @param fetchedUser as {@link User}
 	 * @return String
 	 */
 	private String mailContaintAfterUpdatingPassword(User fetchedUser) {
-		String passwordUpdateBodyContent = "Login Credentials \n" + "UserId : " + fetchedUser.getEmailId()
-				+ "\nPassword : " + fetchedUser.getPassword();
-		String loginString = "\nClick on the link to login\n";
-		String loginLink = Util.IP_ADDRESS + environment.getProperty("server.port") + "/user/login";
-		return passwordUpdateBodyContent + loginString + loginLink;
+
+		String passwordUpdateBodyContent = "Hallo Mr/s. " + fetchedUser.getFirstName() + " " + fetchedUser.getLastName()
+				+ ",\n\n";
+		String message = "password updated sucessfully at : " + LocalDateTime.now()
+				+ "\n😱. Click ☟\n";
+		String loginLink = Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + "/login";
+		return passwordUpdateBodyContent + message + loginLink;
 	}
 
 }

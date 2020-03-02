@@ -61,7 +61,7 @@ public class UserController {
 					.body(new Response("user already exist... please login!", 208, resultStatus));
 		}
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new Response("registration successful...login to continue!", 201, resultStatus));
+				.body(new Response("registration successful... check your mail for verification!", 201, resultStatus));
 
 	}
 
