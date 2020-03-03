@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +47,6 @@ public class UserServiceImpl implements IUserService {
 	private IUserRepository userRepository;
 	@Autowired
 	private JWTToken jwtToken;
-	@Autowired
-	private Environment environment;
 	@Autowired
 	private RabbitMQSender rabbitMQSender;
 
@@ -130,7 +127,7 @@ public class UserServiceImpl implements IUserService {
 					return fetchedUser;
 				}
 				String emailBodyLink = Util.createLink(
-						Util.IP_ADDRESS + environment.getProperty("server.port") + Util.REGESTATION_VERIFICATION_LINK,
+						Util.IP_ADDRESS + Util.ANGULAR_PORT_NUMBER + Util.REGESTATION_VERIFICATION_LINK,
 						jwtToken.createJwtToken(fetchedUser.getUserId()));
 //				emailServiceProvider.sendMail(fetchedUser.getEmailId(), Util.REGISTRATION_EMAIL_SUBJECT, emailBodyLink);
 				rabbitMQSender

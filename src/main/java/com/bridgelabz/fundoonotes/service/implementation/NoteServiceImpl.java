@@ -15,6 +15,7 @@ import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.model.dto.NoteDTO;
 import com.bridgelabz.fundoonotes.model.dto.RemainderDTO;
+import com.bridgelabz.fundoonotes.repository.IElasticSearchRepository;
 import com.bridgelabz.fundoonotes.repository.INoteRepository;
 import com.bridgelabz.fundoonotes.repository.IUserRepository;
 import com.bridgelabz.fundoonotes.service.INoteService;
@@ -43,6 +44,9 @@ public class NoteServiceImpl implements INoteService {
 	private JWTToken jwtToken;
 //	@Autowired
 //	private RedisTemplate<String, Object> redisTemplate;
+	
+	@Autowired
+	private IElasticSearchRepository elasticSearchRepository;
 
 	/**
 	 * This function takes authentication token as String input parameter and decode
@@ -108,6 +112,7 @@ public class NoteServiceImpl implements INoteService {
 			newNote.setColor("white");
 			fetchedUser.getNotes().add(newNote);
 			noteRepository.saveOrUpdate(newNote);
+			elasticSearchRepository.CreateNote(newNote);
 			return true;
 		}
 		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
