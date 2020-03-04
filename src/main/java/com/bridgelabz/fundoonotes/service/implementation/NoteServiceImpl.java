@@ -44,7 +44,7 @@ public class NoteServiceImpl implements INoteService {
 	private JWTToken jwtToken;
 //	@Autowired
 //	private RedisTemplate<String, Object> redisTemplate;
-	
+
 	@Autowired
 	private IElasticSearchRepository elasticSearchRepository;
 
@@ -112,7 +112,7 @@ public class NoteServiceImpl implements INoteService {
 			newNote.setColor("white");
 			fetchedUser.getNotes().add(newNote);
 			noteRepository.saveOrUpdate(newNote);
-			elasticSearchRepository.CreateNote(newNote);
+			elasticSearchRepository.createNote(newNote);
 			return true;
 		}
 		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
@@ -135,6 +135,7 @@ public class NoteServiceImpl implements INoteService {
 		BeanUtils.copyProperties(noteDto, fetchedNote);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
+		elasticSearchRepository.updateNote(fetchedNote);
 		return true;
 	}
 
@@ -149,8 +150,9 @@ public class NoteServiceImpl implements INoteService {
 		// found authorized user
 		authenticatedUser(token);
 		// verified valid note
-		verifiedNote(noteId);
+		Note fetchedVerifiedNote = verifiedNote(noteId);
 		noteRepository.isDeletedNote(noteId);
+		elasticSearchRepository.deleteNote(fetchedVerifiedNote);
 		return true;
 	}
 
@@ -172,6 +174,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setArchived(true);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
+			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
 		// if archived already
@@ -201,6 +204,7 @@ public class NoteServiceImpl implements INoteService {
 		fetchedNote.setPinned(false);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
+		elasticSearchRepository.updateNote(fetchedNote);
 		return false;
 	}
 
@@ -221,6 +225,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setTrashed(true);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
+			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
 		// if trashed already
@@ -300,6 +305,7 @@ public class NoteServiceImpl implements INoteService {
 		fetchedNote.setColor(noteColour);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
+		elasticSearchRepository.updateNote(fetchedNote);
 	}
 
 	/**
@@ -318,6 +324,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			fetchedNote.setRemainderDate(remainderDTO.getRemainder());
 			noteRepository.saveOrUpdate(fetchedNote);
+			elasticSearchRepository.updateNote(fetchedNote);
 			return;
 		}
 		throw new RemainderException("Opps...Remainder already set!", 502);
@@ -339,6 +346,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setRemainderDate(null);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
+			elasticSearchRepository.updateNote(fetchedNote);
 			return;
 		}
 		throw new RemainderException("Opps...Remainder already removed!", 502);
@@ -354,9 +362,10 @@ public class NoteServiceImpl implements INoteService {
 		// authenticate user
 		authenticatedUser(token);
 		List<Note> fetchedNotes = noteRepository.searchBy(noteTitle);
+		List<Note> fetchedElasticNotes = elasticSearchRepository.searchByTitle(noteTitle);
 		// notes are not empty
 		if (!fetchedNotes.isEmpty()) {
-			return fetchedNotes;
+			return fetchedElasticNotes;
 		}
 		// if empty
 		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);

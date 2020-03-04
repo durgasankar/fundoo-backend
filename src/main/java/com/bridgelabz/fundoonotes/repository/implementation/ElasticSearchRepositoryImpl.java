@@ -9,7 +9,6 @@ import java.util.Map;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -26,8 +25,18 @@ import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.repository.IElasticSearchRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Repository of elastic search which implements
+ * {@link IElasticSearchRepository} which provide the functionality of create ,
+ * update, delete, search operation.
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-03-04
+ * @version 1.0
+ * @see {@link ElasticSearchConfig} for configuration
+ * @see {@link ObjectMapper} for reading and writing JSON
+ */
 @Repository
-@SuppressWarnings("unchecked")
 public class ElasticSearchRepositoryImpl implements IElasticSearchRepository {
 
 	@Autowired
@@ -35,33 +44,26 @@ public class ElasticSearchRepositoryImpl implements IElasticSearchRepository {
 	@Autowired
 	private ObjectMapper objectmapper;
 
-	private String INDEX = "springboot";
-
-	private String TYPE = "note_details";
+	private static final String INDEX = "fundoo";
+	private static final String TYPE = "note_details";
 
 	@Override
-	public String CreateNote(Note note) {
-		Map<String, Object> notemapper = objectmapper.convertValue(note, Map.class);
-		IndexRequest indexrequest = new IndexRequest(INDEX, TYPE, String.valueOf(note.getNoteId())).source(notemapper);
-		IndexResponse indexResponse = null;
+	public void createNote(Note note) {
+		IndexRequest indexrequest = new IndexRequest(INDEX, TYPE, String.valueOf(note.getNoteId()))
+				.source(objectmapper.convertValue(note, Map.class));
+		// Index response
 		try {
-			indexResponse = config.client().index(indexrequest, RequestOptions.DEFAULT);
+			config.client().index(indexrequest, RequestOptions.DEFAULT);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(indexrequest);
-		System.out.println(indexResponse);
-		System.out.println(indexResponse.getResult().name());
-		return indexResponse.getResult().name();
-
 	}
 
 	@Override
-	public String UpdateNote(Note note) {
-		Map<String, Object> notemapper = objectmapper.convertValue(note, Map.class);
-		System.out.println(note.getNoteId());
-		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, String.valueOf(note.getNoteId())).doc(notemapper);
+	public String updateNote(Note note) {
+//		System.out.println(note.getNoteId());
+		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, String.valueOf(note.getNoteId()))
+				.doc(objectmapper.convertValue(note, Map.class));
 		UpdateResponse updateResponse = null;
 		try {
 			updateResponse = config.client().update(updateRequest, RequestOptions.DEFAULT);
@@ -72,13 +74,13 @@ public class ElasticSearchRepositoryImpl implements IElasticSearchRepository {
 	}
 
 	@Override
-	public String DeleteNote(Note note) {
+	public String deleteNote(Note note) {
 
-		Map<String, Object> notemapper = objectmapper.convertValue(note, Map.class);
-		DeleteRequest deleterequest = new DeleteRequest(INDEX, TYPE, String.valueOf(note.getNoteId()));
+		objectmapper.convertValue(note, Map.class);
+		DeleteRequest deleteRequest = new DeleteRequest(INDEX, TYPE, String.valueOf(note.getNoteId()));
 		DeleteResponse deleteResponse = null;
 		try {
-			deleteResponse = config.client().delete(deleterequest, RequestOptions.DEFAULT);
+			deleteResponse = config.client().delete(deleteRequest, RequestOptions.DEFAULT);
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -87,29 +89,29 @@ public class ElasticSearchRepositoryImpl implements IElasticSearchRepository {
 	}
 
 	@Override
-	public List<Note> searchbytitle(String title) {
-		System.out.println(title);
-		SearchRequest searchrequest = new SearchRequest("springboot");
-		SearchSourceBuilder searchsource = new SearchSourceBuilder();
-		System.out.println(searchrequest);
+	public List<Note> searchByTitle(String title) {
+//		System.out.println(title);
+		SearchRequest searchRequest = new SearchRequest(INDEX);
+		SearchSourceBuilder searchSource = new SearchSourceBuilder();
+//		System.out.println(searchRequest);
 
-		searchsource.query(QueryBuilders.matchQuery("title", title));
-		searchrequest.source(searchsource);
-		SearchResponse searchresponse = null;
+		searchSource.query(QueryBuilders.matchQuery("title", title));
+		searchRequest.source(searchSource);
+		SearchResponse searchResponse = null;
 		try {
-			searchresponse = config.client().search(searchrequest, RequestOptions.DEFAULT);
+			searchResponse = config.client().search(searchRequest, RequestOptions.DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(getResult(searchresponse).toString());
-		return getResult(searchresponse);
+//		System.out.println(getResult(searchResponse).toString());
+		return getResult(searchResponse);
 	}
 
-	private List<Note> getResult(SearchResponse searchresponse) {
-		SearchHit[] searchhits = searchresponse.getHits().getHits();
+	private List<Note> getResult(SearchResponse searchResponse) {
+		SearchHit[] searchHits = searchResponse.getHits().getHits();
 		List<Note> notes = new ArrayList<>();
-		if (searchhits.length > 0) {
-			Arrays.stream(searchhits)
+		if (searchHits.length > 0) {
+			Arrays.stream(searchHits)
 					.forEach(hit -> notes.add(objectmapper.convertValue(hit.getSourceAsMap(), Note.class)));
 		}
 		return notes;

@@ -6,6 +6,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.bridgelabz.fundoonotes.utility.Util;
+
 /**
  * Configuration bean of elastic search.which takes httpClient which takes
  * httpClientBuilder which takes host-name , port and schema as input parameter.
@@ -17,17 +19,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ElasticSearchConfig {
 
-//	@Bean(destroyMethod = "close")
-//	public RestHighLevelClient client() {
-//		return new RestHighLevelClient(
-//				RestClient.builder(new HttpHost("localhost", Util.ELASTIC_SEARCH_PORT_NUMBER, "http")));
-//
-//	}
-	@Bean(destroyMethod = "close") 
-	public RestHighLevelClient client()
-	{
-		RestHighLevelClient restclient=new RestHighLevelClient(RestClient.builder(new HttpHost("localhost",9200,"http")));
-		return restclient;
+	@Bean(destroyMethod = "close")
+	public RestHighLevelClient client() {
+		return new RestHighLevelClient(
+				RestClient.builder(new HttpHost("localhost", Util.ELASTIC_SEARCH_PORT_NUMBER, "http")));
+
 	}
 
 }
