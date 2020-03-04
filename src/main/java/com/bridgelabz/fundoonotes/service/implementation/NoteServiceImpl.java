@@ -15,7 +15,6 @@ import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.model.dto.NoteDTO;
 import com.bridgelabz.fundoonotes.model.dto.RemainderDTO;
-import com.bridgelabz.fundoonotes.repository.IElasticSearchRepository;
 import com.bridgelabz.fundoonotes.repository.INoteRepository;
 import com.bridgelabz.fundoonotes.repository.IUserRepository;
 import com.bridgelabz.fundoonotes.service.INoteService;
@@ -45,8 +44,8 @@ public class NoteServiceImpl implements INoteService {
 //	@Autowired
 //	private RedisTemplate<String, Object> redisTemplate;
 
-	@Autowired
-	private IElasticSearchRepository elasticSearchRepository;
+//	@Autowired
+//	private IElasticSearchRepository elasticSearchRepository;
 
 	/**
 	 * This function takes authentication token as String input parameter and decode
@@ -112,7 +111,7 @@ public class NoteServiceImpl implements INoteService {
 			newNote.setColor("white");
 			fetchedUser.getNotes().add(newNote);
 			noteRepository.saveOrUpdate(newNote);
-			elasticSearchRepository.createNote(newNote);
+//			elasticSearchRepository.createNote(newNote);
 			return true;
 		}
 		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
@@ -135,7 +134,7 @@ public class NoteServiceImpl implements INoteService {
 		BeanUtils.copyProperties(noteDto, fetchedNote);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
-		elasticSearchRepository.updateNote(fetchedNote);
+//		elasticSearchRepository.updateNote(fetchedNote);
 		return true;
 	}
 
@@ -150,9 +149,9 @@ public class NoteServiceImpl implements INoteService {
 		// found authorized user
 		authenticatedUser(token);
 		// verified valid note
-		Note fetchedVerifiedNote = verifiedNote(noteId);
+		verifiedNote(noteId);
 		noteRepository.isDeletedNote(noteId);
-		elasticSearchRepository.deleteNote(fetchedVerifiedNote);
+//		elasticSearchRepository.deleteNote(fetchedVerifiedNote);
 		return true;
 	}
 
@@ -174,7 +173,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setArchived(true);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
-			elasticSearchRepository.updateNote(fetchedNote);
+//			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
 		// if archived already
@@ -204,7 +203,7 @@ public class NoteServiceImpl implements INoteService {
 		fetchedNote.setPinned(false);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
-		elasticSearchRepository.updateNote(fetchedNote);
+//		elasticSearchRepository.updateNote(fetchedNote);
 		return false;
 	}
 
@@ -225,7 +224,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setTrashed(true);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
-			elasticSearchRepository.updateNote(fetchedNote);
+//			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
 		// if trashed already
@@ -305,7 +304,7 @@ public class NoteServiceImpl implements INoteService {
 		fetchedNote.setColor(noteColour);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
-		elasticSearchRepository.updateNote(fetchedNote);
+//		elasticSearchRepository.updateNote(fetchedNote);
 	}
 
 	/**
@@ -324,7 +323,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			fetchedNote.setRemainderDate(remainderDTO.getRemainder());
 			noteRepository.saveOrUpdate(fetchedNote);
-			elasticSearchRepository.updateNote(fetchedNote);
+//			elasticSearchRepository.updateNote(fetchedNote);
 			return;
 		}
 		throw new RemainderException("Opps...Remainder already set!", 502);
@@ -346,7 +345,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setRemainderDate(null);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
-			elasticSearchRepository.updateNote(fetchedNote);
+//			elasticSearchRepository.updateNote(fetchedNote);
 			return;
 		}
 		throw new RemainderException("Opps...Remainder already removed!", 502);
@@ -362,10 +361,10 @@ public class NoteServiceImpl implements INoteService {
 		// authenticate user
 		authenticatedUser(token);
 		List<Note> fetchedNotes = noteRepository.searchBy(noteTitle);
-		List<Note> fetchedElasticNotes = elasticSearchRepository.searchByTitle(noteTitle);
+//		List<Note> fetchedElasticNotes = elasticSearchRepository.searchByTitle(noteTitle);
 		// notes are not empty
 		if (!fetchedNotes.isEmpty()) {
-			return fetchedElasticNotes;
+			return fetchedNotes;
 		}
 		// if empty
 		throw new NoteException(Util.NOTE_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOTE_NOT_FOUND_EXCEPTION_STATUS);
