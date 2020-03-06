@@ -13,11 +13,13 @@ public class UserDetailResponse {
 	private String message;
 	private int statusCode;
 	private String token;
+	private String firstName;
 
-	public UserDetailResponse(String message, int statusCode, String token) {
+	public UserDetailResponse(String message, int statusCode, String token, String firstName) {
 		this.message = message;
 		this.statusCode = statusCode;
 		this.token = token;
+		this.firstName = firstName;
 	}
 
 	public UserDetailResponse(String message, int statusCode) {
@@ -48,6 +50,14 @@ public class UserDetailResponse {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 }

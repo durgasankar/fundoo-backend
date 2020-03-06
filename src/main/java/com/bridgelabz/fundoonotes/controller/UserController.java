@@ -101,8 +101,8 @@ public class UserController {
 		if (fetchedUserInformation != null) {
 			String generatedToken = jwtToken.createJwtToken(fetchedUserInformation.getUserId());
 			System.out.println("generated token : " + generatedToken);
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new UserDetailResponse("login successful", 200, generatedToken));
+			return ResponseEntity.status(HttpStatus.OK).body(new UserDetailResponse("login successful", 200,
+					generatedToken, fetchedUserInformation.getFirstName()));
 		}
 		// not registered
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -123,7 +123,8 @@ public class UserController {
 		if (userService.isUserPresent(forgetPasswordDTO.getEmailId())) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("Check mail for password updation", 200));
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response("Account not verified...Check mail for verification", 401));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(new Response("Account not verified...Check mail for verification", 401));
 	}
 
 	/**
