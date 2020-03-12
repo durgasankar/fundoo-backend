@@ -115,6 +115,15 @@ public interface INoteService {
 	public List<Note> getAllArchivedNotes(String token);
 
 	/**
+	 * UnImplemented functionality of getting all personalized remainder notes of
+	 * the user after validating the authorization token based on note id.
+	 * 
+	 * @param token as String input parameter
+	 * @return List<Note>
+	 */
+	public List<Note> getAllRemaindersNotes(String token);
+
+	/**
 	 * UnImplemented functionality of changing the color of personalized note after
 	 * after validating the authorization token based on note id.
 	 * 

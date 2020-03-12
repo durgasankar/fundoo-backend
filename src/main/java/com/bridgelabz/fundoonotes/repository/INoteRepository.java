@@ -76,6 +76,15 @@ public interface INoteRepository {
 	public List<Note> getAllArchivedNotes(long userId);
 
 	/**
+	 * UnImplemented functionality of fetching all user's note which have remainders
+	 * from database by taking noteId as input parameter.
+	 * 
+	 * @param userId as Long input parameter
+	 * @return List<Note>
+	 */
+	public List<Note> getAllRemainderNotes(long userId);
+
+	/**
 	 * UnImplemented functionality of fetching all non trashed user's note which are
 	 * not trashed.
 	 * 
@@ -83,5 +92,5 @@ public interface INoteRepository {
 	 * @return List<Note>
 	 */
 	public List<Note> searchBy(String noteTitle);
-	
+
 }

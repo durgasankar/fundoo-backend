@@ -213,6 +213,7 @@ public class NoteController {
 	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
 		List<Note> notes = noteService.getallNotes(token);
 		if (!notes.isEmpty()) {
+			System.out.println("response notes " + notes);
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, notes));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -238,6 +239,30 @@ public class NoteController {
 		if (!trashedNotes.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Response("Trashed notes are", Util.OK_RESPONSE_CODE, trashedNotes));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+	}
+
+	/**
+	 * This function takes authentication token as {@link RequestHeader} and verify
+	 * originality of user {@link NoteServiceImpl} after verification allows user to
+	 * get all remainder notes.
+	 * 
+	 * @param token as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/fetch/notes/remainders
+	 */
+	@ApiOperation(value = "fetch all remainder notes for valid user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "remainder notes are"),
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!"),
+			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
+	@GetMapping("fetch/notes/remainders")
+	public ResponseEntity<Response> fetchRemainderNotes(@RequestHeader("token") String token) {
+		List<Note> remaindersNotes = noteService.getAllRemaindersNotes(token);
+		if (!remaindersNotes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Remainder notes are", Util.OK_RESPONSE_CODE, remaindersNotes));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));

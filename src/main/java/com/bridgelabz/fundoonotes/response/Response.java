@@ -18,7 +18,7 @@ public class Response {
 
 	private Object object;
 
-	List<String> details;
+	private List<String> details;
 
 	/**
 	 * Constructor to fetch response if exist any.

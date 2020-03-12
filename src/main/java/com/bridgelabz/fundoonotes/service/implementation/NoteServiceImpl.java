@@ -116,7 +116,6 @@ public class NoteServiceImpl implements INoteService {
 		}
 		throw new AuthorizationException(Util.USER_AUTHORIZATION_EXCEPTION_MESSAGE,
 				Util.USER_AUTHENTICATION_EXCEPTION_STATUS);
-
 	}
 
 	/**
@@ -288,6 +287,17 @@ public class NoteServiceImpl implements INoteService {
 		// empty list
 		return fetchedArchivedNotes;
 	}
+	
+	@Override
+	public List<Note> getAllRemaindersNotes(String token) {
+		List<Note> fetchedremainderNotes = noteRepository.getAllRemainderNotes(authenticatedUser(token).getUserId());
+		// note found of authenticated user
+		if (!fetchedremainderNotes.isEmpty()) {
+			return fetchedremainderNotes;
+		}
+		// empty list
+		return fetchedremainderNotes;
+	}
 
 	/**
 	 * This function takes note id and authorized token and note color from the user
@@ -376,5 +386,7 @@ public class NoteServiceImpl implements INoteService {
 		authenticatedUser(token);
 		return verifiedNote(noteId).getLabelsList();
 	}
+
+	
 
 }

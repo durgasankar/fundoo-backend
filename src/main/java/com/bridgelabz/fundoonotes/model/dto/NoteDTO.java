@@ -2,6 +2,13 @@ package com.bridgelabz.fundoonotes.model.dto;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Note DTO class
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-12-02
+ * @version 1.0
+ */
 @Component
 public class NoteDTO {
 	private String title;

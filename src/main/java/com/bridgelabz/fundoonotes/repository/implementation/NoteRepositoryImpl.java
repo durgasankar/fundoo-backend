@@ -133,4 +133,11 @@ public class NoteRepositoryImpl implements INoteRepository {
 				.setParameter("title", noteTitle).getResultList();
 	}
 
+	@Override
+	public List<Note> getAllRemainderNotes(long userId) {
+		return entityManager.unwrap(Session.class)
+				.createQuery("FROM Note WHERE user_id=:id and remainder_date != null and is_trashed=false")
+				.setParameter("id", userId).getResultList();
+	}
+
 }
