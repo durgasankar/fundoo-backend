@@ -213,11 +213,10 @@ public class NoteController {
 	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
 		List<Note> notes = noteService.getallNotes(token);
 		if (!notes.isEmpty()) {
-			System.out.println("response notes " + notes);
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, notes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
 	}
 
 	/**
@@ -264,8 +263,8 @@ public class NoteController {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Response("Remainder notes are", Util.OK_RESPONSE_CODE, remaindersNotes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
 	}
 
 	@GetMapping("fetch/notes/{noteId}/labels")
@@ -276,8 +275,8 @@ public class NoteController {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Response("Labels are", Util.OK_RESPONSE_CODE, fetchedLabels));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.LABEL_NOT_FOUND_EXCEPTION_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
 	}
 
 	/**
@@ -300,8 +299,8 @@ public class NoteController {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Response("Pinned notes are", Util.OK_RESPONSE_CODE, pinnedNotes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
 	}
 
 	/**
@@ -325,8 +324,8 @@ public class NoteController {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Response("Archived notes are", Util.OK_RESPONSE_CODE, archivedNotes));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
 	}
 
 	/**

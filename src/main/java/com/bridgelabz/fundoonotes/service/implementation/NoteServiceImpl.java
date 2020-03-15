@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.service.implementation;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -237,7 +238,9 @@ public class NoteServiceImpl implements INoteService {
 	 */
 	@Override
 	public List<Note> getallNotes(String token) {
-		return noteRepository.getAllNotes(authenticatedUser(token).getUserId());
+		List<Note> fetchedNotes = noteRepository.getAllNotes(authenticatedUser(token).getUserId());
+		Collections.sort(fetchedNotes, (note1, note2) -> note2.getCreatedDate().compareTo(note1.getCreatedDate()));
+		return fetchedNotes;
 	}
 
 	/**
@@ -249,6 +252,8 @@ public class NoteServiceImpl implements INoteService {
 	public List<Note> getAllTrashedNotes(String token) {
 		// note found of authenticated user
 		List<Note> fetchedTrashedNotes = noteRepository.getAllTrashedNotes(authenticatedUser(token).getUserId());
+		Collections.sort(fetchedTrashedNotes,
+				(note1, note2) -> note2.getUpdatedDate().compareTo(note1.getUpdatedDate()));
 		if (!fetchedTrashedNotes.isEmpty()) {
 			return fetchedTrashedNotes;
 		}
@@ -265,6 +270,8 @@ public class NoteServiceImpl implements INoteService {
 	public List<Note> getAllPinnedNotes(String token) {
 		// note found of authenticated user
 		List<Note> fetchedPinnedNotes = noteRepository.getAllPinnedNotes(authenticatedUser(token).getUserId());
+		Collections.sort(fetchedPinnedNotes,
+				(note1, note2) -> note2.getUpdatedDate().compareTo(note1.getUpdatedDate()));
 		if (!fetchedPinnedNotes.isEmpty()) {
 			return fetchedPinnedNotes;
 		}
@@ -280,6 +287,8 @@ public class NoteServiceImpl implements INoteService {
 	@Override
 	public List<Note> getAllArchivedNotes(String token) {
 		List<Note> fetchedArchivedNotes = noteRepository.getAllArchivedNotes(authenticatedUser(token).getUserId());
+		Collections.sort(fetchedArchivedNotes,
+				(note1, note2) -> note2.getUpdatedDate().compareTo(note1.getUpdatedDate()));
 		// note found of authenticated user
 		if (!fetchedArchivedNotes.isEmpty()) {
 			return fetchedArchivedNotes;
@@ -287,10 +296,12 @@ public class NoteServiceImpl implements INoteService {
 		// empty list
 		return fetchedArchivedNotes;
 	}
-	
+
 	@Override
 	public List<Note> getAllRemaindersNotes(String token) {
 		List<Note> fetchedremainderNotes = noteRepository.getAllRemainderNotes(authenticatedUser(token).getUserId());
+		Collections.sort(fetchedremainderNotes,
+				(note1, note2) -> note2.getRemainderDate().compareTo(note1.getRemainderDate()));
 		// note found of authenticated user
 		if (!fetchedremainderNotes.isEmpty()) {
 			return fetchedremainderNotes;
@@ -386,7 +397,5 @@ public class NoteServiceImpl implements INoteService {
 		authenticatedUser(token);
 		return verifiedNote(noteId).getLabelsList();
 	}
-
-	
 
 }
