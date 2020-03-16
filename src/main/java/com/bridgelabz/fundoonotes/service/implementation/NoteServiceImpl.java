@@ -176,7 +176,7 @@ public class NoteServiceImpl implements INoteService {
 //			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
-		// if archived already
+		// if archived already unArchive functionality
 		fetchedNote.setArchived(false);
 		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
@@ -226,12 +226,38 @@ public class NoteServiceImpl implements INoteService {
 		Note fetchedNote = verifiedNote(noteId);
 		if (!fetchedNote.isTrashed()) {
 			fetchedNote.setTrashed(true);
+			fetchedNote.setArchived(false);
+			fetchedNote.setPinned(false);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
 //			elasticSearchRepository.updateNote(fetchedNote);
 			return true;
 		}
 		// if trashed already
+		return false;
+	}
+
+	/**
+	 * This function takes note id and authorized token from the user checks for
+	 * user authorization if valid customer then find for the available of note on
+	 * the database. if found valid note then it change the status of trashed on
+	 * database. if the note is trashed already then then it remove the note from
+	 * trashed and on Successful change of trashed status of note it return boolean
+	 * value.
+	 */
+	@Override
+	public boolean restoreNote(long noteId, String token) {
+		// found authorized user
+		authenticatedUser(token);
+		// verified valid note
+		Note fetchedNote = verifiedNote(noteId);
+		if (fetchedNote.isTrashed()) {
+			fetchedNote.setTrashed(false);
+			fetchedNote.setUpdatedDate(LocalDateTime.now());
+			noteRepository.saveOrUpdate(fetchedNote);
+//			elasticSearchRepository.updateNote(fetchedNote);
+			return true;
+		}
 		return false;
 	}
 

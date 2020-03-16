@@ -164,4 +164,14 @@ public interface INoteService {
 
 	public List<Label> getLabelsOfNote(String token, long noteId);
 
+	/**
+	 * UnImplemented functionality of restoring a personalized note from trash of a
+	 * customer after validating the authorization token based on note id .
+	 * 
+	 * @param noteId as long input parameter
+	 * @param token  as String input parameter
+	 * @return Boolean
+	 */
+	public boolean restoreNote(long noteId, String token);
+
 }

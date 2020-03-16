@@ -116,12 +116,41 @@ public class NoteController {
 			@ApiResponse(code = 400, message = "Opps...Error deleting note!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
 	@DeleteMapping("{id}/delete")
-	public ResponseEntity<Response> deleteNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
+	public ResponseEntity<Response> deleteNotePermanently(@PathVariable("id") long noteId,
+			@RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note deleted", Util.OK_RESPONSE_CODE));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Response("Note deleted forever", Util.OK_RESPONSE_CODE));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+				.body(new Response("Opps...Error deleting note!", Util.BAD_GATEWAY_RESPONSE_CODE));
+
+	}
+
+	/**
+	 * This function takes noteId as {@link PathVariable} and token as
+	 * {@link RequestHeader} and verify originality of client
+	 * {@link NoteServiceImpl} and hence restore operation of note accordingly it
+	 * returns the response.
+	 * 
+	 * @param noteId as {@link PathVariable}
+	 * @param token  as {@link RequestHeader}
+	 * @return ResponseEntity<Response>
+	 * @URL http://localhost:8080/note/76/restore
+	 */
+	@ApiOperation(value = "delete an existing note for valid user")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "note deleted"),
+			@ApiResponse(code = 300, message = "Opps...Note not found!"),
+			@ApiResponse(code = 400, message = "Opps...Error deleting note!"),
+			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
+	@PutMapping("{id}/restore")
+	public ResponseEntity<Response> restoreFromTrashed(@PathVariable("id") long noteId,
+			@RequestHeader("token") String token) {
+		if (noteService.restoreNote(noteId, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note restored", Util.OK_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response("Opps...Error deleting note!", Util.BAD_REQUEST_RESPONSE_CODE));
+				.body(new Response("Opps...Error Restoring note!", Util.BAD_REQUEST_RESPONSE_CODE));
 
 	}
 
