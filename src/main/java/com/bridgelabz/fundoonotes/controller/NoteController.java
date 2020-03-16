@@ -68,7 +68,7 @@ public class NoteController {
 	public ResponseEntity<Response> createNote(@RequestBody NoteDTO noteDto, @RequestHeader("token") String token) {
 		if (noteService.createNote(noteDto, token)) {
 			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(new Response("note created", Util.CREATED_RESPONSE_CODE));
+					.body(new Response("Note created", Util.CREATED_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps... Error creating note!", Util.BAD_REQUEST_RESPONSE_CODE));
@@ -93,7 +93,7 @@ public class NoteController {
 	public ResponseEntity<Response> updateNote(@RequestBody NoteDTO noteDto, @RequestParam("id") long noteId,
 			@RequestHeader("token") String token) {
 		if (noteService.updateNote(noteDto, noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note updated", Util.OK_RESPONSE_CODE));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note updated", Util.OK_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Error updating note!", Util.BAD_REQUEST_RESPONSE_CODE));
@@ -118,7 +118,7 @@ public class NoteController {
 	@DeleteMapping("{id}/delete")
 	public ResponseEntity<Response> deleteNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.deleteNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note deleted", Util.OK_RESPONSE_CODE));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note deleted", Util.OK_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Error deleting note!", Util.BAD_REQUEST_RESPONSE_CODE));
@@ -141,14 +141,14 @@ public class NoteController {
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 400, message = "Opps...Already archived!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
-	@PatchMapping("{id}/archieve")
+	@DeleteMapping("{id}/archive")
 	public ResponseEntity<Response> archieveNote(@PathVariable("id") long noteId,
 			@RequestHeader("token") String token) {
-		if (noteService.archieveNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note archieved", Util.OK_RESPONSE_CODE));
+		if (noteService.isArchivedNote(noteId, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note archieved", Util.OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response("Opps...Already archived!", Util.BAD_REQUEST_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(new Response("Note unarchived", Util.CREATED_RESPONSE_CODE));
 	}
 
 	/**
@@ -170,9 +170,10 @@ public class NoteController {
 	@PatchMapping("{id}/pin")
 	public ResponseEntity<Response> pinNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.isPinnedNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note pinned", Util.OK_RESPONSE_CODE));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note pinned", Util.OK_RESPONSE_CODE));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("note unpinned", Util.OK_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(new Response("Note unpinned", Util.CREATED_RESPONSE_CODE));
 	}
 
 	/**
@@ -194,7 +195,7 @@ public class NoteController {
 	@DeleteMapping("{id}/trash")
 	public ResponseEntity<Response> trashNote(@PathVariable("id") long noteId, @RequestHeader("token") String token) {
 		if (noteService.trashNote(noteId, token)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("note trashed", Util.OK_RESPONSE_CODE));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Note trashed", Util.OK_RESPONSE_CODE));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Already trashed!", Util.BAD_REQUEST_RESPONSE_CODE));

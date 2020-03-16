@@ -20,17 +20,8 @@ public class Response {
 
 	private List<String> details;
 
-	/**
-	 * Constructor to fetch response if exist any.
-	 * 
-	 * @param message    as String input parameter
-	 * @param statusCode as integer input parameter
-	 * @param object     as User Object
-	 */
-	public Response(String message, int statusCode, Object object) {
-		this.message = message;
-		this.statusCode = statusCode;
-		this.object = object;
+	public Response() {
+
 	}
 
 	/**
@@ -40,13 +31,20 @@ public class Response {
 	 * @param statusCode as integer input parameter
 	 */
 	public Response(String message, int statusCode) {
-
 		this.message = message;
 		this.statusCode = statusCode;
 	}
 
-	public Response() {
-
+	/**
+	 * Constructor to fetch response if exist any.
+	 * 
+	 * @param message    as String input parameter
+	 * @param statusCode as integer input parameter
+	 * @param object     as User Object
+	 */
+	public Response(String message, int statusCode, Object object) {
+		this(message, statusCode);
+		this.object = object;
 	}
 
 	public String getMessage() {

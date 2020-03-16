@@ -86,7 +86,8 @@ public class NoteRepositoryImpl implements INoteRepository {
 	@Override
 	public List<Note> getAllNotes(long userId) {
 		return entityManager.unwrap(Session.class)
-				.createQuery("FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false")
+				.createQuery(
+						"FROM Note WHERE user_id=:id and is_trashed=false and is_archived=false and is_pinned=false")
 				.setParameter("id", userId).getResultList();
 
 	}
@@ -111,7 +112,8 @@ public class NoteRepositoryImpl implements INoteRepository {
 	 */
 	@Override
 	public List<Note> getAllPinnedNotes(long userId) {
-		return entityManager.unwrap(Session.class).createQuery("FROM Note WHERE user_id=:id and is_pinned=true")
+		return entityManager.unwrap(Session.class)
+				.createQuery("FROM Note WHERE user_id=:id and is_pinned=true and is_trashed=false")
 				.setParameter("id", userId).getResultList();
 	}
 

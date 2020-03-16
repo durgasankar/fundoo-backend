@@ -56,7 +56,7 @@ public interface INoteService {
 	 * @param token  as String input parameter
 	 * @return Boolean
 	 */
-	public boolean archieveNote(long noteId, String token);
+	public boolean isArchivedNote(long noteId, String token);
 
 	/**
 	 * UnImplemented functionality of pinning a personalized note of a customer

@@ -159,11 +159,11 @@ public class NoteServiceImpl implements INoteService {
 	 * This function takes note id and authorized token from the user checks for
 	 * user authorization if valid customer then find for the available of note on
 	 * the database. if found valid note then it change the status of archived on
-	 * database. if the note is archived already then it return false. on Successful
-	 * change of archived status of note it return boolean value.
+	 * database. if the note is archived already then make it as unArchived note and
+	 * after Successful change of archived status of note it return boolean value.
 	 */
 	@Override
-	public boolean archieveNote(long noteId, String token) {
+	public boolean isArchivedNote(long noteId, String token) {
 		// found authorized user
 		authenticatedUser(token);
 		// verified valid note
@@ -177,6 +177,10 @@ public class NoteServiceImpl implements INoteService {
 			return true;
 		}
 		// if archived already
+		fetchedNote.setArchived(false);
+		fetchedNote.setUpdatedDate(LocalDateTime.now());
+		noteRepository.saveOrUpdate(fetchedNote);
+//		elasticSearchRepository.updateNote(fetchedNote);
 		return false;
 	}
 
