@@ -241,12 +241,7 @@ public class NoteController {
 	 */
 	@GetMapping("fetch/notes")
 	public ResponseEntity<Response> getAllNotes(@RequestHeader String token) {
-		List<Note> notes = noteService.getallNotes(token);
-		if (!notes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, notes));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("found", 200, noteService.getallNotes(token)));
 	}
 
 	/**
@@ -264,13 +259,8 @@ public class NoteController {
 			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/trashed")
 	public ResponseEntity<Response> fetchTrashedNotes(@RequestHeader("token") String token) {
-		List<Note> trashedNotes = noteService.getAllTrashedNotes(token);
-		if (!trashedNotes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new Response("Trashed notes are", Util.OK_RESPONSE_CODE, trashedNotes));
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new Response("Trashed notes are", Util.OK_RESPONSE_CODE, noteService.getAllTrashedNotes(token)));
 	}
 
 	/**
@@ -288,13 +278,8 @@ public class NoteController {
 			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/remainders")
 	public ResponseEntity<Response> fetchRemainderNotes(@RequestHeader("token") String token) {
-		List<Note> remaindersNotes = noteService.getAllRemaindersNotes(token);
-		if (!remaindersNotes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new Response("Remainder notes are", Util.OK_RESPONSE_CODE, remaindersNotes));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK).body(
+				new Response("Remainder notes are", Util.OK_RESPONSE_CODE, noteService.getAllRemaindersNotes(token)));
 	}
 
 	@GetMapping("fetch/notes/{noteId}/labels")
@@ -306,7 +291,7 @@ public class NoteController {
 					.body(new Response("Labels are", Util.OK_RESPONSE_CODE, fetchedLabels));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
+				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE, fetchedLabels));
 	}
 
 	/**
@@ -324,13 +309,8 @@ public class NoteController {
 			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/pinned")
 	public ResponseEntity<Response> fetchPinnedNotes(@RequestHeader("token") String token) {
-		List<Note> pinnedNotes = noteService.getAllPinnedNotes(token);
-		if (!pinnedNotes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new Response("Pinned notes are", Util.OK_RESPONSE_CODE, pinnedNotes));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new Response("Pinned notes are", Util.OK_RESPONSE_CODE, noteService.getAllPinnedNotes(token)));
 	}
 
 	/**
@@ -349,13 +329,9 @@ public class NoteController {
 			@ApiResponse(code = 404, message = "Opps...No notes Found!") })
 	@GetMapping("fetch/notes/archived")
 	public ResponseEntity<Response> fetchArchivedNotes(@RequestHeader("token") String token) {
-		List<Note> archivedNotes = noteService.getAllArchivedNotes(token);
-		if (!archivedNotes.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new Response("Archived notes are", Util.OK_RESPONSE_CODE, archivedNotes));
-		}
-		return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-				.body(new Response(Util.NO_NOTES_FOUND_MESSAGE, Util.BAD_GATEWAY_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK).body(
+				new Response("Archived notes are", Util.OK_RESPONSE_CODE, noteService.getAllArchivedNotes(token)));
+
 	}
 
 	/**
