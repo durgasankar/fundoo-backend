@@ -349,11 +349,11 @@ public class NoteController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pinned notes are"),
 			@ApiResponse(code = 300, message = "Opps...Note not found!"),
 			@ApiResponse(code = 401, message = "Opps...Authorization failed!") })
-	@PostMapping("{id}/colour")
+	@PatchMapping("{id}")
 	public ResponseEntity<Response> changeColour(@RequestHeader("token") String token, @PathVariable("id") long noteId,
 			@RequestParam("color") String noteColour) {
 		noteService.changeColour(token, noteId, noteColour);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("color changed", Util.OK_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("Color changed", Util.OK_RESPONSE_CODE));
 	}
 
 	/**

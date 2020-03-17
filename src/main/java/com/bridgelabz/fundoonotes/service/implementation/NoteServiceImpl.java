@@ -353,7 +353,6 @@ public class NoteServiceImpl implements INoteService {
 		// validate note
 		Note fetchedNote = verifiedNote(noteId);
 		fetchedNote.setColor(noteColour);
-		fetchedNote.setUpdatedDate(LocalDateTime.now());
 		noteRepository.saveOrUpdate(fetchedNote);
 //		elasticSearchRepository.updateNote(fetchedNote);
 	}
