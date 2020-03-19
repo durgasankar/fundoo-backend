@@ -368,7 +368,7 @@ public class NoteServiceImpl implements INoteService {
 		authenticatedUser(token);
 		// validate note
 		Note fetchedNote = verifiedNote(noteId);
-		if (!fetchedNote.getRemainderTime().equals(remainderTime)) {
+		if (fetchedNote.getRemainderTime() == null ||!fetchedNote.getRemainderTime().equals(remainderTime)) {
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			fetchedNote.setRemainderTime(remainderTime);
 			noteRepository.saveOrUpdate(fetchedNote);
