@@ -38,7 +38,7 @@ public class Note {
 	private String color;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
-	private LocalDateTime remainderDate;
+	private String remainderTime;
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "note_label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "label_id") })
@@ -210,24 +210,7 @@ public class Note {
 		this.updatedDate = updatedDate;
 	}
 
-	/**
-	 * Getter method to get remainder date and time.
-	 * 
-	 * @return LocalDateTime
-	 */
-	public LocalDateTime getRemainderDate() {
-		return remainderDate;
-	}
-
-	/**
-	 * Setter method to set remainder date.
-	 * 
-	 * @param remainderDate as LocalDateTime input parameter
-	 */
-	public void setRemainderDate(LocalDateTime remainderDate) {
-		this.remainderDate = remainderDate;
-	}
-
+	
 	public List<Label> getLabelsList() {
 		return labelsList;
 	}
@@ -244,15 +227,24 @@ public class Note {
 		this.colaboratedUsers = colaboratedUsers;
 	}
 
-	/**
-	 * ToString method to print the data in String format
-	 */
+	public String getRemainderTime() {
+		return remainderTime;
+	}
+
+	public void setRemainderTime(String remainderTime) {
+		this.remainderTime = remainderTime;
+	}
+
 	@Override
 	public String toString() {
 		return "Note [noteId=" + noteId + ", title=" + title + ", description=" + description + ", isArchived="
 				+ isArchived + ", isPinned=" + isPinned + ", isTrashed=" + isTrashed + ", color=" + color
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", remainderDate=" + remainderDate
-				+ "]";
+				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", remainderTime=" + remainderTime
+				+ ", labelsList=" + labelsList + ", colaboratedUsers=" + colaboratedUsers + "]";
 	}
 
+	/**
+	 * ToString method to print the data in String format
+	 */
+	
 }

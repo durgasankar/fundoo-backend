@@ -15,7 +15,6 @@ import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.model.dto.NoteDTO;
-import com.bridgelabz.fundoonotes.model.dto.RemainderDTO;
 import com.bridgelabz.fundoonotes.repository.INoteRepository;
 import com.bridgelabz.fundoonotes.repository.IUserRepository;
 import com.bridgelabz.fundoonotes.service.INoteService;
@@ -331,7 +330,7 @@ public class NoteServiceImpl implements INoteService {
 	public List<Note> getAllRemaindersNotes(String token) {
 		List<Note> fetchedremainderNotes = noteRepository.getAllRemainderNotes(authenticatedUser(token).getUserId());
 		Collections.sort(fetchedremainderNotes,
-				(note1, note2) -> note2.getRemainderDate().compareTo(note1.getRemainderDate()));
+				(note1, note2) -> note2.getRemainderTime().compareTo(note1.getRemainderTime()));
 		// note found of authenticated user
 		if (!fetchedremainderNotes.isEmpty()) {
 			return fetchedremainderNotes;
@@ -364,19 +363,19 @@ public class NoteServiceImpl implements INoteService {
 	 * for note and add the update time then add to database.
 	 */
 	@Override
-	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO) {
+	public void setRemainderforNote(String token, long noteId, String remainderTime) {
 		// authenticate user
 		authenticatedUser(token);
 		// validate note
 		Note fetchedNote = verifiedNote(noteId);
-		if (fetchedNote.getRemainderDate() == null) {
+		if (!fetchedNote.getRemainderTime().equals(remainderTime)) {
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
-			fetchedNote.setRemainderDate(remainderDTO.getRemainder());
+			fetchedNote.setRemainderTime(remainderTime);
 			noteRepository.saveOrUpdate(fetchedNote);
 //			elasticSearchRepository.updateNote(fetchedNote);
 			return;
 		}
-		throw new RemainderException("Opps...Remainder already set!", 502);
+		throw new RemainderException("Opps...Remainder already set for above time", 502);
 	}
 
 	/**
@@ -391,8 +390,8 @@ public class NoteServiceImpl implements INoteService {
 		authenticatedUser(token);
 		// validate note
 		Note fetchedNote = verifiedNote(noteId);
-		if (fetchedNote.getRemainderDate() != null) {
-			fetchedNote.setRemainderDate(null);
+		if (fetchedNote.getRemainderTime() != null) {
+			fetchedNote.setRemainderTime(null);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
 //			elasticSearchRepository.updateNote(fetchedNote);

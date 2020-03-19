@@ -5,7 +5,6 @@ import java.util.List;
 import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.dto.NoteDTO;
-import com.bridgelabz.fundoonotes.model.dto.RemainderDTO;
 
 /**
  * This interface has the UnImplemented functionality of registering note,
@@ -141,7 +140,7 @@ public interface INoteService {
 	 * @param noteId       as long input parameter
 	 * @param remainderDTO as {@link RemainderDTO}
 	 */
-	public void setRemainderforNote(String token, long noteId, RemainderDTO remainderDTO);
+	public void setRemainderforNote(String token, long noteId, String remainderTime);
 
 	/**
 	 * UnImplemented functionality of removing remainder for personalized note after

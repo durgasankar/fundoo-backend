@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.dto.NoteDTO;
-import com.bridgelabz.fundoonotes.model.dto.RemainderDTO;
 import com.bridgelabz.fundoonotes.model.dto.UserDTO;
 import com.bridgelabz.fundoonotes.response.Response;
 import com.bridgelabz.fundoonotes.service.INoteService;
@@ -374,10 +373,10 @@ public class NoteController {
 			@ApiResponse(code = 502, message = "Opps...Remainder already set!") })
 	@PutMapping("{id}/remainder/add")
 	public ResponseEntity<Response> setRemainder(@RequestHeader("token") String token, @PathVariable("id") long noteId,
-			@RequestBody RemainderDTO remainderDTO) {
-		noteService.setRemainderforNote(token, noteId, remainderDTO);
+			@RequestParam("time") String remainderTime) {
+		noteService.setRemainderforNote(token, noteId, remainderTime);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new Response("remainder created", Util.CREATED_RESPONSE_CODE));
+				.body(new Response("Remainder added", Util.CREATED_RESPONSE_CODE));
 	}
 
 	/**
@@ -399,8 +398,8 @@ public class NoteController {
 	public ResponseEntity<Response> removeRemainder(@RequestHeader("token") String token,
 			@PathVariable("id") long noteId) {
 		noteService.removeRemainderforNote(token, noteId);
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new Response("remainder removed", Util.CREATED_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new Response("remainder removed", Util.OK_RESPONSE_CODE));
 	}
 
 	/**
