@@ -26,6 +26,13 @@ import com.bridgelabz.fundoonotes.utility.Util;
 
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-03-01
+ * @version 1.0
+ *
+ */
 @RestController
 @RequestMapping("labels")
 public class LabelController {
@@ -87,7 +94,7 @@ public class LabelController {
 				.body(new Response("Opps...Error deleting label", Util.BAD_REQUEST_RESPONSE_CODE));
 	}
 
-	@GetMapping("/fetch/labels")
+	@GetMapping("/fetch")
 	@ApiOperation(value = "Api to delete a particular label", response = Response.class)
 	public ResponseEntity<Response> getAllLabels(@RequestHeader("token") String token) {
 		List<Label> foundLabelList = labelService.listOfLabels(token);
