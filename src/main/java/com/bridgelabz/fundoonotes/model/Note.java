@@ -30,14 +30,20 @@ public class Note {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "note_id")
 	private long noteId;
+	@Column(length = 200)
 	private String title;
+	@Column(length = 7000)
 	private String description;
 	private boolean isArchived;
 	private boolean isPinned;
 	private boolean isTrashed;
+	@Column(length = 30)
 	private String color;
+	@Column(length = 30)
 	private LocalDateTime createdDate;
+	@Column(length = 30)
 	private LocalDateTime updatedDate;
+	@Column(length = 30)
 	private String remainderTime;
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "note_label", joinColumns = { @JoinColumn(name = "note_id") }, inverseJoinColumns = {

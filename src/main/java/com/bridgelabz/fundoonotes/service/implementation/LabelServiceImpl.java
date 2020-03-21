@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.service.implementation;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,7 +163,10 @@ public class LabelServiceImpl implements ILabelService {
 	@Override
 	public List<Label> listOfLabels(String token) {
 		authenticatedUser(token);
-		return labelRepository.getAllLabels();
+		List<Label> fetchedAllLabels = labelRepository.getAllLabels();
+		Collections.sort(fetchedAllLabels,
+				(lable1, lable2) -> lable2.getCreatedDate().compareTo(lable1.getCreatedDate()));
+		return fetchedAllLabels;
 	}
 
 	@Override

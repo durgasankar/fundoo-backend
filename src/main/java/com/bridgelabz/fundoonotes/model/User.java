@@ -34,11 +34,13 @@ public class User {
 	private long userId;
 	private String firstName;
 	private String lastName;
-	@Column(unique = true)
 	@ValidEmailId
+	@Column(unique = true)
 	private String emailId;
 	private String password;
+	@Column(length = 10, unique = true)
 	private String mobileNumber;
+	@Column(length = 30)
 	private LocalDateTime createdDate;
 	private boolean isVerified;
 

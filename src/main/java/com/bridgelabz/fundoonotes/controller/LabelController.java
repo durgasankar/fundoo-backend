@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotes.model.Label;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.dto.LabelDTO;
 import com.bridgelabz.fundoonotes.response.Response;
@@ -97,12 +96,9 @@ public class LabelController {
 	@GetMapping("/fetch")
 	@ApiOperation(value = "Api to delete a particular label", response = Response.class)
 	public ResponseEntity<Response> getAllLabels(@RequestHeader("token") String token) {
-		List<Label> foundLabelList = labelService.listOfLabels(token);
-		if (!foundLabelList.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("found labels", 200, foundLabelList));
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body(new Response("Opps...No labels found", Util.NOT_FOUND_RESPONSE_CODE));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new Response("found labels", 200, labelService.listOfLabels(token)));
+
 	}
 
 	@GetMapping("/fetch/{labelId}")

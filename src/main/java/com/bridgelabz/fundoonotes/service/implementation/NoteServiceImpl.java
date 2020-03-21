@@ -227,6 +227,7 @@ public class NoteServiceImpl implements INoteService {
 			fetchedNote.setTrashed(true);
 			fetchedNote.setArchived(false);
 			fetchedNote.setPinned(false);
+			fetchedNote.setRemainderTime(null);
 			fetchedNote.setUpdatedDate(LocalDateTime.now());
 			noteRepository.saveOrUpdate(fetchedNote);
 //			elasticSearchRepository.updateNote(fetchedNote);
