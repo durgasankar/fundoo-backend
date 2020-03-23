@@ -11,6 +11,13 @@ import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.Label;
 
+/**
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-03-01
+ * @version 1.0
+ *
+ */
 @Repository
 public interface ILabelRepository extends JpaRepository<Label, Long> {
 

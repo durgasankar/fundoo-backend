@@ -43,7 +43,7 @@ public class LabelController {
 	@ApiOperation(value = "Api to create label", response = Response.class)
 	public ResponseEntity<Response> createLabel(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO) {
 		labelService.createLabel(token, labelDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created", 201, labelDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("Label created", 201, labelDTO));
 	}
 
 	@PostMapping("/create/{noteId}")
@@ -51,7 +51,7 @@ public class LabelController {
 	public ResponseEntity<Response> createandMapLabel(@RequestHeader("token") String token,
 			@RequestBody LabelDTO labelDTO, @PathVariable("noteId") long noteId) {
 		labelService.createLabelAndMap(token, noteId, labelDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("label created and mapped", 201, labelDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new Response("Label created and mapped", 201, labelDTO));
 	}
 
 	@PostMapping("/map")
@@ -59,7 +59,7 @@ public class LabelController {
 	public ResponseEntity<Response> addLabelsToNote(@RequestHeader("token") String token,
 			@RequestParam("noteId") long noteId, @RequestParam("labelId") long labelId) {
 		labelService.addNoteToLabel(token, noteId, labelId);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("note added to the label", 200));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("Note added to the label", 200));
 	}
 
 	@PatchMapping("/remove")
@@ -67,7 +67,7 @@ public class LabelController {
 	public ResponseEntity<Response> removeLabelsToNote(@RequestHeader("token") String token,
 			@RequestParam("noteId") long noteId, @RequestParam("labelId") long labelId) {
 		labelService.removeNoteFromLabel(token, noteId, labelId);
-		return ResponseEntity.status(HttpStatus.OK).body(new Response("note removed from the label", 200));
+		return ResponseEntity.status(HttpStatus.OK).body(new Response("Note removed from the label", 200));
 	}
 
 	@PutMapping("/edit")
@@ -75,7 +75,7 @@ public class LabelController {
 	public ResponseEntity<Response> editLabelName(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO,
 			@RequestParam("labelId") long labelId) {
 		if (labelService.isLabelEdited(token, labelDTO, labelId)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("label name changed", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Label name changed", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...new Label name can't be same!", Util.BAD_REQUEST_RESPONSE_CODE));
@@ -87,7 +87,7 @@ public class LabelController {
 	public ResponseEntity<Response> deleteLabel(@RequestHeader("token") String token,
 			@PathVariable("labelId") long labelId) {
 		if (labelService.idDeletedLabel(token, labelId)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("label deleted sucessfully", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Label deleted sucessfully", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Error deleting label", Util.BAD_REQUEST_RESPONSE_CODE));

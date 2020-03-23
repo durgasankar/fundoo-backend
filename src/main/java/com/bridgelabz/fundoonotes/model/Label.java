@@ -14,6 +14,13 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-03-01
+ * @version 1.0
+ *
+ */
 @Entity
 @Table(name = "label_details")
 public class Label {

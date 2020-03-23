@@ -23,6 +23,13 @@ import com.bridgelabz.fundoonotes.service.ILabelService;
 import com.bridgelabz.fundoonotes.utility.JWTToken;
 import com.bridgelabz.fundoonotes.utility.Util;
 
+/**
+ * 
+ * @author Durgasankar Mishra
+ * @created 2020-03-01
+ * @version 1.0
+ *
+ */
 @Service
 public class LabelServiceImpl implements ILabelService {
 
