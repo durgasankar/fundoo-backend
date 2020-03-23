@@ -81,8 +81,7 @@ public class LabelController {
 				.body(new Response("Opps...new Label name can't be same!", Util.BAD_REQUEST_RESPONSE_CODE));
 	}
 
-	// URL -> http://localhost:8080/label/5/delete
-	@DeleteMapping("/{labelId}/delete")
+	@DeleteMapping("{labelId}/delete")
 	@ApiOperation(value = "Api to delete a particular label", response = Response.class)
 	public ResponseEntity<Response> deleteLabel(@RequestHeader("token") String token,
 			@PathVariable("labelId") long labelId) {
