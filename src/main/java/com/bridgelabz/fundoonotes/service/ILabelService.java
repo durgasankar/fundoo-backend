@@ -16,7 +16,7 @@ public interface ILabelService {
 
 	public boolean removeNoteFromLabel(String token, long noteId, long labelId);
 
-	public boolean isLabelEdited(String token, LabelDTO labelDTO, long labelId);
+	public boolean isLabelEdited(String token, String labelName, long labelId);
 
 	public boolean idDeletedLabel(String token, long labelId);
 

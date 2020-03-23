@@ -70,15 +70,15 @@ public class LabelController {
 		return ResponseEntity.status(HttpStatus.OK).body(new Response("Note removed from the label", 200));
 	}
 
-	@PutMapping("/edit")
+	@PutMapping("{labelId}/edit")
 	@ApiOperation(value = "Api to edit the name of label", response = Response.class)
-	public ResponseEntity<Response> editLabelName(@RequestHeader("token") String token, @RequestBody LabelDTO labelDTO,
-			@RequestParam("labelId") long labelId) {
-		if (labelService.isLabelEdited(token, labelDTO, labelId)) {
+	public ResponseEntity<Response> editLabelName(@RequestHeader("token") String token, @RequestParam String labelName,
+			@PathVariable("labelId") long labelId) {
+		if (labelService.isLabelEdited(token, labelName, labelId)) {
 			return ResponseEntity.status(HttpStatus.OK).body(new Response("Label name changed", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new Response("Opps...new Label name can't be same!", Util.BAD_REQUEST_RESPONSE_CODE));
+				.body(new Response("Opps...Error renaming label", Util.BAD_REQUEST_RESPONSE_CODE));
 	}
 
 	@DeleteMapping("{labelId}/delete")
@@ -86,7 +86,7 @@ public class LabelController {
 	public ResponseEntity<Response> deleteLabel(@RequestHeader("token") String token,
 			@PathVariable("labelId") long labelId) {
 		if (labelService.idDeletedLabel(token, labelId)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Response("Label deleted sucessfully", 200));
+			return ResponseEntity.status(HttpStatus.OK).body(new Response("Label deleted sucessfully!", 200));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new Response("Opps...Error deleting label", Util.BAD_REQUEST_RESPONSE_CODE));
