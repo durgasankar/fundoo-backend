@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
- * @version 1.0
+ * @version 1.1
+ * @updated -> 2020-04-02
+ * @modified -> added extra field address on registration form.
  */
 @Component
 public class UserDTO {
@@ -25,6 +27,7 @@ public class UserDTO {
 	private String password;
 	@NotNull(message = "field should not be empty")
 	private String mobileNumber;
+	private String address;
 
 	/**
 	 * Getter method for first name
@@ -116,13 +119,22 @@ public class UserDTO {
 		this.mobileNumber = mobileNumber;
 	}
 
-	/**
-	 * ToString method to print the data in String format
-	 */
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDTO [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId + ", password="
-				+ password + ", mobileNumber=" + mobileNumber + "]";
+				+ password + ", mobileNumber=" + mobileNumber + ", address=" + address + "]";
 	}
+
+	/**
+	 * ToString method to print the data in String format
+	 */
 
 }

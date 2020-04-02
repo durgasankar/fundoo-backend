@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
- * @version 1.0
+ * @version 1.1
+ * @updated -> 2020-04-02
+ * @modified -> added extra field address on registration form.
  */
 @Entity
 @Table(name = "user_details")
@@ -43,6 +45,7 @@ public class User {
 	@Column(length = 30)
 	private LocalDateTime createdDate;
 	private boolean isVerified;
+	private String address;
 
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
@@ -67,14 +70,17 @@ public class User {
 	 * @param emailId      as String input parameter
 	 * @param password     as String input parameter
 	 * @param mobileNumber as boolean input parameter
+	 * @param address      as String input parameter
 	 */
-	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumber) {
+	public User(long userId, String firstName, String lastName, String emailId, String password, String mobileNumber,
+			String address) {
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailId = emailId;
 		this.password = password;
 		this.mobileNumber = mobileNumber;
+		this.address = address;
 	}
 
 	/**
@@ -265,11 +271,21 @@ public class User {
 	/**
 	 * ToString method to print the data in String format
 	 */
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
 				+ ", password=" + password + ", mobileNumber=" + mobileNumber + ", createdDate=" + createdDate
-				+ ", isVerified=" + isVerified + "]";
+				+ ", isVerified=" + isVerified + ", address=" + address + ", notes=" + notes + ", labels=" + labels
+				+ ", colaboratedNotes=" + colaboratedNotes + "]";
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }

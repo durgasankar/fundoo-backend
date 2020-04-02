@@ -30,13 +30,16 @@ import com.bridgelabz.fundoonotes.utility.Util;
  * 
  * @author Durgasankar Mishra
  * @created 2020-01-22
- * @version 1.0
+ * @version 1.1
  * @modified -> 2020-02-09
  * @updated -> RabbitMQ functionality added to the existing JMS mail service.
  * @see {@link BCryptPasswordEncoder} for creating encrypted password
  * @see {@link IUserRepository} for storing data with the database
  * @see {@link JWTToken} fore creation of token
  * @see {@link RabbitMQSender}, {@link EMailServiceProvider} for mail facilities
+ * 
+ * @updated -> 2020-04-02
+ * @modified -> added extra field address on registration form.
  */
 @Service
 public class UserServiceImpl implements IUserService {
